@@ -1,10 +1,10 @@
-version: '2.2'
+version: "3.8"
 services:
   rctf:
-    image: redpwn/rctf:${RCTF_GIT_REF}
+    build: .
     restart: always
     ports:
-      - '127.0.0.1:8080:80'
+      - "8080:80"
     networks:
       - rctf
     env_file:
@@ -17,18 +17,18 @@ services:
       - redis
       - postgres
   redis:
-    image: redis:6.0.6
+    image: redis:latest
     restart: always
-    command: ["redis-server", "--requirepass", "${RCTF_REDIS_PASSWORD}"]
+    command: ["redis-server", "--requirepass", "1234"]
     networks:
       - rctf
     volumes:
       - ./data/rctf-redis:/data
   postgres:
-    image: postgres:12.3
+    image: postgres:latest
     restart: always
     environment:
-      - POSTGRES_PASSWORD=${RCTF_DATABASE_PASSWORD}
+      - POSTGRES_PASSWORD=1234
       - POSTGRES_USER=rctf
       - POSTGRES_DB=rctf
     networks:
@@ -37,4 +37,4 @@ services:
       - ./data/rctf-postgres:/var/lib/postgresql/data
 
 networks:
-  rctf: {}
+  rctf:

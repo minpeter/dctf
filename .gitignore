@@ -5,9 +5,9 @@ yarn-error.log*
 /node_modules
 
 /dist
-/.env
+# /.env
 /data
-/conf.d/*
+# /conf.d/*
 !/conf.d/.keep
 /docs/site
 
