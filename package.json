@@ -9,6 +9,7 @@
     "dev": "cross-env NODE_ENV=development preact watch --src src --template index.html"
   },
   "dependencies": {
+    "deepmerge": "^4.3.1",
     "dotenv": "8.2.0",
     "jss-plugin-global": "10.4.0",
     "mustache": "4.0.1",
