@@ -3,3 +3,8 @@ build
 .DS_Store
 
 size-plugin.json
+
+
+# other branch
+data
+dist
