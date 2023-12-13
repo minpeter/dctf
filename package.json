@@ -28,7 +28,6 @@
     "jss-nested": "6.0.1",
     "jss-vendor-prefixer": "8.0.1",
     "linkstate": "1.1.1",
-    "lint-staged": "10.2.11",
     "loader-utils": "2.0.0",
     "pascal-case": "3.1.1",
     "preact": "10.4.7",
@@ -37,7 +36,7 @@
     "preact-router": "3.2.1",
     "purgecss-webpack-plugin": "2.3.0",
     "snarkdown": "1.2.2",
-    "svg-sprite-loader": "5.0.0"
+    "svg-sprite-loader": "^6.0.11"
   },
   "description": "rctf is RedpwnCTF's CTF platform. It is developed and maintained by the [redpwn](https://redpwn.net) CTF team.",
   "repository": {
