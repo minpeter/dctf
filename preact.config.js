@@ -19,7 +19,7 @@ export default (config, env, helpers) => {
     }]
   }
 
-  config.resolveLoader.modules.unshift(path.resolve(__dirname, 'client/lib/loaders'))
+  config.resolveLoader.modules.unshift(path.resolve(__dirname, 'lib/loaders'))
 
   const { rule: { options: babelConfig } } = helpers.getLoadersByName(config, 'babel-loader')[0]
   babelConfig.plugins.push('transform-export-extensions')
@@ -50,7 +50,7 @@ export default (config, env, helpers) => {
     test: /\.svg$/,
     loader: 'svg-sprite-loader',
     options: {
-      runtimeGenerator: require.resolve('./client/lib/svg-icon-component-generator'),
+      runtimeGenerator: require.resolve('./lib/svg-icon-component-generator'),
       runtimeOptions: {
         iconModule: './components/icon'
       }
