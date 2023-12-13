@@ -4,16 +4,15 @@
   "license": "BSD-3-Clause",
   "private": true,
   "scripts": {
-    "lint": "sh -c \"tsc --noEmit ; eslint .\"",
-    "build": "preact build --src src --template index.html --dest dist --no-prerender --no-inline-css",
-    "dev": "cross-env NODE_ENV=development preact watch --src src --template index.html"
+    "build": "preact build --template index.html --no-prerender",
+    "dev": "preact watch --template index.html"
   },
   "dependencies": {
     "deepmerge": "^4.3.1",
     "dotenv": "8.2.0",
     "jss-plugin-global": "10.4.0",
     "mustache": "4.0.1",
-    "uuid": "8.3.0",
+    "uuid": "^9.0.1",
     "workbox-core": "^7.0.0",
     "workbox-routing": "^7.0.0",
     "workbox-strategies": "^7.0.0"
