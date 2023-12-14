@@ -4,9 +4,7 @@
   "license": "BSD-3-Clause",
   "private": true,
   "scripts": {
-    "build": "yarn preact build --src client/src --template client/index.html --dest build --no-prerender",
-    "watch:client": "cross-env NODE_ENV=development preact watch --src client/src --template client/index.html",
-    "dev": "concurrently -k -t \"HH:mm:ss.SSS\" -p \"[{time}]\" -c \"cyan,green,red\" \"yarn:watch:*\""
+    "build": "preact build --src client/src --template client/index.html --dest build --no-prerender"
   },
   "nodemonConfig": {
     "watch": [
@@ -17,37 +15,35 @@
     "delay": "1000"
   },
   "dependencies": {
-    "jss-plugin-global": "10.4.0",
-    "mustache": "4.0.1",
-    "uuid": "8.3.0"
+    "deepmerge": "^4.3.1",
+    "dotenv": "16.3.1",
+    "jss-plugin-global": "10.10.0",
+    "mustache": "4.2.0",
+    "uuid": "^9.0.1",
+    "workbox-core": "^7.0.0",
+    "workbox-routing": "^7.0.0",
+    "workbox-strategies": "^7.0.0"
   },
   "devDependencies": {
-    "babel-plugin-transform-export-extensions": "6.22.0",
-    "cirrus-ui": "0.5.5",
-    "concurrently": "5.3.0",
-    "cross-env": "7.0.2",
-    "cz-conventional-changelog": "3.2.0",
-    "eslint": "7.6.0",
-    "eslint-config-standard": "14.1.1",
-    "eslint-plugin-import": "2.22.0",
-    "eslint-plugin-node": "11.1.0",
-    "eslint-plugin-promise": "4.2.1",
-    "eslint-plugin-standard": "4.0.1",
+    "babel-plugin-transform-export-extensions": "^6.22.0",
+    "cirrus-ui": "0.7.1",
+    "cross-env": "7.0.3",
+    "cz-conventional-changelog": "3.3.0",
     "glob": "7.1.6",
-    "jss": "10.4.0",
+    "jss": "10.10.0",
     "jss-camel-case": "6.1.0",
     "jss-nested": "6.0.1",
     "jss-vendor-prefixer": "8.0.1",
-    "linkstate": "1.1.1",
-    "loader-utils": "2.0.0",
-    "pascal-case": "3.1.1",
+    "linkstate": "2.0.1",
+    "loader-utils": "^2.0.0",
+    "pascal-case": "^3.0.0",
     "preact": "10.4.7",
     "preact-cli": "3.0.1",
     "preact-markup": "2.0.0",
     "preact-router": "3.2.1",
-    "purgecss-webpack-plugin": "2.3.0",
-    "snarkdown": "1.2.2",
-    "svg-sprite-loader": "5.0.0"
+    "purgecss-webpack-plugin": "^2.0.0",
+    "snarkdown": "2.0.0",
+    "svg-sprite-loader": "^6.0.11"
   },
   "description": "rctf is RedpwnCTF's CTF platform. It is developed and maintained by the [redpwn](https://redpwn.net) CTF team.",
   "repository": {

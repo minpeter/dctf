@@ -11,10 +11,10 @@
     "open": "Open"
   },
   "defaultDivision": "undefined",
-  "origin": "http: //127.0.0.1:8080",
+  "origin": "http: //localhost:3000",
   "startTime": 1702355705000,
   "endTime": 0,
   "emailEnabled": false,
   "userMembers": true,
-  "faviconUrl": "https: //redpwn.storage.googleapis.com/branding/rctf-favicon.ico"
+  "faviconUrl": "https://zany.sh/favicon.svg?emoji=🤑"
 }

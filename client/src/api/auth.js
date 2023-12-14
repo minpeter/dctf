@@ -26,7 +26,8 @@ export const login = async ({ teamToken, ctftimeToken }) => {
       }
     default:
       return {
-        teamToken: 'Unknown response from server, please contact ctf administrator'
+        teamToken:
+          'Unknown response from server, please contact ctf administrator'
       }
   }
 }
@@ -58,7 +59,12 @@ export const verify = async ({ verifyToken }) => {
   }
 }
 
-export const register = async ({ email, name, ctftimeToken, recaptchaCode }) => {
+export const register = async ({
+  email,
+  name,
+  ctftimeToken,
+  recaptchaCode
+}) => {
   const resp = await request('POST', '/auth/register', {
     email,
     name,
