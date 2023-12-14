@@ -111,7 +111,7 @@ export default withStyles(
               autocomplete="off"
               autocorrect="off"
               name="teamToken"
-              icon={<IdCard />}
+              icon={<img src={IdCard} />}
               placeholder="Team Token"
               type="text"
               value={teamToken}

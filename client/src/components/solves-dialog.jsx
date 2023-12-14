@@ -96,7 +96,7 @@ const SolvesDialog = withStyles(
             {solves.length === 0 ? (
               <div class={classes.empty}>
                 <div class={classes.icon}>
-                  <Clock />
+                  <img src={Clock} />
                 </div>
                 <h5>{challName} has no solves.</h5>
               </div>

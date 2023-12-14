@@ -108,7 +108,7 @@ export default withStyles(
               required
               autocomplete="username"
               autocorrect="off"
-              icon={<UserCircle />}
+              icon={<img src={UserCircle} />}
               name="name"
               maxLength="64"
               minLength="2"
@@ -121,7 +121,7 @@ export default withStyles(
               required
               autocomplete="email"
               autocorrect="off"
-              icon={<EnvelopeOpen />}
+              icon={<img src={EnvelopeOpen} />}
               name="email"
               placeholder="Email"
               type="email"
