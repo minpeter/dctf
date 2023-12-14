@@ -15,9 +15,7 @@
     "delay": "1000"
   },
   "dependencies": {
-    "deepmerge": "^4.3.1",
-    "dotenv": "16.3.1",
-    "jss-plugin-global": "10.10.0",
+    "cirrus-ui": "0.7.0",
     "mustache": "4.2.0",
     "uuid": "^9.0.1",
     "workbox-core": "^7.0.0",
@@ -25,25 +23,20 @@
     "workbox-strategies": "^7.0.0"
   },
   "devDependencies": {
-    "babel-plugin-transform-export-extensions": "^6.22.0",
-    "cirrus-ui": "0.7.1",
-    "cross-env": "7.0.3",
     "cz-conventional-changelog": "3.3.0",
-    "glob": "7.1.6",
+    "eslint-config-standard": "^17.1.0",
     "jss": "10.10.0",
     "jss-camel-case": "6.1.0",
     "jss-nested": "6.0.1",
+    "jss-plugin-global": "10.10.0",
     "jss-vendor-prefixer": "8.0.1",
     "linkstate": "2.0.1",
-    "loader-utils": "^2.0.0",
-    "pascal-case": "^3.0.0",
-    "preact": "10.4.7",
-    "preact-cli": "3.0.1",
-    "preact-markup": "2.0.0",
-    "preact-router": "3.2.1",
-    "purgecss-webpack-plugin": "^2.0.0",
-    "snarkdown": "2.0.0",
-    "svg-sprite-loader": "^6.0.11"
+    "preact": "^10.19.3",
+    "preact-cli": "^3.5.0",
+    "preact-markup": "^2.1.1",
+    "preact-router": "^4.1.2",
+    "preact-svg-loader": "^0.2.1",
+    "snarkdown": "2.0.0"
   },
   "description": "rctf is RedpwnCTF's CTF platform. It is developed and maintained by the [redpwn](https://redpwn.net) CTF team.",
   "repository": {
