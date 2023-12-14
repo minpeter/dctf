@@ -61,6 +61,8 @@ func main() {
 
 	app.Static("/assets", "client/dist/assets")
 
+	app.NoRoute(serveIndex)
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "3000"

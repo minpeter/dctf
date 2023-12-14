@@ -115,7 +115,7 @@ export default withStyles(
     root: {
       display: "flex",
       flexDirection: "column",
-      minHeight: "100%",
+      minHeight: "100dvh",
       background: "#111",
       color: "#fff",
       "& *:not(code):not(pre)": {
