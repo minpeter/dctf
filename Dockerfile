@@ -1,9 +1,9 @@
-FROM node:16-slim AS front-build
+FROM node:21-slim AS front-build
 
 WORKDIR /app
-COPY package.json yarn.lock ./
+COPY client/package.json client/yarn.lock ./
 RUN yarn install --frozen-lockfile && yarn cache clean
-COPY . .
+COPY client .
 RUN yarn build
 
 FROM golang:1.21-alpine AS back-build
@@ -14,13 +14,11 @@ RUN go mod download
 COPY . .
 RUN go build -o /app/server .
 
-FROM node:16-slim
+FROM alpine
 
 WORKDIR /app
-COPY package.json yarn.lock ./
-ENV NODE_ENV production
-RUN yarn install --prod --frozen-lockfile && yarn cache clean
-COPY --from=front-build /app/build /app/build
+COPY client-config.json /app/client-config.json
+COPY --from=front-build /app/dist /app/client/dist
 COPY --from=back-build /app/server /app/server
 EXPOSE 3000
 CMD ./server
