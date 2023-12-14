@@ -6,14 +6,6 @@
   "scripts": {
     "build": "preact build --src client/src --template client/index.html --dest build --no-prerender"
   },
-  "nodemonConfig": {
-    "watch": [
-      "dist/server",
-      "dist/config",
-      "dist/build/index.html"
-    ],
-    "delay": "1000"
-  },
   "dependencies": {
     "cirrus-ui": "^0.7.1",
     "mustache": "4.2.0",
@@ -37,20 +29,5 @@
     "preact-router": "^4.1.2",
     "preact-svg-loader": "^0.2.1",
     "snarkdown": "2.0.0"
-  },
-  "description": "rctf is RedpwnCTF's CTF platform. It is developed and maintained by the [redpwn](https://redpwn.net) CTF team.",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/redpwn/rctf.git"
-  },
-  "author": "redpwn <contact@redpwn.net>",
-  "bugs": {
-    "url": "https://github.com/redpwn/rctf/issues"
-  },
-  "homepage": "https://github.com/redpwn/rctf#readme",
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
   }
 }
