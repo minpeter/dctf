@@ -48,18 +48,8 @@ func serveIndex(c *gin.Context) {
 	}
 
 	// Use mustache to render the index.html template
-	html := mustache.RenderFile("build/index.html", rendered)
+	html := mustache.RenderFile("client/dist/index.html", rendered)
 	c.Writer.WriteString(html)
-}
-
-func serveFile(c *gin.Context) {
-	path := c.Param("path")
-	if path == "" {
-		c.Writer.WriteHeader(404)
-		return
-	}
-
-	c.File("build/" + path)
 }
 
 func main() {
@@ -69,7 +59,7 @@ func main() {
 
 	app.GET("/", serveIndex)
 
-	app.GET("/:path", serveFile)
+	app.Static("/assets", "client/dist/assets")
 
 	port := os.Getenv("PORT")
 	if port == "" {

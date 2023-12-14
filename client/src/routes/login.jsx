@@ -1,72 +1,72 @@
-import { Fragment, Component } from 'preact'
-import { Link } from 'preact-router'
-import Form from '../components/form'
-import config from '../config'
-import 'linkstate/polyfill'
-import withStyles from '../components/jss'
+import { Component } from "preact";
+import { Link } from "preact-router";
+import Form from "../components/form";
+import config from "../config";
+import linkState from "linkstate";
+import withStyles from "../components/jss";
 
-import { login, setAuthToken } from '../api/auth'
-import IdCard from '../icons/id-card.svg'
-import CtftimeButton from '../components/ctftime-button'
-import CtftimeAdditional from '../components/ctftime-additional'
-import AuthOr from '../components/or'
-import PendingToken from '../components/pending-token'
+import { login, setAuthToken } from "../api/auth";
+import IdCard from "../icons/id-card.svg";
+import CtftimeButton from "../components/ctftime-button";
+import CtftimeAdditional from "../components/ctftime-additional";
+import AuthOr from "../components/or";
+import PendingToken from "../components/pending-token";
 
 export default withStyles(
   {
     root: {
-      flexDirection: 'column'
+      flexDirection: "column",
     },
     title: {
-      marginBottom: '20px'
+      marginBottom: "20px",
     },
     form: {
-      padding: '1.5em',
-      maxWidth: '500px',
-      '& input': {
-        background: '#222',
-        color: '#fff !important'
-      }
+      padding: "1.5em",
+      maxWidth: "500px",
+      "& input": {
+        background: "#222",
+        color: "#fff !important",
+      },
     },
     submit: {
-      marginTop: '1.5em'
+      marginTop: "1.5em",
     },
     link: {
-      display: 'inline'
-    }
+      display: "inline",
+    },
   },
   class Login extends Component {
     state = {
-      teamToken: '',
+      teamToken: "",
       errors: {},
       disabledButton: false,
       ctftimeToken: undefined,
       ctftimeName: undefined,
       pendingAuthToken: null,
       pendingUserName: null,
-      pending: false
-    }
+      pending: false,
+    };
 
     componentDidMount() {
-      document.title = `Login | ${config.ctfName}`
-      ;(async () => {
-        const qs = new URLSearchParams(location.search)
-        if (qs.has('token')) {
+      document.title = `Login | ${config.ctfName}`;
+      (async () => {
+        const qs = new URLSearchParams(location.search);
+        if (qs.has("token")) {
           this.setState({
-            pending: true
-          })
+            pending: true,
+          });
 
-          const loginRes = await login({ teamToken: qs.get('token') })
+          const loginRes = await login({ teamToken: qs.get("token") });
           if (loginRes.authToken) {
             this.setState({
-              pendingAuthToken: loginRes.authToken
-            })
+              pendingAuthToken: loginRes.authToken,
+            });
           }
           this.setState({
-            pending: false
-          })
+            pending: false,
+          });
         }
-      })()
+      })();
     }
 
     render(
@@ -78,7 +78,7 @@ export default withStyles(
         ctftimeToken,
         ctftimeName,
         pendingAuthToken,
-        pending
+        pending,
       }
     ) {
       if (ctftimeToken) {
@@ -87,13 +87,13 @@ export default withStyles(
             ctftimeToken={ctftimeToken}
             ctftimeName={ctftimeName}
           />
-        )
+        );
       }
       if (pending) {
-        return null
+        return null;
       }
       if (pendingAuthToken) {
-        return <PendingToken authToken={pendingAuthToken} />
+        return <PendingToken authToken={pendingAuthToken} />;
       }
       return (
         <div class={`row u-center ${classes.root}`}>
@@ -115,7 +115,7 @@ export default withStyles(
               placeholder="Team Token"
               type="text"
               value={teamToken}
-              onChange={this.linkState('teamToken')}
+              onChange={linkState(this, "teamToken")}
             />
             {config.emailEnabled && (
               <Link href="/recover" class={classes.link}>
@@ -124,64 +124,64 @@ export default withStyles(
             )}
           </Form>
           {config.ctftime && (
-            <Fragment>
+            <>
               <AuthOr />
               <CtftimeButton
                 class="col-12"
                 onCtftimeDone={this.handleCtftimeDone}
               />
-            </Fragment>
+            </>
           )}
         </div>
-      )
+      );
     }
 
     handleCtftimeDone = async ({ ctftimeToken, ctftimeName }) => {
       this.setState({
-        disabledButton: true
-      })
-      const loginRes = await login({ ctftimeToken })
+        disabledButton: true,
+      });
+      const loginRes = await login({ ctftimeToken });
       if (loginRes.authToken) {
-        setAuthToken({ authToken: loginRes.authToken })
+        setAuthToken({ authToken: loginRes.authToken });
       }
       if (loginRes && loginRes.badUnknownUser) {
         this.setState({
           ctftimeToken,
-          ctftimeName
-        })
+          ctftimeName,
+        });
       }
-    }
+    };
 
     handlePendingLoginClick = () => {
-      setAuthToken({ authToken: this.state.pendingAuthToken })
-    }
+      setAuthToken({ authToken: this.state.pendingAuthToken });
+    };
 
     handleSubmit = async (e) => {
-      e.preventDefault()
+      e.preventDefault();
       this.setState({
-        disabledButton: true
-      })
+        disabledButton: true,
+      });
 
-      let teamToken = this.state.teamToken
-      let url
+      let teamToken = this.state.teamToken;
+      let url;
       try {
-        url = new URL(teamToken)
-        if (url.searchParams.has('token')) {
-          teamToken = url.searchParams.get('token')
+        url = new URL(teamToken);
+        if (url.searchParams.has("token")) {
+          teamToken = url.searchParams.get("token");
         }
       } catch {}
 
       const result = await login({
-        teamToken
-      })
+        teamToken,
+      });
       if (result.authToken) {
-        setAuthToken({ authToken: result.authToken })
-        return
+        setAuthToken({ authToken: result.authToken });
+        return;
       }
       this.setState({
         errors: result,
-        disabledButton: false
-      })
-    }
+        disabledButton: false,
+      });
+    };
   }
-)
+);

@@ -2,40 +2,34 @@
 <html lang="en">
 
 <head>
-	<meta charset="utf-8">
-	<title>{{ Config.CtfName }}</title>
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<meta name="mobile-web-app-capable" content="yes">
-	<meta name="apple-mobile-web-app-capable" content="yes">
+  <meta charset="utf-8">
+  <title>{{ Config.CtfName }}</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
 
-	<link rel="shortcut icon" href="{{ Config.FaviconUrl }}">
-	<meta name="title" content="{{ Config.CtfName }}">
-	<meta name="description" content="{{ Config.Meta.Description }}">
-	<meta property="og:type" content="website">
-	<meta property="og:title" content="{{ Config.CtfName }}">
-	<meta property="og:image" content="{{ Config.Meta.ImageUrl }}">
-	<meta property="og:description" content="{{ Config.Meta.Description }}">
-	<meta property="og:url" content="{{ Config.Origin }}">
-	<meta name="twitter:card" content="summary_large_image">
-	<meta name="twitter:title" content="{{ Config.CtfName }}">
-	<meta name="twitter:description" content="{{ Config.Meta.Description }}">
-	<meta name="twitter:image" content="{{ Config.Meta.ImageUrl }}">
-	<meta name="twitter:url" content="{{ Config.Origin }}">
-	<link rel="canonical" href="{{ Config.Origin }}" />
-	<meta name="theme-color" content="#111111">
+  <link rel="shortcut icon" href="{{ Config.FaviconUrl }}">
+  <meta name="title" content="{{ Config.CtfName }}">
+  <meta name="description" content="{{ Config.Meta.Description }}">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{ Config.CtfName }}">
+  <meta property="og:image" content="{{ Config.Meta.ImageUrl }}">
+  <meta property="og:description" content="{{ Config.Meta.Description }}">
+  <meta property="og:url" content="{{ Config.Origin }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ Config.CtfName }}">
+  <meta name="twitter:description" content="{{ Config.Meta.Description }}">
+  <meta name="twitter:image" content="{{ Config.Meta.ImageUrl }}">
+  <meta name="twitter:url" content="{{ Config.Origin }}">
+  <link rel="canonical" href="{{ Config.Origin }}" />
+  <meta name="theme-color" content="#111111">
 
-	<meta name="rctf-config" content="{{ JSONConfig }}" />
-
-	{{ #Config.renderGoogleAnalytics }}
-	<meta name="analytics-id" content="{{ Config.GlobalSiteTag }}">
-	<script async src="/analytics/index.js"></script>
-	<script async src="/analytics/autotrack.js"></script>
-	<script async src="https://www.google-analytics.com/analytics.js"></script>
-	{{ /Config.renderGoogleAnalytics }}
+  <meta name="rctf-config" content="{{ JSONConfig }}" />
 </head>
 
 <body>
-	<% preact.bodyEnd %>
+  <div id="app"></div>
+  <script type="module" src="/src/main.jsx"></script>
 </body>
 
 </html>

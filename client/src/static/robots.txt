@@ -1,6 +1,0 @@
-User-agent: *
-Disallow: /api
-Disallow: /login
-Disallow: /verify
-Disallow: /admin
-Disallow: /integrations
