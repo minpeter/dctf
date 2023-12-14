@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"runtime"
 
 	"github.com/gin-gonic/gin"
 	"github.com/hoisie/mustache"
@@ -70,7 +71,18 @@ func main() {
 
 	app.GET("/:path", serveFile)
 
-	if err := app.Run("localhost:3000"); err != nil {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "3000"
+	}
+
+	host := ":" + port
+	// Removes the “accept incoming network connections?” pop-up on macOS.
+	if runtime.GOOS == "darwin" {
+		host = "localhost:" + port
+	}
+
+	if err := app.Run(host); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
 }
