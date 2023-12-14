@@ -1,3 +1,0 @@
-Contact: mailto:contact@redpwn.net
-Preferred-Languages: en
-Policy: https://github.com/redpwn/rctf/blob/master/SECURITY.md

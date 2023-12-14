@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[4],{Fklj:function(n,o,e){"use strict";e.r(o),e.d(o,"default",(function(){return s}));var t=e("sL3o");class s extends t.Component{componentDidMount(){window.opener.postMessage({kind:"ctftimeCallback",state:this.props.state,ctftimeCode:this.props.code},location.origin),window.close()}render(){return null}}}}]);
