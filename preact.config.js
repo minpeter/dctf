@@ -1,5 +1,3 @@
-require('dotenv').config()
-
 const path = require('path')
 const glob = require('glob')
 const assert = require('assert').strict
@@ -11,17 +9,23 @@ export default (config, env, helpers) => {
     // Disable sourcemaps
     config.devtool = false
   } else {
-    config.devServer.proxy = [{
-      path: '/api/**',
-      target: 'http://localhost:3000',
-      changeOrigin: true,
-      changeHost: true
-    }]
+    config.devServer.proxy = [
+      {
+        path: '/api/**',
+        target: process.env.API_URL || 'http://localhost:3000',
+        changeOrigin: true,
+        changeHost: true
+      }
+    ]
   }
 
-  config.resolveLoader.modules.unshift(path.resolve(__dirname, 'client/lib/loaders'))
+  config.resolveLoader.modules.unshift(
+    path.resolve(__dirname, 'client/lib/loaders')
+  )
 
-  const { rule: { options: babelConfig } } = helpers.getLoadersByName(config, 'babel-loader')[0]
+  const {
+    rule: { options: babelConfig }
+  } = helpers.getLoadersByName(config, 'babel-loader')[0]
   babelConfig.plugins.push('transform-export-extensions')
 
   // The webpack base config has minicssextractplugin already loaded
@@ -41,16 +45,19 @@ export default (config, env, helpers) => {
 
   // Remove .svg from preconfigured webpack file-loader
   ;['file-loader', 'url-loader']
-    .flatMap(name => helpers.getLoadersByName(config, name))
-    .forEach(entry => {
-      entry.rule.test = /\.(woff2?|ttf|eot|jpe?g|png|webp|gif|mp4|mov|ogg|webm)(\?.*)?$/i
+    .flatMap((name) => helpers.getLoadersByName(config, name))
+    .forEach((entry) => {
+      entry.rule.test =
+        /\.(woff2?|ttf|eot|jpe?g|png|webp|gif|mp4|mov|ogg|webm)(\?.*)?$/i
     })
 
   config.module.rules.push({
     test: /\.svg$/,
     loader: 'svg-sprite-loader',
     options: {
-      runtimeGenerator: require.resolve('./client/lib/svg-icon-component-generator'),
+      runtimeGenerator: require.resolve(
+        './client/lib/svg-icon-component-generator'
+      ),
       runtimeOptions: {
         iconModule: './components/icon'
       }
@@ -73,7 +80,10 @@ export default (config, env, helpers) => {
   }
 
   if (!env.production) {
-    const HtmlWebpackPluginsWrappers = helpers.getPluginsByName(config, 'HtmlWebpackPlugin')
+    const HtmlWebpackPluginsWrappers = helpers.getPluginsByName(
+      config,
+      'HtmlWebpackPlugin'
+    )
     for (const HtmlWebpackPluginWrapper of HtmlWebpackPluginsWrappers) {
       const options = HtmlWebpackPluginWrapper.plugin.options
       const loaderMatch = options.template.match(/^!!ejs-loader!(.*)$/)
@@ -87,7 +97,9 @@ export default (config, env, helpers) => {
   if (CopyPluginWrapper !== undefined) {
     const plugin = CopyPluginWrapper.plugin
     plugin.patterns = plugin.patterns.filter(({ from }) => {
-      return !/node_modules[\\/]preact-cli[\\/]lib[\\/]resources[\\/](manifest.json|icon.png)$/.test(from)
+      return !/node_modules[\\/]preact-cli[\\/]lib[\\/]resources[\\/](manifest.json|icon.png)$/.test(
+        from
+      )
     })
   }
 }

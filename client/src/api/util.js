@@ -28,12 +28,11 @@ export const request = (method, endpoint, data) => {
   if (method === 'GET' && data) {
     // encode data into the querystring
     // eslint-disable-next-line prefer-template
-    qs =
-      '?' +
-      Object.keys(data)
-        .filter((k) => data[k] !== undefined)
-        .map((k) => `${k}=${encodeURIComponent(data[k])}`)
-        .join('&')
+    qs = Object.keys(data)
+      .filter((k) => data[k] !== undefined)
+      .map((k) => `${k}=${encodeURIComponent(data[k])}`)
+      .join('&')
+    qs = `?${qs}`
   } else {
     body = data
   }
@@ -43,6 +42,7 @@ export const request = (method, endpoint, data) => {
   if (body) {
     headers['Content-Type'] = 'application/json'
   }
+
   return fetch(`/api${endpoint}${qs}`, {
     method,
     headers,

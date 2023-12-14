@@ -1,22 +1,26 @@
 import server, { ServerConfig } from './server'
 
-export type ClientConfig = Pick<ServerConfig,
-  'meta' |
-  'homeContent' |
-  'sponsors' |
-  'globalSiteTag' |
-  'ctfName' |
-  'divisions' |
-  'defaultDivision' |
-  'origin' |
-  'startTime' |
-  'endTime' |
-  'userMembers' |
-  'faviconUrl'
+export type ClientConfig = Pick<
+  ServerConfig,
+  | 'meta'
+  | 'homeContent'
+  | 'sponsors'
+  | 'globalSiteTag'
+  | 'ctfName'
+  | 'divisions'
+  | 'defaultDivision'
+  | 'origin'
+  | 'startTime'
+  | 'endTime'
+  | 'userMembers'
+  | 'faviconUrl'
 > & {
-  emailEnabled: boolean;
+  emailEnabled: boolean
   ctftime?: Pick<NonNullable<ServerConfig['ctftime']>, 'clientId'>
-  recaptcha?: Pick<NonNullable<ServerConfig['recaptcha']>, 'siteKey' | 'protectedActions'>
+  recaptcha?: Pick<
+    NonNullable<ServerConfig['recaptcha']>,
+    'siteKey' | 'protectedActions'
+  >
 }
 
 const config: ClientConfig = {
@@ -33,13 +37,19 @@ const config: ClientConfig = {
   emailEnabled: server.email != null,
   userMembers: server.userMembers,
   faviconUrl: server.faviconUrl,
-  ctftime: server.ctftime == null ? undefined : {
-    clientId: server.ctftime.clientId
-  },
-  recaptcha: server.recaptcha == null ? undefined : {
-    siteKey: server.recaptcha.siteKey,
-    protectedActions: server.recaptcha.protectedActions
-  }
+  ctftime:
+    server.ctftime == null
+      ? undefined
+      : {
+          clientId: server.ctftime.clientId
+        },
+  recaptcha:
+    server.recaptcha == null
+      ? undefined
+      : {
+          siteKey: server.recaptcha.siteKey,
+          protectedActions: server.recaptcha.protectedActions
+        }
 }
 
 export default config

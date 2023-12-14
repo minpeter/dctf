@@ -7,7 +7,7 @@ import { FastifyPluginAsync, FastifyRequest, RouteHandlerMethod } from 'fastify'
 export * as normalize from './normalize'
 export * as validate from './validate'
 export * as scores from './scores'
-export * as restrict from './restrict'
+// export * as restrict from './restrict'
 export * as recaptcha from './recaptcha'
 
 /**
@@ -17,7 +17,10 @@ export const deepCopy = <T>(data: T): T => {
   return JSON.parse(JSON.stringify(data)) as T
 }
 
-export const serveIndex: FastifyPluginAsync<{ indexPath: string; }> = async (fastify, opts) => {
+export const serveIndex: FastifyPluginAsync<{ indexPath: string }> = async (
+  fastify,
+  opts
+) => {
   const indexTemplate = (await fs.readFile(opts.indexPath)).toString()
 
   const rendered = mustache.render(indexTemplate, {

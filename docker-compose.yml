@@ -1,41 +1,13 @@
-version: "3.8"
+version: '3.8'
 services:
   rctf:
     build: .
     restart: always
     ports:
-      - "8080:80"
-    networks:
-      - rctf
+      - '8080:4000'
+    environment:
+      - API_URL=http://host.docker.internal:3000
     env_file:
       - .env
-    environment:
-      - PORT=80
     volumes:
       - ./conf.d:/app/conf.d
-    depends_on:
-      - redis
-      - postgres
-  redis:
-    image: redis:latest
-    restart: always
-    command: ["redis-server", "--requirepass", "1234"]
-    networks:
-      - rctf
-    volumes:
-      - ./data/rctf-redis:/data
-  postgres:
-    image: postgres:latest
-    restart: always
-    environment:
-      - POSTGRES_PASSWORD=1234
-      - POSTGRES_USER=rctf
-      - POSTGRES_DB=rctf
-    ports: ["5432:5432"]
-    networks:
-      - rctf
-    volumes:
-      - ./data/rctf-postgres:/var/lib/postgresql/data
-
-networks:
-  rctf:

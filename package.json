@@ -5,11 +5,14 @@
   "private": true,
   "scripts": {
     "build:ts": "tsc && yarn copy-static",
+    "build:client": "preact build --src client/src --template client/index.html --dest dist/build --no-prerender --no-inline-css",
+    "build": "yarn build:ts && yarn build:client",
     "watch:client": "cross-env NODE_ENV=development preact watch --src client/src --template client/index.html",
     "watch:server": "nodemon --enable-source-maps dist/server/index.js | pino-pretty -c -t",
     "watch:ts": "tsc -w",
     "dev": "yarn build:ts && concurrently -k -t \"HH:mm:ss.SSS\" -p \"[{time}]\" -c \"cyan,green,red\" \"yarn:watch:*\"",
-    "copy-static": "cpy \"server/**/*\" \"!**/*.{j,t}s\" \"migrations\" dist/ --parents"
+    "copy-static": "cpy \"server/**/*\" \"!**/*.{j,t}s\" \"migrations\" dist/ --parents",
+    "start": "node --enable-source-maps --unhandled-rejections=strict dist/server/index.js"
   },
   "nodemonConfig": {
     "watch": [
