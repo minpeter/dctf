@@ -15,7 +15,7 @@
     "delay": "1000"
   },
   "dependencies": {
-    "cirrus-ui": "0.7.0",
+    "cirrus-ui": "^0.7.1",
     "mustache": "4.2.0",
     "uuid": "^9.0.1",
     "workbox-core": "^7.0.0",

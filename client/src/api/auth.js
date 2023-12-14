@@ -35,7 +35,7 @@ export const login = async ({ teamToken, ctftimeToken }) => {
 export const logout = () => {
   localStorage.removeItem('token')
 
-  return route('/')
+  return route('/', true)
 }
 
 export const verify = async ({ verifyToken }) => {

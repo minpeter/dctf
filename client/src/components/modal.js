@@ -34,7 +34,9 @@ function Modal({ classes, open, onClose, children }) {
     (open || isLinger) &&
     createPortal(
       <div
-        class={`modal shown ${classes.animated}${open ? '' : ' leaving'}`}
+        class={`modal modal--visible ${classes.animated}${
+          open ? '' : ' leaving'
+        }`}
         hidden={!(open || isLinger)}
       >
         <div class="modal-overlay" onClick={onClose} aria-label="Close" />
