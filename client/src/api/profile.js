@@ -7,11 +7,13 @@ export const privateProfile = async () => {
 }
 
 export const pendingPrivateProfile = async ({ authToken }) => {
-  const { data } = await (await fetch('/api/v1/users/me', {
-    headers: {
-      authorization: `Bearer ${authToken}`
-    }
-  })).json()
+  const { data } = await (
+    await fetch('/api/users/me', {
+      headers: {
+        authorization: `Bearer ${authToken}`
+      }
+    })
+  ).json()
 
   return data
 }
@@ -54,12 +56,20 @@ export const updateEmail = async ({ email, recaptchaCode }) => {
     recaptchaCode
   })
 
-  return handleResponse({ resp, valid: ['goodVerifySent', 'goodEmailSet'], resolveDataMessage: true })
+  return handleResponse({
+    resp,
+    valid: ['goodVerifySent', 'goodEmailSet'],
+    resolveDataMessage: true
+  })
 }
 
 export const deleteEmail = async () => {
   const resp = await request('DELETE', '/users/me/auth/email')
 
   // If the email did not exist, still a "success" in that no more email
-  return handleResponse({ resp, valid: ['goodEmailRemoved', 'badEmailNoExists'], resolveDataMessage: true })
+  return handleResponse({
+    resp,
+    valid: ['goodEmailRemoved', 'badEmailNoExists'],
+    resolveDataMessage: true
+  })
 }

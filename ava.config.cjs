@@ -1,11 +1,9 @@
-require('dotenv').config()
+require("dotenv").config();
 
 module.exports = {
   environmentVariables: {
-    API_ENDPOINT: '/api/v1'
+    API_ENDPOINT: "/api",
   },
-  files: [
-    'test/**/*.js'
-  ],
-  timeout: '30000'
-}
+  files: ["test/**/*.js"],
+  timeout: "30000",
+};

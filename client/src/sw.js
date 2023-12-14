@@ -7,7 +7,4 @@ setupRouting()
 setupPrecaching(getFiles())
 clientsClaim()
 
-registerRoute(
-  ({ url }) => url.pathname === '/api/v1/challs',
-  new NetworkFirst()
-)
+registerRoute(({ url }) => url.pathname === '/api/challs', new NetworkFirst())

@@ -21,7 +21,7 @@ There are also two development settings you have to change to develop the fronte
 In `config/client.js`, you should update `apiEndpoint` and `staticEndpoint`.
 
 ```
-  apiEndpoint: 'http://localhost:3000/api/v1',
+  apiEndpoint: 'http://localhost:3000/api',
   staticEndpoint: 'http://localhost:3000/static',
 ```
 

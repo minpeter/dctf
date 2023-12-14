@@ -5,8 +5,8 @@ import helmet from 'fastify-helmet'
 import hyperid from 'hyperid'
 import config from './config/server'
 import { serveIndex, getRealIp } from './util'
-import { init as uploadProviderInit } from './uploads'
-import api, { logSerializers as apiLogSerializers } from './api'
+// import { init as uploadProviderInit } from './uploads'
+// import api, { logSerializers as apiLogSerializers } from "./api";
 
 const app = fastify({
   trustProxy: config.proxy.trust,
@@ -28,33 +28,40 @@ const app = fastify({
   genReqId: hyperid()
 })
 
-app.addHook('onRequest', async (req, reply) => {
-  Object.defineProperty(req, 'ip', {
-    get () { return getRealIp(this) }
-  })
-})
+// app.addHook('onRequest', async (req, reply) => {
+//   Object.defineProperty(req, 'ip', {
+//     get() {
+//       return getRealIp(this)
+//     }
+//   })
+// })
 
 app.register(helmet, {
   dnsPrefetchControl: false,
   referrerPolicy: { policy: 'origin-when-cross-origin' },
   contentSecurityPolicy: {
     directives: {
-      defaultSrc: ['\'none\''],
-      styleSrc: ['\'unsafe-inline\'', '\'self\''],
-      scriptSrc: ['\'self\'', 'https://www.google-analytics.com', 'https://www.google.com/recaptcha/', 'https://www.gstatic.com/recaptcha/'],
+      defaultSrc: ["'none'"],
+      styleSrc: ["'unsafe-inline'", "'self'"],
+      scriptSrc: [
+        "'self'",
+        'https://www.google-analytics.com',
+        'https://www.google.com/recaptcha/',
+        'https://www.gstatic.com/recaptcha/'
+      ],
       frameSrc: ['https://www.google.com/recaptcha/'],
-      connectSrc: ['\'self\'', 'https://www.google-analytics.com'],
+      connectSrc: ["'self'", 'https://www.google-analytics.com'],
       imgSrc: ['*', 'data:']
     }
   }
 })
 
-uploadProviderInit(app)
+// uploadProviderInit(app)
 
-app.register(api, {
-  prefix: '/api/v1/',
-  logSerializers: apiLogSerializers
-})
+// app.register(api, {
+//   prefix: "/api/",
+//   logSerializers: apiLogSerializers,
+// });
 
 const staticPath = path.join(__dirname, '../build')
 
