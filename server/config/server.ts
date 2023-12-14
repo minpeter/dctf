@@ -4,8 +4,6 @@ import yaml from 'yaml'
 import deepMerge from 'deepmerge'
 import { PartialDeep } from 'type-fest'
 import { nullsafeParseInt, nullsafeParseBoolEnv, removeUndefined } from './util'
-// import { ACL } from '../util/restrict'
-import { RecaptchaProtectedActions } from '../util/recaptcha'
 
 export type ProviderConfig = {
   name: string
@@ -44,7 +42,6 @@ export type ServerConfig = {
   tokenKey: string
   origin: string
 
-  // TODO: enforce `trust` is false when `cloudflare` is true
   proxy: {
     cloudflare: boolean
     trust: boolean | string | string[] | number
@@ -85,7 +82,6 @@ export type ServerConfig = {
   recaptcha?: {
     siteKey: string
     secretKey: string
-    protectedActions: RecaptchaProtectedActions[]
   }
 
   leaderboard: {

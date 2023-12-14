@@ -1,0 +1,20 @@
+{
+  "meta": {
+    "description": "A description of your CTF",
+    "imageUrl": "https: //example.com"
+  },
+  "homeContent": "A description of your CTF. Markdown supported.",
+  "sponsors": [],
+  "globalSiteTag": "undefined",
+  "ctfName": "rCTF",
+  "divisions": {
+    "open": "Open"
+  },
+  "defaultDivision": "undefined",
+  "origin": "http: //127.0.0.1:8080",
+  "startTime": 1702355705000,
+  "endTime": 0,
+  "emailEnabled": false,
+  "userMembers": true,
+  "faviconUrl": "https: //redpwn.storage.googleapis.com/branding/rctf-favicon.ico"
+}

@@ -1,38 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<title>{{ config.ctfName }}</title>
-		<meta name="viewport" content="width=device-width,initial-scale=1">
-		<meta name="mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-capable" content="yes">
 
-		<link rel="shortcut icon" href="{{ config.faviconUrl }}">
-		<meta name="title" content="{{ config.ctfName }}">
-		<meta name="description" content="{{ config.meta.description }}">
-		<meta property="og:type" content="website">
-		<meta property="og:title" content="{{ config.ctfName }}">
-		<meta property="og:image" content="{{ config.meta.imageUrl }}">
-		<meta property="og:description" content="{{ config.meta.description }}">
-		<meta property="og:url" content="{{ config.origin }}">
-		<meta name="twitter:card" content="summary_large_image">
-		<meta name="twitter:title" content="{{ config.ctfName }}">
-		<meta name="twitter:description" content="{{ config.meta.description }}">
-		<meta name="twitter:image" content="{{ config.meta.imageUrl }}">
-		<meta name="twitter:url" content="{{ config.origin }}">
-		<link rel="canonical" href="{{ config.origin }}" />
-		<meta name="theme-color" content="#111111">
+<head>
+	<meta charset="utf-8">
+	<title>{{ Config.CtfName }}</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-capable" content="yes">
 
-		<meta name="rctf-config" content="{{ jsonConfig }}" />
+	<link rel="shortcut icon" href="{{ Config.FaviconUrl }}">
+	<meta name="title" content="{{ Config.CtfName }}">
+	<meta name="description" content="{{ Config.Meta.Description }}">
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="{{ Config.CtfName }}">
+	<meta property="og:image" content="{{ Config.Meta.ImageUrl }}">
+	<meta property="og:description" content="{{ Config.Meta.Description }}">
+	<meta property="og:url" content="{{ Config.Origin }}">
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:title" content="{{ Config.CtfName }}">
+	<meta name="twitter:description" content="{{ Config.Meta.Description }}">
+	<meta name="twitter:image" content="{{ Config.Meta.ImageUrl }}">
+	<meta name="twitter:url" content="{{ Config.Origin }}">
+	<link rel="canonical" href="{{ Config.Origin }}" />
+	<meta name="theme-color" content="#111111">
 
-		{{ #config.renderGoogleAnalytics }}
-			<meta name="analytics-id" content="{{ config.globalSiteTag }}">
-			<script async src="/analytics/index.js"></script>
-			<script async src="/analytics/autotrack.js"></script>
-			<script async src="https://www.google-analytics.com/analytics.js"></script>
-		{{ /config.renderGoogleAnalytics }}
-	</head>
-	<body>
-		<% preact.bodyEnd %>
-	</body>
+	<meta name="rctf-config" content="{{ JSONConfig }}" />
+
+	{{ #Config.renderGoogleAnalytics }}
+	<meta name="analytics-id" content="{{ Config.GlobalSiteTag }}">
+	<script async src="/analytics/index.js"></script>
+	<script async src="/analytics/autotrack.js"></script>
+	<script async src="https://www.google-analytics.com/analytics.js"></script>
+	{{ /Config.renderGoogleAnalytics }}
+</head>
+
+<body>
+	<% preact.bodyEnd %>
+</body>
+
 </html>
