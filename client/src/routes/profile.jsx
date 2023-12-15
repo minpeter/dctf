@@ -74,7 +74,7 @@ const SummaryCard = memo(
       isPrivate,
     }) => (
       <div class="card">
-        <div class="content">
+        <div class="content p-4 w-80">
           <div class={classes.wrapper}>
             <h5
               class={`title ${
@@ -156,7 +156,7 @@ const TeamCodeCard = withStyles(
 
     return (
       <div class="card">
-        <div class="content">
+        <div class="content p-4 w-80">
           <p>Team Invite</p>
           <p class="font-thin">
             Send this team invite URL to your teammates so they can login.
@@ -164,7 +164,7 @@ const TeamCodeCard = withStyles(
 
           <button
             onClick={onCopyClick}
-            class={`${classes.btn} btn-info u-center`}
+            class={`${classes.btn} btn-info`}
             name="btn"
             value="submit"
             type="submit"
@@ -174,7 +174,7 @@ const TeamCodeCard = withStyles(
 
           <button
             onClick={toggleReveal}
-            class="btn-info u-center"
+            class="btn-info pl-2"
             name="btn"
             value="submit"
             type="submit"
@@ -306,9 +306,9 @@ const UpdateCard = withStyles(
 
     return (
       <div class="card">
-        <div class="content">
+        <div class="content p-4 w-80">
           <p>Update Information</p>
-          <p class="font-thin u-no-margin">
+          <p class="font-thin m-0">
             This will change how your team appears on the scoreboard. You may
             only change your team's name once every 10 minutes.
           </p>
@@ -442,7 +442,7 @@ const Profile = ({ uuid, classes }) => {
       <div class="row u-center">
         <div class="col-4">
           <div class={`card ${classes.errorCard}`}>
-            <div class="content">
+            <div class="content p-4 w-80">
               <p class="title">There was an error</p>
               <p class="font-thin">{error}</p>
             </div>

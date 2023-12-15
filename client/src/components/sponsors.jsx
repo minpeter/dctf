@@ -39,7 +39,7 @@ export default withStyles(
           return (
             <div class={`col-6 ${classes.row}`} key={sponsor.name}>
               <div class={cl}>
-                <div class="content">
+                <div class="content p-4 w-80">
                   {sponsor.icon && (
                     <figure class={`u-center ${classes.icon}`}>
                       <img src={sponsor.icon} />

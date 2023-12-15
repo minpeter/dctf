@@ -38,11 +38,11 @@ const CtftimeCard = withStyles(
 
     return (
       <div class="card">
-        <div class="content">
+        <div class="content p-4 w-80">
           <p>CTFtime Integration</p>
           {ctftimeId === null ? (
             <>
-              <p class="font-thin u-no-margin">
+              <p class="font-thin m-0">
                 To login with CTFtime and get a badge on your profile, connect
                 CTFtime to your account.
               </p>
@@ -55,7 +55,7 @@ const CtftimeCard = withStyles(
             </>
           ) : (
             <>
-              <p class="font-thin u-no-margin">
+              <p class="font-thin m-0">
                 Your account is already connected to CTFtime. You can disconnect
                 CTFtime from your account.
               </p>

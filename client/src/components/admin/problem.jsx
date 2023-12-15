@@ -228,7 +228,7 @@ const Problem = ({ classes, problem, update: updateClient }) => {
       <div class={`frame ${classes.frame}`}>
         <div class="frame__body">
           <form onSubmit={handleUpdate}>
-            <div class="row u-no-padding">
+            <div class="row p-0">
               <div class={`col-6 ${classes.header}`}>
                 <input
                   autocomplete="off"
@@ -291,7 +291,7 @@ const Problem = ({ classes, problem, update: updateClient }) => {
               </div>
             </div>
 
-            <div class="content-no-padding u-center">
+            <div class="p-0 content p-4 w-80 u-center">
               <div class={`divider ${classes.divider}`} />
             </div>
 
@@ -316,9 +316,7 @@ const Problem = ({ classes, problem, update: updateClient }) => {
 
             {problem.files.length !== 0 && (
               <div>
-                <p
-                  class={`frame__subtitle u-no-margin ${classes.downloadsHeader}`}
-                >
+                <p class={`frame__subtitle m-0 ${classes.downloadsHeader}`}>
                   Downloads
                 </p>
                 <div class="tag-container">

@@ -91,14 +91,14 @@ const Problem = ({ classes, problem, solved, setSolved }) => {
   return (
     <div class={`frame ${classes.frame}`}>
       <div class="frame__body">
-        <div class="row u-no-padding">
-          <div class="col-6 u-no-padding">
+        <div class="row p-0">
+          <div class="col-6 p-0">
             <div class="frame__title title">
               {problem.category}/{problem.name}
             </div>
-            <div class="frame__subtitle u-no-margin">{problem.author}</div>
+            <div class="frame__subtitle m-0">{problem.author}</div>
           </div>
-          <div class="col-6 u-no-padding u-text-right">
+          <div class="col-6 p-0 u-text-right">
             <a
               class={`${classes.points} ${
                 solvesPending ? classes.solvesPending : ""
@@ -113,7 +113,7 @@ const Problem = ({ classes, problem, solved, setSolved }) => {
           </div>
         </div>
 
-        <div class="content-no-padding u-center">
+        <div class="p-0 content p-4 w-80 u-center">
           <div class={`divider ${classes.divider}`} />
         </div>
 
@@ -143,7 +143,7 @@ const Problem = ({ classes, problem, solved, setSolved }) => {
 
         {hasDownloads && (
           <div>
-            <p class="frame__subtitle u-no-margin">Downloads</p>
+            <p class="frame__subtitle m-0">Downloads</p>
             <div class="tag-container">
               {problem.files.map((file) => {
                 return (

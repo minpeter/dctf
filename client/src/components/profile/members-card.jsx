@@ -27,12 +27,12 @@ const MemberRow = withStyles(
 
     return (
       <div class={classes.root} key={id}>
-        <p class="u-no-margin">{email}</p>
+        <p class="m-0">{email}</p>
         <div class="btn-container u-vertical-center">
           <input
             onClick={handleDelete}
             type="submit"
-            class="btn-small btn-danger u-no-margin"
+            class="btn-small btn-danger m-0"
             value="Delete"
           />
         </div>
@@ -88,9 +88,9 @@ const MembersCard = withStyles(
 
     return (
       <div class="card">
-        <div class="content">
+        <div class="content p-4 w-80">
           <p>Team Information</p>
-          <p class="font-thin u-no-margin">
+          <p class="font-thin m-0">
             Please enter a separate email for each team member. This data is
             collected for informational purposes only. Ensure that this section
             is up to date in order to remain prize eligible.
