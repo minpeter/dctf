@@ -1,4 +1,4 @@
-FROM node:21-slim AS front-build
+FROM node:20-slim AS front-build
 
 WORKDIR /app
 COPY client/package.json client/yarn.lock ./

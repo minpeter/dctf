@@ -1,0 +1,18 @@
+{
+  "name": "rctf",
+  "version": "1.0.0",
+  "repository": "https://github.com/minpeter/rctf.git",
+  "author": "Woonggi Min <minpeter@friendli.ai>",
+  "license": "MIT",
+  "scripts": {
+    "watch:client": "sleep 1 && cd client && yarn dev",
+    "watch:server": "air",
+    "dev": "concurrently \"yarn watch:client\" \"yarn watch:server\"",
+    "build:client": "cd client && yarn build",
+    "build:server": "go build -o rctf",
+    "build": "yarn build:client && yarn build:server"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
