@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/minpeter/rctf-backend/utils"
 )
 
 func deleteMemberHandler(c *gin.Context) {
@@ -11,7 +12,7 @@ func deleteMemberHandler(c *gin.Context) {
 }
 
 func listMembersHandler(c *gin.Context) {
-	c.Status(http.StatusNoContent)
+	utils.SendResponse(c, "goodMemberData", []gin.H{})
 }
 
 func newMemberHandler(c *gin.Context) {

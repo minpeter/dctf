@@ -1,9 +1,8 @@
 package leaderboard
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
+	"github.com/minpeter/rctf-backend/utils"
 )
 
 func Routes(leaderboardRoutes *gin.RouterGroup) {
@@ -14,9 +13,12 @@ func Routes(leaderboardRoutes *gin.RouterGroup) {
 }
 
 func leaderboardGraphHandler(c *gin.Context) {
-	c.Status(http.StatusNoContent)
+	utils.SendResponse(c, "goodLeaderboard", gin.H{"graph": []string{}})
 }
 
 func leaderboardNowHandler(c *gin.Context) {
-	c.Status(http.StatusNoContent)
+	utils.SendResponse(c, "goodLeaderboard", gin.H{
+		"total":       0,
+		"loaderboard": []string{},
+	})
 }

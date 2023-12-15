@@ -29,7 +29,7 @@ func recoverHandler(c *gin.Context) {
 }
 
 func registerHandler(c *gin.Context) {
-	c.Status(http.StatusNoContent)
+	utils.SendResponse(c, "goodRegister", gin.H{"authToken": "testAuthToken"})
 }
 
 func testHandler(c *gin.Context) {
