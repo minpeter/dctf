@@ -39,11 +39,16 @@ var clientConfig ClientConfig
 
 func serveIndex(c *gin.Context) {
 
+	jsonData, err := json.Marshal(clientConfig)
+	if err != nil {
+		log.Fatalf("Error marshalling clientConfig: %v", err)
+	}
+
 	rendered := struct {
 		JSONConfig string
 		Config     ClientConfig
 	}{
-		JSONConfig: toJSON(clientConfig),
+		JSONConfig: string(jsonData),
 		Config:     clientConfig,
 	}
 
@@ -93,12 +98,4 @@ func loadClientConfig() {
 		fmt.Printf("Error decoding client-config.json: %v\n", err)
 		return
 	}
-}
-
-func toJSON(v interface{}) string {
-	jsonData, err := json.Marshal(v)
-	if err != nil {
-		return ""
-	}
-	return string(jsonData)
 }
