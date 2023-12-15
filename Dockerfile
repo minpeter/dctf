@@ -20,5 +20,5 @@ WORKDIR /app
 COPY client-config.json /app/client-config.json
 COPY --from=front-build /app/dist /app/client/dist
 COPY --from=back-build /app/server /app/server
-EXPOSE 3000
+EXPOSE 4000
 CMD ./server
