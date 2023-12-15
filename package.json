@@ -5,12 +5,15 @@
   "author": "Woonggi Min <minpeter@friendli.ai>",
   "license": "MIT",
   "scripts": {
-    "watch:client": "sleep 1 && cd client && yarn dev",
-    "watch:server": "air",
-    "dev": "concurrently \"yarn watch:client\" \"yarn watch:server\"",
+    "dev:client": "sleep 1 && cd client && yarn dev",
+    "dev:server": "air",
+    "dev": "concurrently \"yarn dev:client\" \"yarn dev:server\"",
     "build:client": "cd client && yarn build",
     "build:server": "go build -o rctf",
-    "build": "yarn build:client && yarn build:server"
+    "build": "yarn build:client && yarn build:server",
+    "dep:client": "cd client && yarn",
+    "dep:server": "go mod tidy",
+    "dep": "yarn && yarn dep:client && yarn dep:server"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
