@@ -1,140 +1,140 @@
-import { request } from './util'
-import { route } from 'preact-router'
+import { request } from "./util";
+import { route } from "preact-router";
 
 export const setAuthToken = ({ authToken }) => {
-  localStorage.token = authToken
-  route('/profile')
-}
+  localStorage.token = authToken;
+  route("/profile");
+};
 
 export const login = async ({ teamToken, ctftimeToken }) => {
-  const resp = await request('POST', '/auth/login', {
+  const resp = await request("POST", "/auth/login", {
     teamToken,
-    ctftimeToken
-  })
+    ctftimeToken,
+  });
   switch (resp.kind) {
-    case 'goodLogin':
+    case "goodLogin":
       return {
-        authToken: resp.data.authToken
-      }
-    case 'badTokenVerification':
+        authToken: resp.data.authToken,
+      };
+    case "badTokenVerification":
       return {
-        teamToken: resp.message
-      }
-    case 'badUnknownUser':
+        teamToken: resp.message,
+      };
+    case "badUnknownUser":
       return {
-        badUnknownUser: true
-      }
+        badUnknownUser: true,
+      };
     default:
       return {
         teamToken:
-          'Unknown response from server, please contact ctf administrator'
-      }
+          "Unknown response from server, please contact ctf administrator",
+      };
   }
-}
+};
 
 export const logout = () => {
-  localStorage.removeItem('token')
+  localStorage.removeItem("token");
 
-  return route('/', true)
-}
+  return route("/", true);
+};
 
 export const verify = async ({ verifyToken }) => {
-  const resp = await request('POST', '/auth/verify', {
-    verifyToken
-  })
+  const resp = await request("POST", "/auth/verify", {
+    verifyToken,
+  });
   switch (resp.kind) {
-    case 'goodRegister':
-    case 'goodVerify':
+    case "goodRegister":
+    case "goodVerify":
       return {
-        authToken: resp.data.authToken
-      }
-    case 'goodEmailSet':
+        authToken: resp.data.authToken,
+      };
+    case "goodEmailSet":
       return {
-        emailSet: true
-      }
+        emailSet: true,
+      };
     default:
       return {
-        verifyToken: resp.message
-      }
+        verifyToken: resp.message,
+      };
   }
-}
+};
 
 export const register = async ({
   email,
   name,
   ctftimeToken,
-  recaptchaCode
+  recaptchaCode,
 }) => {
-  const resp = await request('POST', '/auth/register', {
+  const resp = await request("POST", "/auth/register", {
     email,
     name,
     ctftimeToken,
-    recaptchaCode
-  })
+    recaptchaCode,
+  });
   switch (resp.kind) {
-    case 'goodRegister':
-      localStorage.setItem('token', resp.data.authToken)
+    case "goodRegister":
+      localStorage.setItem("token", resp.data.authToken);
 
-      return route('/profile')
-    case 'goodVerifySent':
+      return route("/profile");
+    case "goodVerifySent":
       return {
-        verifySent: true
-      }
-    case 'badEmail':
-    case 'badKnownEmail':
-    case 'badCompetitionNotAllowed':
-      return {
-        errors: {
-          email: resp.message
-        }
-      }
-    case 'badKnownName':
+        verifySent: true,
+      };
+    case "badEmail":
+    case "badKnownEmail":
+    case "badCompetitionNotAllowed":
       return {
         errors: {
-          name: resp.message
+          email: resp.message,
         },
-        data: resp.data
-      }
-    case 'badName':
+      };
+    case "badKnownName":
       return {
         errors: {
-          name: resp.message
-        }
-      }
+          name: resp.message,
+        },
+        data: resp.data,
+      };
+    case "badName":
+      return {
+        errors: {
+          name: resp.message,
+        },
+      };
   }
-}
+};
 
 export const ctftimeCallback = ({ ctftimeCode }) => {
-  return request('POST', '/integrations/ctftime/callback', {
-    ctftimeCode
-  })
-}
+  return request("POST", "/integrations/ctftime/callback", {
+    ctftimeCode,
+  });
+};
 
 export const putCtftime = ({ ctftimeToken }) => {
-  return request('PUT', '/users/me/auth/ctftime', {
-    ctftimeToken
-  })
-}
+  return request("PUT", "/users/me/auth/ctftime", {
+    ctftimeToken,
+  });
+};
 
 export const deleteCtftime = () => {
-  return request('DELETE', '/users/me/auth/ctftime')
-}
+  return request("DELETE", "/users/me/auth/ctftime");
+};
 
 export const recover = async ({ email, recaptchaCode }) => {
-  const resp = await request('POST', '/auth/recover', {
+  const resp = await request("POST", "/auth/recover", {
     email,
-    recaptchaCode
-  })
+    recaptchaCode,
+  });
   switch (resp.kind) {
-    case 'goodVerifySent':
+    case "goodVerifySent":
       return {
-        verifySent: true
-      }
+        verifySent: true,
+      };
     default:
       return {
         errors: {
-          email: resp.message
-        }
-      }
+          email: resp.message,
+        },
+      };
   }
-}
+};

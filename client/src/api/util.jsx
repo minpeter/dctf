@@ -1,60 +1,60 @@
-import { route } from 'preact-router'
+import { route } from "preact-router";
 
 export const relog = () => {
-  localStorage.removeItem('token')
-  route('/register')
-}
+  localStorage.removeItem("token");
+  route("/register");
+};
 
 export const handleResponse = ({ resp, valid, resolveDataMessage }) => {
   if (valid.includes(resp.kind)) {
     if (resolveDataMessage) {
       return {
-        data: resp.message
-      }
+        data: resp.message,
+      };
     }
 
     return {
-      data: resp.data
-    }
+      data: resp.data,
+    };
   }
   return {
-    error: resp.message
-  }
-}
+    error: resp.message,
+  };
+};
 
 export const request = (method, endpoint, data) => {
-  let body = null
-  let qs = ''
-  if (method === 'GET' && data) {
+  let body = null;
+  let qs = "";
+  if (method === "GET" && data) {
     // encode data into the querystring
     // eslint-disable-next-line prefer-template
     qs = Object.keys(data)
       .filter((k) => data[k] !== undefined)
       .map((k) => `${k}=${encodeURIComponent(data[k])}`)
-      .join('&')
-    qs = `?${qs}`
+      .join("&");
+    qs = `?${qs}`;
   } else {
-    body = data
+    body = data;
   }
   const headers = {
-    Authorization: `Bearer ${localStorage.getItem('token')}`
-  }
+    Authorization: `Bearer ${localStorage.getItem("token")}`,
+  };
   if (body) {
-    headers['Content-Type'] = 'application/json'
+    headers["Content-Type"] = "application/json";
   }
 
   return fetch(`/api${endpoint}${qs}`, {
     method,
     headers,
-    body: body && JSON.stringify(body)
+    body: body && JSON.stringify(body),
   })
     .then((resp) => resp.json())
     .then((resp) => {
-      if (resp.kind === 'badToken') return relog()
+      if (resp.kind === "badToken") return relog();
 
-      return resp
+      return resp;
     })
     .catch((err) => {
-      console.debug(err)
-    })
-}
+      console.debug(err);
+    });
+};

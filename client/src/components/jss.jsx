@@ -1,31 +1,31 @@
-import { Component } from 'preact'
-import { create as jssCreate } from 'jss'
-import jssCamelCase from 'jss-camel-case'
-import jssNested from 'jss-nested'
-import jssVendorPrefixer from 'jss-vendor-prefixer'
-import jssGlobal from 'jss-plugin-global'
+import { Component } from "preact";
+import { create as jssCreate } from "jss";
+import jssCamelCase from "jss-camel-case";
+import jssNested from "jss-nested";
+import jssVendorPrefixer from "jss-vendor-prefixer";
+import jssGlobal from "jss-plugin-global";
 
 const jss = jssCreate({
   id: {
-    minify: true
-  }
-})
+    minify: true,
+  },
+});
 
-jss.use(jssNested(), jssGlobal(), jssCamelCase(), jssVendorPrefixer())
+jss.use(jssNested(), jssGlobal(), jssCamelCase(), jssVendorPrefixer());
 
 export default (styles, Wrap) => {
-  const sheet = jss.createStyleSheet(styles)
-  let hasAttached = false
+  const sheet = jss.createStyleSheet(styles);
+  let hasAttached = false;
   return class withStyles extends Component {
-    componentDidMount () {
+    componentDidMount() {
       if (!hasAttached) {
-        hasAttached = true
-        sheet.attach()
+        hasAttached = true;
+        sheet.attach();
       }
     }
 
-    render () {
-      return <Wrap {...this.props} classes={sheet.classes} />
+    render() {
+      return <Wrap {...this.props} classes={sheet.classes} />;
     }
-  }
-}
+  };
+};

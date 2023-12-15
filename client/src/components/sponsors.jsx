@@ -1,40 +1,40 @@
-import config from '../config'
+import config from "../config";
 
-import Markdown from './markdown'
-import withStyles from './jss'
+import Markdown from "./markdown";
+import withStyles from "./jss";
 
 export default withStyles(
   {
     icon: {
-      padding: '10px',
-      margin: '20px 0',
-      background: '#fff',
-      borderRadius: '10px',
-      '& img': {
-        height: '6.250em',
-        width: 'auto'
-      }
+      padding: "10px",
+      margin: "20px 0",
+      background: "#fff",
+      borderRadius: "10px",
+      "& img": {
+        height: "6.250em",
+        width: "auto",
+      },
     },
     description: {
-      '& a': {
-        display: 'inline',
-        padding: '0'
-      }
+      "& a": {
+        display: "inline",
+        padding: "0",
+      },
     },
     row: {
-      marginBottom: '1.5em'
+      marginBottom: "1.5em",
     },
     card: {
-      background: '#222'
-    }
+      background: "#222",
+    },
   },
   ({ classes }) => {
-    const { sponsors } = config
+    const { sponsors } = config;
     return (
       <div class="row">
         {sponsors.map((sponsor) => {
-          let cl = `card ${classes.card}`
-          if (!sponsor.small) cl += ' u-flex u-flex-column h-100'
+          let cl = `card ${classes.card}`;
+          if (!sponsor.small) cl += " u-flex u-flex-column h-100";
 
           return (
             <div class={`col-6 ${classes.row}`} key={sponsor.name}>
@@ -52,9 +52,9 @@ export default withStyles(
                 </div>
               </div>
             </div>
-          )
+          );
         })}
       </div>
-    )
+    );
   }
-)
+);

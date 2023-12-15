@@ -1,9 +1,9 @@
-import Match from 'preact-router/match'
-import withStyles from './jss'
-import LogoutButton from './logout-button'
+import Match from "preact-router/match";
+import withStyles from "./jss";
+import LogoutButton from "./logout-button";
 
 function Header({ classes, paths }) {
-  const loggedIn = localStorage.getItem('token') !== null
+  const loggedIn = localStorage.getItem("token") !== null;
 
   return (
     <div class="tab-container tabs--center">
@@ -11,7 +11,7 @@ function Header({ classes, paths }) {
         {paths.map(({ props: { path, name } }) => (
           <Match key={name} path={path}>
             {({ matches }) => (
-              <li class={matches ? 'selected' : ''}>
+              <li class={matches ? "selected" : ""}>
                 <a href={path} class={classes.link}>
                   {name}
                 </a>
@@ -26,27 +26,27 @@ function Header({ classes, paths }) {
         )}
       </ul>
     </div>
-  )
+  );
 }
 
 export default withStyles(
   {
     link: {
-      '&:focus': {
-        boxShadow: 'none',
+      "&:focus": {
+        boxShadow: "none",
         // color copied from Cirrus styles - there is no variable for it
-        borderBottomColor: 'rgba(240,61,77,.6)'
+        borderBottomColor: "rgba(240,61,77,.6)",
       },
-      background: '#0000 !important',
-      color: '#fff !important',
-      padding: '.5rem .7rem !important'
+      background: "#0000 !important",
+      color: "#fff !important",
+      padding: ".5rem .7rem !important",
     },
     list: {
-      borderBottomColor: '#333 !important',
-      '& li.selected a': {
-        color: 'rgb(240,61,77) !important'
-      }
-    }
+      borderBottomColor: "#333 !important",
+      "& li.selected a": {
+        color: "rgb(240,61,77) !important",
+      },
+    },
   },
   Header
-)
+);
