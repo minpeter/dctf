@@ -10,9 +10,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/hoisie/mustache"
 	"github.com/minpeter/rctf-backend/api"
+	"github.com/minpeter/rctf-backend/database"
 )
 
-// ClientConfig는 client-config.json의 구조를 정의합니다.
 type ClientConfig struct {
 	Meta            Meta              `json:"meta"`
 	HomeContent     string            `json:"homeContent"`
@@ -29,7 +29,6 @@ type ClientConfig struct {
 	FaviconUrl      string            `json:"faviconUrl"`
 }
 
-// Meta는 client-config.json의 "meta" 부분을 정의합니다.
 type Meta struct {
 	Description string `json:"description"`
 	ImageURL    string `json:"imageUrl"`
@@ -57,7 +56,27 @@ func serveIndex(c *gin.Context) {
 	c.Writer.WriteString(html)
 }
 
+func loadClientConfig() {
+	configFile, err := os.Open("client-config.json")
+	if err != nil {
+		fmt.Printf("Error opening client-config.json: %v\n", err)
+		return
+	}
+	defer configFile.Close()
+
+	decoder := json.NewDecoder(configFile)
+	err = decoder.Decode(&clientConfig)
+	if err != nil {
+		fmt.Printf("Error decoding client-config.json: %v\n", err)
+		return
+	}
+}
+
 func main() {
+	if err := database.ConnectDatabase(); err != nil {
+		log.Fatalf("Failed to connect to database: %v", err)
+	}
+
 	loadClientConfig()
 
 	app := api.NewRouter()
@@ -81,21 +100,5 @@ func main() {
 
 	if err := app.Run(host); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
-	}
-}
-
-func loadClientConfig() {
-	configFile, err := os.Open("client-config.json")
-	if err != nil {
-		fmt.Printf("Error opening client-config.json: %v\n", err)
-		return
-	}
-	defer configFile.Close()
-
-	decoder := json.NewDecoder(configFile)
-	err = decoder.Decode(&clientConfig)
-	if err != nil {
-		fmt.Printf("Error decoding client-config.json: %v\n", err)
-		return
 	}
 }
