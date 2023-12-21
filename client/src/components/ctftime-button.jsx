@@ -8,15 +8,12 @@ import { withToast } from "../components/toast";
 export default withStyles(
   {
     ctftimeButton: {
-      margin: "auto",
-      lineHeight: "0",
-      padding: "10px",
-      background: "#222",
-      "&:hover": {
-        background: "#222",
-      },
-      "& svg": {
-        width: "150px",
+      background: "none",
+      border: "none",
+      cursor: "pointer",
+      padding: "0",
+      "& img": {
+        width: "100%",
       },
     },
   },

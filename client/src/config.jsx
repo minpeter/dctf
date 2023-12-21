@@ -1,3 +1,5 @@
+import ctftime from "./util/ctftime";
+
 let config;
 
 try {
@@ -8,6 +10,9 @@ try {
   console.error("Error parsing JSON from meta tag:", error);
   console.log("Using default config");
   config = {
+    ctftime: {
+      clientId: "0f18c7f2d534b23a56c8",
+    },
     meta: {
       description: "A description of your CTF",
       imageUrl: "https: //example.com",

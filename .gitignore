@@ -11,6 +11,7 @@ tmp
 # /conf.d/*
 !/conf.d/.keep
 /docs/site
+.env
 
 # Upload provider dir
 /uploads

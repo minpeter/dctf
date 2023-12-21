@@ -129,15 +129,12 @@ export default withStyles(
               onChange={linkState(this, "email")}
             />
           </Form>
-          {config.ctftime && (
+          {/* {config.ctftime && (
             <>
-              <AuthOr />
-              <CtftimeButton
-                class="col-6"
-                onCtftimeDone={this.handleCtftimeDone}
-              />
-            </>
-          )}
+              <AuthOr /> */}
+          <CtftimeButton class="col-6" onCtftimeDone={this.handleCtftimeDone} />
+          {/* </>
+          )} */}
           {recaptchaEnabled && (
             <div class={classes.recaptchaLegalNotice}>
               <RecaptchaLegalNotice />

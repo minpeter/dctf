@@ -28,8 +28,8 @@ export default () => {
   const state = getState();
   openPopup({
     url:
-      "https://oauth.ctftime.org/authorize" +
-      `?scope=${encodeURIComponent("team:read")}` +
+      "https://github.com/login/oauth/authorize" +
+      `?scope=${encodeURIComponent("user")}` +
       `&client_id=${encodeURIComponent(config.ctftime.clientId)}` +
       `&redirect_uri=${encodeURIComponent(
         `${location.origin}/integrations/ctftime/callback`
