@@ -1,72 +1,83 @@
 package auth
 
 import (
-	"os"
+	"encoding/base64"
+	"fmt"
 	"time"
 
-	"github.com/golang-jwt/jwt/v5"
+	"github.com/golang-jwt/jwt"
 )
 
-type TokenData struct {
-	Kind     string
-	Email    string
-	Name     string
-	Division string
+var secretKey = []byte("your-secret-key")
+
+// Claims는 사용자 정의 클레임을 정의합니다.
+type Claims struct {
+	uuid string
+	jwt.StandardClaims
 }
 
-type InternalTokenData struct {
-	K string    //kind
-	T int       //time
-	D TokenData //data
-}
+func GetToken(uuid string) (string, error) {
+	// 토큰 만료 시간을 설정합니다. 예제로 1시간으로 설정합니다.
+	expirationTime := time.Now().Add(1 * time.Hour)
 
-func encryptToken(IT InternalTokenData) (string, error) {
-	token := jwt.New(jwt.SigningMethodHS256)
-	claims := token.Claims.(jwt.MapClaims)
-	claims["k"] = IT.K
-	claims["t"] = IT.T
-	claims["d"] = map[string]interface{}{
-		"email":    IT.D.Email,
-		"name":     IT.D.Name,
-		"division": IT.D.Division,
+	// 사용자 정의 클레임을 생성합니다.
+	claims := &Claims{
+		uuid: uuid,
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: expirationTime.Unix(),
+		},
 	}
-	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
-	return token.SignedString([]byte(os.Getenv("JWT_SECRET")))
+
+	// 토큰을 생성합니다.
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	fmt.Println("token:", token)
+	// 토큰을 서명합니다.
+	signedToken, err := token.SignedString(secretKey)
+	if err != nil {
+		return "", err
+	}
+	// 서명 완료
+	fmt.Println("signedToken:", signedToken)
+
+	// 서명된 토큰을 Base64로 인코딩합니다.
+	encodedToken := base64.StdEncoding.EncodeToString([]byte(signedToken))
+
+	fmt.Println("encodedToken:", encodedToken)
+	return encodedToken, nil
 }
 
-func decryptToken(tokenString string) (InternalTokenData, error) {
-	var IT InternalTokenData
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		return []byte(os.Getenv("JWT_SECRET")), nil
+// GetData 함수는 주어진 Base64로 인코딩된 JWT 토큰에서 데이터를 추출합니다.
+func GetData(encodedToken string) (string, error) {
+	// Base64 디코딩을 수행합니다.
+	decodedToken, err := base64.StdEncoding.DecodeString(encodedToken)
+	if err != nil {
+		return "", err
+	}
+
+	fmt.Println("decodedToken:", string(decodedToken))
+
+	claims := jwt.MapClaims{}
+	// 토큰을 파싱합니다.
+	token, err := jwt.ParseWithClaims(string(decodedToken), claims, func(token *jwt.Token) (interface{}, error) {
+		return secretKey, nil
 	})
+
+	fmt.Println("token:", token)
+
 	if err != nil {
-		return IT, err
+		return "", err
 	}
-	claims := token.Claims.(jwt.MapClaims)
-	IT.K = claims["k"].(string)
-	IT.T = int(claims["t"].(float64))
-	IT.D.Email = claims["d"].(map[string]interface{})["email"].(string)
-	IT.D.Name = claims["d"].(map[string]interface{})["name"].(string)
-	IT.D.Division = claims["d"].(map[string]interface{})["division"].(string)
-	return IT, nil
-}
 
-func GetData(tokenString string) (TokenData, error) {
-	var IT InternalTokenData
-
-	IT, err := decryptToken(tokenString)
-	if err != nil {
-		return IT.D, err
+	// 토큰이 유효한지 검사합니다.
+	if !token.Valid {
+		return "", fmt.Errorf("invalid token")
 	}
-	return IT.D, nil
-}
 
-func GetToken(TD TokenData) string {
-	IT := InternalTokenData{
-		K: TD.Kind,
-		T: int(time.Now().Unix()),
-		D: TD,
+	fmt.Println("claims:", claims)
+
+	for key, val := range claims {
+		fmt.Printf("key:%v, val:%v\n", key, val)
 	}
-	token, _ := encryptToken(IT)
-	return token
+	return "", nil
 }
