@@ -55,6 +55,7 @@ func getMeHandler(c *gin.Context) {
 
 	token := c.GetHeader("Authorization")
 
+	fmt.Println("token:", token)
 	data, err := auth.GetData(token)
 
 	if err != nil {

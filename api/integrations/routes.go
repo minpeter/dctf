@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/minpeter/rctf-backend/utils"
 )
 
 func Routes(integrationRoutes *gin.RouterGroup) {
@@ -26,7 +27,10 @@ func clientConfigHandler(c *gin.Context) {
 }
 
 func ctftimeCallbackHandler(c *gin.Context) {
-	c.Status(http.StatusNoContent)
+
+	utils.SendResponse(c, "goodCtftimeToken", gin.H{
+		"ctftimeToken": "testtokentesttoken",
+	})
 }
 
 func ctftimeLeaderboardHandler(c *gin.Context) {
