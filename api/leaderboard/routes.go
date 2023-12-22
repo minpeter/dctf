@@ -46,7 +46,7 @@ func leaderboardGraphHandler(c *gin.Context) {
 func leaderboardNowHandler(c *gin.Context) {
 	utils.SendResponse(c, "goodLeaderboard", gin.H{
 		"total": 4,
-		"loaderboard": []gin.H{
+		"leaderboard": []gin.H{
 			{
 				"id":    "502ca3a8-b1e8-48f0-9539-5d1734369e67",
 				"name":  "K3su4l_H3ck3r",

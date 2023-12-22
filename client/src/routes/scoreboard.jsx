@@ -7,11 +7,10 @@ import {
 } from "preact/hooks";
 import config from "../config";
 import Pagination from "../components/pagination";
-import Graph from "../components/graph";
 import NotStarted from "../components/not-started";
 import { useToast } from "../components/toast";
 
-import { getScoreboard, getGraph } from "../api/scoreboard";
+import { getScoreboard } from "../api/scoreboard";
 import { privateProfile } from "../api/profile";
 
 const PAGESIZE_OPTIONS = [25, 50, 100];
@@ -55,14 +54,12 @@ export default function Scoreboard() {
       scoreboardPageState.pageSize || 100
     );
     const [scores, setScores] = useState([]);
-    const [graphData, setGraphData] = useState(null);
     const [division, _setDivision] = useState(
       scoreboardPageState.division || "all"
     );
     const [page, setPage] = useState(scoreboardPageState.page || 1);
     const [totalItems, setTotalItems] = useState(0);
     const [scoreLoadState, setScoreLoadState] = useState(loadStates.pending);
-    const [graphLoadState, setGraphLoadState] = useState(loadStates.pending);
     const selfRow = useRef();
     const { toast } = useToast();
 
@@ -148,20 +145,6 @@ export default function Scoreboard() {
       })();
     }, [division, page, pageSize]);
 
-    useEffect(() => {
-      (async () => {
-        const _division = division === "all" ? undefined : division;
-        const { kind, data } = await getGraph({ division: _division });
-        setGraphLoadState(
-          kind === "badNotStarted" ? loadStates.notStarted : loadStates.loaded
-        );
-        if (kind !== "goodLeaderboard") {
-          return;
-        }
-        setGraphData(data);
-      })();
-    }, [division]);
-
     const isUserOnCurrentScoreboard =
       loggedIn &&
       profile !== null &&
@@ -215,27 +198,16 @@ export default function Scoreboard() {
       }
     }, [isSelfVisible, needsScrollToSelf, scrollToSelf]);
 
-    if (
-      scoreLoadState === loadStates.pending ||
-      graphLoadState === loadStates.pending
-    ) {
+    if (scoreLoadState === loadStates.pending) {
       return null;
     }
 
-    if (
-      scoreLoadState === loadStates.notStarted ||
-      graphLoadState === loadStates.notStarted
-    ) {
+    if (scoreLoadState === loadStates.notStarted) {
       return <NotStarted />;
     }
 
     return (
       <div class="row u-center" style="align-items: initial !important">
-        <div class="col-12 u-center">
-          <div class="col-8">
-            <Graph graphData={graphData} />
-          </div>
-        </div>
         <div class="col-3">
           <div class={`frame`}>
             <div class="frame__body">
