@@ -15,23 +15,4 @@ const Footer = ({ classes }) => (
   </div>
 );
 
-export default withStyles(
-  {
-    root: {
-      display: "flex",
-      justifyContent: "center",
-      padding: "1rem",
-      "& a": {
-        display: "inline",
-        padding: 0,
-      },
-      fontSize: "0.85rem",
-      opacity: 0.7,
-      "&:hover": {
-        opacity: 1,
-      },
-      transition: "opacity 300ms ease",
-    },
-  },
-  Footer
-);
+export default withStyles({}, Footer);

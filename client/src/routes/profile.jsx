@@ -30,39 +30,7 @@ import useRecaptcha, { RecaptchaLegalNotice } from "../components/recaptcha";
 
 const SummaryCard = memo(
   withStyles(
-    {
-      icon: {
-        "& svg": {
-          verticalAlign: "middle",
-          height: "1.25em",
-          fill: "#333",
-        },
-        marginRight: "1.5em",
-      },
-      publicHeader: {
-        textOverflow: "ellipsis",
-        overflow: "hidden",
-        margin: "0 !important",
-        maxWidth: "75vw",
-      },
-      privateHeader: {
-        textOverflow: "ellipsis",
-        overflow: "hidden",
-        margin: "0 !important",
-        maxWidth: "30vw",
-      },
-      "@media (max-width: 804px)": {
-        privateHeader: {
-          maxWidth: "75vw",
-        },
-      },
-      wrapper: {
-        display: "flex",
-        justifyContent: "space-between",
-        paddingTop: "15px",
-        paddingBottom: "5px",
-      },
-    },
+    {},
     ({
       name,
       score,
@@ -128,84 +96,62 @@ const SummaryCard = memo(
   )
 );
 
-const TeamCodeCard = withStyles(
-  {
-    btn: {
-      marginRight: "10px",
-    },
-  },
-  ({ teamToken, classes }) => {
-    const { toast } = useToast();
+const TeamCodeCard = withStyles({}, ({ teamToken, classes }) => {
+  const { toast } = useToast();
 
-    const tokenUrl = `${location.origin}/login?token=${encodeURIComponent(
-      teamToken
-    )}`;
+  const tokenUrl = `${location.origin}/login?token=${encodeURIComponent(
+    teamToken
+  )}`;
 
-    const [reveal, setReveal] = useState(false);
-    const toggleReveal = useCallback(() => setReveal(!reveal), [reveal]);
+  const [reveal, setReveal] = useState(false);
+  const toggleReveal = useCallback(() => setReveal(!reveal), [reveal]);
 
-    const onCopyClick = useCallback(() => {
-      if (navigator.clipboard) {
-        try {
-          navigator.clipboard.writeText(tokenUrl).then(() => {
-            toast({ body: "Copied team invite URL to clipboard" });
-          });
-        } catch {}
-      }
-    }, [toast, tokenUrl]);
+  const onCopyClick = useCallback(() => {
+    if (navigator.clipboard) {
+      try {
+        navigator.clipboard.writeText(tokenUrl).then(() => {
+          toast({ body: "Copied team invite URL to clipboard" });
+        });
+      } catch {}
+    }
+  }, [toast, tokenUrl]);
 
-    return (
-      <div class="card">
-        <div class="content p-4 w-80">
-          <p>Team Invite</p>
-          <p class="font-thin">
-            Send this team invite URL to your teammates so they can login.
-          </p>
+  return (
+    <div class="card">
+      <div class="content p-4 w-80">
+        <p>Team Invite</p>
+        <p class="font-thin">
+          Send this team invite URL to your teammates so they can login.
+        </p>
 
-          <button
-            onClick={onCopyClick}
-            class={`${classes.btn} btn-info`}
-            name="btn"
-            value="submit"
-            type="submit"
-          >
-            Copy
-          </button>
+        <button
+          onClick={onCopyClick}
+          class={`${classes.btn} btn-info`}
+          name="btn"
+          value="submit"
+          type="submit"
+        >
+          Copy
+        </button>
 
-          <button
-            onClick={toggleReveal}
-            class="btn-info pl-2"
-            name="btn"
-            value="submit"
-            type="submit"
-          >
-            {reveal ? "Hide" : "Reveal"}
-          </button>
+        <button
+          onClick={toggleReveal}
+          class="btn-info pl-2"
+          name="btn"
+          value="submit"
+          type="submit"
+        >
+          {reveal ? "Hide" : "Reveal"}
+        </button>
 
-          {reveal && <TokenPreview token={tokenUrl} />}
-        </div>
+        {reveal && <TokenPreview token={tokenUrl} />}
       </div>
-    );
-  }
-);
+    </div>
+  );
+});
 
 const UpdateCard = withStyles(
-  {
-    form: {
-      "& button": {
-        margin: 0,
-        marginBottom: "0.4em",
-        float: "right",
-      },
-      padding: "0 !important",
-    },
-    divisionSelect: {
-      paddingLeft: "2.75rem",
-    },
-    recaptchaLegalNotice: {
-      marginTop: "20px",
-    },
-  },
+  {},
   ({
     name: oldName,
     email: oldEmail,
@@ -494,35 +440,4 @@ const Profile = ({ uuid, classes }) => {
   );
 };
 
-export default withStyles(
-  {
-    root: {
-      display: "grid",
-      gridTemplateColumns: "repeat(auto-fit, minmax(384px, 1fr))",
-      width: "100%",
-      maxWidth: "1500px",
-      margin: "auto",
-      "& .card": {
-        background: "#222",
-        marginBottom: "20px",
-      },
-      "& input, & select, & option": {
-        background: "#111",
-        color: "#fff !important",
-      },
-    },
-    col: {
-      margin: "0 auto",
-      width: "calc(100% - 20px)",
-      marginLeft: "10px",
-    },
-    privateCol: {
-      width: "calc(100% - 20px)",
-      marginLeft: "10px",
-    },
-    errorCard: {
-      background: "#222",
-    },
-  },
-  Profile
-);
+export default withStyles({}, Profile);

@@ -6,7 +6,6 @@ import {
   useRef,
 } from "preact/hooks";
 import config from "../config";
-import withStyles from "../components/jss";
 import Pagination from "../components/pagination";
 import Graph from "../components/graph";
 import NotStarted from "../components/not-started";
@@ -23,38 +22,8 @@ const loadStates = {
   loaded: 2,
 };
 
-const Scoreboard = withStyles(
+export default function Scoreboard() {
   {
-    frame: {
-      paddingBottom: "1.5em",
-      paddingTop: "2.125em",
-      background: "#222",
-      "& .frame__subtitle": {
-        color: "#fff",
-      },
-      "& button, & select, & option": {
-        background: "#111",
-        color: "#fff",
-      },
-    },
-    tableFrame: {
-      paddingTop: "1.5em",
-    },
-    selected: {
-      backgroundColor: "rgba(216,216,216,.07)",
-      "&:hover": {
-        backgroundColor: "rgba(216,216,216,.20) !important",
-      },
-    },
-    table: {
-      tableLayout: "fixed",
-      "& tbody td": {
-        overflow: "hidden",
-        whiteSpace: "nowrap",
-      },
-    },
-  },
-  ({ classes }) => {
     const loggedIn = useMemo(() => localStorage.getItem("token") !== null, []);
     const scoreboardPageState = useMemo(() => {
       const localStorageState = JSON.parse(
@@ -268,7 +237,7 @@ const Scoreboard = withStyles(
           </div>
         </div>
         <div class="col-3">
-          <div class={`frame ${classes.frame}`}>
+          <div class={`frame`}>
             <div class="frame__body">
               <div class="frame__subtitle">Filter by division</div>
               <div class="input-control">
@@ -319,9 +288,9 @@ const Scoreboard = withStyles(
           </div>
         </div>
         <div class="col-6">
-          <div class={`frame ${classes.frame} ${classes.tableFrame}`}>
+          <div class={`frame `}>
             <div class="frame__body">
-              <table class={`table small ${classes.table}`}>
+              <table class={`table small `}>
                 <thead>
                   <tr>
                     <th style="width: 3.5em">#</th>
@@ -336,7 +305,8 @@ const Scoreboard = withStyles(
                     return (
                       <tr
                         key={id}
-                        class={isSelf ? classes.selected : ""}
+                        // class={isSelf ? classes.selected : ""}
+
                         ref={isSelf ? selfRow : null}
                       >
                         <td>{rank}</td>
@@ -361,6 +331,4 @@ const Scoreboard = withStyles(
       </div>
     );
   }
-);
-
-export default Scoreboard;
+}

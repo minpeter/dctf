@@ -51,46 +51,4 @@ function Modal({ classes, open, onClose, children }) {
 
 const ANIMATION_INITIAL_SCALE = 0.8;
 
-export default withStyles(
-  {
-    "@keyframes container": {
-      from: {
-        opacity: 0,
-      },
-      to: {
-        opactiy: 1,
-      },
-    },
-    "@keyframes content": {
-      from: {
-        transform: `scale(${ANIMATION_INITIAL_SCALE})`,
-      },
-      to: {
-        transform: "scale(1)",
-      },
-    },
-    modal: {
-      background: "#222",
-      color: "#fff",
-      maxWidth: "initial",
-    },
-    animated: {
-      "&": {
-        display: "flex",
-        animation: `$container ${ANIMATION_DURATION}ms ease-out`,
-      },
-      "& .modal-content": {
-        animation: `$content ${ANIMATION_DURATION}ms ease-out`,
-      },
-      "&.leaving": {
-        opacity: 0,
-        transition: `opacity ${ANIMATION_DURATION}ms ease-in`,
-      },
-      "&.leaving .modal-content": {
-        transform: `scale(${ANIMATION_INITIAL_SCALE})`,
-        transition: `transform ${ANIMATION_DURATION}ms ease-in`,
-      },
-    },
-  },
-  Modal
-);
+export default withStyles({}, Modal);

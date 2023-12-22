@@ -10,67 +10,50 @@ import {
 import { useToast } from "../../components/toast";
 import { encodeFile } from "../../util";
 
-const DeleteModal = withStyles(
-  {
-    modalBody: {
-      paddingTop: "0em !important", // reduce space between header and body
+const DeleteModal = withStyles({}, ({ open, onClose, onDelete, classes }) => {
+  const wrappedOnClose = useCallback(
+    (e) => {
+      e.preventDefault();
+      onClose();
     },
-    controls: {
-      display: "flex",
-      justifyContent: "center",
-      "& :first-child": {
-        marginLeft: "0em",
-      },
-      "& :last-child": {
-        marginRight: "0em",
-      },
+    [onClose]
+  );
+  const wrappedOnDelete = useCallback(
+    (e) => {
+      e.preventDefault();
+      onDelete();
     },
-  },
-  ({ open, onClose, onDelete, classes }) => {
-    const wrappedOnClose = useCallback(
-      (e) => {
-        e.preventDefault();
-        onClose();
-      },
-      [onClose]
-    );
-    const wrappedOnDelete = useCallback(
-      (e) => {
-        e.preventDefault();
-        onDelete();
-      },
-      [onDelete]
-    );
+    [onDelete]
+  );
 
-    return (
-      <Modal open={open} onClose={onClose}>
-        <div class="modal-header">
-          <div class="modal-title">Delete Challenge?</div>
-        </div>
-        <div class={`modal-body ${classes.modalBody}`}>
-          This is an irreversible action that permanently deletes the challenge
-          and revokes all solves.
-          <div class={classes.controls}>
-            <div class="btn-container u-inline-block">
-              <button type="button" class="btn-small" onClick={wrappedOnClose}>
-                Cancel
-              </button>
-            </div>
-            <div class="btn-container u-inline-block">
-              <button
-                type="submit"
-                class="btn-small btn-danger"
-                onClick={wrappedOnDelete}
-              >
-                Delete Challenge
-              </button>
-            </div>
+  return (
+    <Modal open={open} onClose={onClose}>
+      <div class="modal-header">
+        <div class="modal-title">Delete Challenge?</div>
+      </div>
+      <div class={`modal-body ${classes.modalBody}`}>
+        This is an irreversible action that permanently deletes the challenge
+        and revokes all solves.
+        <div class={classes.controls}>
+          <div class="btn-container u-inline-block">
+            <button type="button" class="btn-small" onClick={wrappedOnClose}>
+              Cancel
+            </button>
+          </div>
+          <div class="btn-container u-inline-block">
+            <button
+              type="submit"
+              class="btn-small btn-danger"
+              onClick={wrappedOnDelete}
+            >
+              Delete Challenge
+            </button>
           </div>
         </div>
-      </Modal>
-    );
-  }
-);
+      </div>
+    </Modal>
+  );
+});
 
 const Problem = ({ classes, problem, update: updateClient }) => {
   const { toast } = useToast();

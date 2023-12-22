@@ -16,6 +16,7 @@
     "dep": "yarn && yarn dep:client && yarn dep:server"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "scss": "^0.2.4"
   }
 }

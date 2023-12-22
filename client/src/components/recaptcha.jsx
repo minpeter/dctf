@@ -55,43 +55,31 @@ const requestRecaptchaCode = () =>
 // exported for legacy class component usage
 export { loadRecaptcha, requestRecaptchaCode };
 
-export const RecaptchaLegalNotice = withStyles(
-  {
-    root: {
-      fontSize: "12px",
-      textAlign: "center",
-    },
-    link: {
-      display: "inline",
-      padding: "0",
-    },
-  },
-  ({ classes }) => (
-    <div class={classes.root}>
-      This site is protected by reCAPTCHA.
-      <br />
-      The Google{" "}
-      <a
-        class={classes.link}
-        href="https://policies.google.com/privacy"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Privacy Policy
-      </a>{" "}
-      and{" "}
-      <a
-        class={classes.link}
-        href="https://policies.google.com/terms"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Terms of Service
-      </a>{" "}
-      apply.
-    </div>
-  )
-);
+export const RecaptchaLegalNotice = withStyles({}, ({ classes }) => (
+  <div class={classes.root}>
+    This site is protected by reCAPTCHA.
+    <br />
+    The Google{" "}
+    <a
+      class={classes.link}
+      href="https://policies.google.com/privacy"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Privacy Policy
+    </a>{" "}
+    and{" "}
+    <a
+      class={classes.link}
+      href="https://policies.google.com/terms"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Terms of Service
+    </a>{" "}
+    apply.
+  </div>
+));
 
 export default (action) => {
   const recaptchaEnabled = config.recaptcha?.protectedActions.includes(action);

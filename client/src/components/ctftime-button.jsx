@@ -6,13 +6,7 @@ import { ctftimeCallback } from "../api/auth";
 import { withToast } from "../components/toast";
 
 export default withStyles(
-  {
-    githubButton: {
-      height: "auto",
-      width: "140px",
-      padding: "10px",
-    },
-  },
+  {},
   withToast(
     class CtftimeButton extends Component {
       componentDidMount() {

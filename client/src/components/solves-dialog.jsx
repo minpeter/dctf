@@ -6,69 +6,7 @@ import { formatRelativeTime } from "../util/time";
 import Clock from "../icons/clock.svg";
 
 const SolvesDialog = withStyles(
-  {
-    button: {
-      fontFamily: "inherit",
-    },
-    table: {
-      display: "grid",
-      gridTemplateColumns: "repeat(3, max-content)",
-      "& div": {
-        margin: "auto",
-        padding: "5px 10px",
-        textAlign: "center",
-        whiteSpace: "nowrap",
-      },
-    },
-    label: {
-      borderBottom: "1px solid #fff",
-      width: "100%",
-      textAlign: "center",
-    },
-    name: {
-      overflow: "hidden",
-      width: "300px",
-    },
-    inlineLabel: {
-      display: "none",
-    },
-    icon: {
-      width: "60px",
-      margin: "auto",
-    },
-    empty: {
-      "& h5": {
-        color: "#fff !important",
-      },
-      padding: "0 3rem",
-      paddingTop: "3rem",
-    },
-    modalBody: {
-      maxHeight: "60vh !important",
-    },
-    "@media (max-width: 768px)": {
-      inlineLabel: {
-        display: "initial",
-        borderRight: "1px solid #fff",
-      },
-      table: {
-        gridTemplateColumns: "repeat(2, minmax(max-content, 1fr))",
-        "& div": {
-          margin: "0",
-        },
-      },
-      label: {
-        display: "none",
-      },
-      number: {
-        borderTop: "1px solid #fff",
-      },
-      name: {
-        width: "initial",
-        maxWidth: "300px",
-      },
-    },
-  },
+  {},
   ({
     onClose,
     classes,

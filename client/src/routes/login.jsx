@@ -1,40 +1,14 @@
 import { Component } from "preact";
-import { Link } from "preact-router";
-import Form from "../components/form";
 import config from "../config";
-import linkState from "linkstate";
 import withStyles from "../components/jss";
 
 import { login, setAuthToken } from "../api/auth";
-import IdCard from "../icons/id-card.svg";
 import CtftimeButton from "../components/ctftime-button";
 import CtftimeAdditional from "../components/ctftime-additional";
-import AuthOr from "../components/or";
 import PendingToken from "../components/pending-token";
 
 export default withStyles(
-  {
-    root: {
-      flexDirection: "column",
-    },
-    title: {
-      marginBottom: "20px",
-    },
-    form: {
-      padding: "1.5em",
-      maxWidth: "500px",
-      "& input": {
-        background: "#222",
-        color: "#fff !important",
-      },
-    },
-    submit: {
-      marginTop: "1.5em",
-    },
-    link: {
-      display: "inline",
-    },
-  },
+  {},
   class Login extends Component {
     state = {
       teamToken: "",
@@ -71,15 +45,7 @@ export default withStyles(
 
     render(
       { classes },
-      {
-        teamToken,
-        errors,
-        disabledButton,
-        ctftimeToken,
-        ctftimeName,
-        pendingAuthToken,
-        pending,
-      }
+      { ctftimeToken, ctftimeName, pendingAuthToken, pending }
     ) {
       if (ctftimeToken) {
         return (
@@ -98,40 +64,11 @@ export default withStyles(
       return (
         <div class={`row u-center ${classes.root}`}>
           <h4 class={classes.title}>Log in to {config.ctfName}</h4>
-          <Form
-            class={`${classes.form} col-6`}
-            onSubmit={this.handleSubmit}
-            disabled={disabledButton}
-            buttonText="Login"
-            errors={errors}
-          >
-            <input
-              autofocus
-              required
-              autocomplete="off"
-              autocorrect="off"
-              name="teamToken"
-              icon={<img src={IdCard} />}
-              placeholder="Team Token"
-              type="text"
-              value={teamToken}
-              onChange={linkState(this, "teamToken")}
-            />
-            {config.emailEnabled && (
-              <Link href="/recover" class={classes.link}>
-                Lost your team token?
-              </Link>
-            )}
-          </Form>
-          {/* {config.ctftime && (
-            <>
-              <AuthOr /> */}
+
           <CtftimeButton
             class="col-12"
             onCtftimeDone={this.handleCtftimeDone}
           />
-          {/* </>
-          )} */}
         </div>
       );
     }

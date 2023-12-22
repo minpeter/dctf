@@ -35,32 +35,17 @@ function PaginationItem({
   );
 }
 
-const PaginationEllipses = withStyles(
-  {
-    noHover: {
-      backgroundColor: "transparent !important",
-    },
-    ellipses: {
-      paddingLeft: "0.1em !important",
-      paddingRight: "0.1em !important",
-    },
-  },
-  ({ classes }) => {
-    const noFocus = useCallback((e) => e.target.blur(), []);
-    // TODO: pass props through
-    return (
-      <div class={`pagination-item short ${classes.noHover}`}>
-        <a
-          class={`ellipses ${classes.ellipses}`}
-          tabindex="-1"
-          onFocus={noFocus}
-        >
-          &hellip;
-        </a>
-      </div>
-    );
-  }
-);
+const PaginationEllipses = withStyles({}, ({ classes }) => {
+  const noFocus = useCallback((e) => e.target.blur(), []);
+  // TODO: pass props through
+  return (
+    <div class={`pagination-item short ${classes.noHover}`}>
+      <a class={`ellipses ${classes.ellipses}`} tabindex="-1" onFocus={noFocus}>
+        &hellip;
+      </a>
+    </div>
+  );
+});
 
 function Pagination({ totalItems, pageSize, page, setPage, numVisiblePages }) {
   numVisiblePages = numVisiblePages || 9;

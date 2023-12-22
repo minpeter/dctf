@@ -5,41 +5,31 @@ import Form from "../form";
 import EnvelopeOpen from "../../icons/envelope-open.svg";
 import { useToast } from "../toast";
 
-const MemberRow = withStyles(
-  {
-    root: {
-      alignItems: "center",
-      width: "100%",
-      display: "flex",
-      justifyContent: "space-between",
-    },
-  },
-  ({ classes, id, email, setMembers }) => {
-    const { toast } = useToast();
+const MemberRow = withStyles({}, ({ classes, id, email, setMembers }) => {
+  const { toast } = useToast();
 
-    const handleDelete = useCallback(() => {
-      removeMember({ id }).then(() => {
-        setMembers((members) => members.filter((a) => a.id !== id));
+  const handleDelete = useCallback(() => {
+    removeMember({ id }).then(() => {
+      setMembers((members) => members.filter((a) => a.id !== id));
 
-        toast({ body: "Team member successfully deleted" });
-      });
-    }, [id, setMembers, toast]);
+      toast({ body: "Team member successfully deleted" });
+    });
+  }, [id, setMembers, toast]);
 
-    return (
-      <div class={classes.root} key={id}>
-        <p class="m-0">{email}</p>
-        <div class="btn-container u-vertical-center">
-          <input
-            onClick={handleDelete}
-            type="submit"
-            class="btn-small btn-danger m-0"
-            value="Delete"
-          />
-        </div>
+  return (
+    <div class={classes.root} key={id}>
+      <p class="m-0">{email}</p>
+      <div class="btn-container u-vertical-center">
+        <input
+          onClick={handleDelete}
+          type="submit"
+          class="btn-small btn-danger m-0"
+          value="Delete"
+        />
       </div>
-    );
-  }
-);
+    </div>
+  );
+});
 
 const MembersCard = withStyles(
   {

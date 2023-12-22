@@ -254,26 +254,4 @@ function Graph({ graphData, classes }) {
   );
 }
 
-export default withStyles(
-  {
-    root: {
-      marginBottom: "20px",
-      background: "#222",
-      "& .frame__body": {
-        padding: "20px",
-      },
-    },
-    tooltip: {
-      position: "fixed",
-      pointerEvents: "none",
-      background: "#fff",
-      color: "#222",
-      padding: "5px 10px",
-      borderRadius: "5px",
-      margin: "5px",
-      top: "0",
-      left: "0",
-    },
-  },
-  Graph
-);
+export default withStyles({}, Graph);

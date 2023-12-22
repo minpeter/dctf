@@ -28,18 +28,9 @@ function Toast({ children, remove, type, id }) {
   );
 }
 
-const ToastContainer = withStyles(
-  {
-    container: {
-      position: "fixed",
-      top: "1em",
-      right: "1em",
-      zIndex: 9999,
-      width: "320px",
-    },
-  },
-  ({ classes, ...props }) => <div class={classes.container} {...props} />
-);
+const ToastContainer = withStyles({}, ({ classes, ...props }) => (
+  <div class={classes.container} {...props} />
+));
 
 export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([]);
