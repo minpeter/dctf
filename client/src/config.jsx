@@ -1,5 +1,3 @@
-import ctftime from "./util/ctftime";
-
 let config;
 
 try {
@@ -7,8 +5,8 @@ try {
     document.head.querySelector("meta[name=rctf-config]").content
   );
 } catch (error) {
-  console.error("Error parsing JSON from meta tag:", error);
-  console.log("Using default config");
+  console.log("Error parsing JSON from meta tag: meta[name=rctf-config]");
+  console.log("=============  Using default config  ===================");
   config = {
     ctftime: {
       clientId: "0f18c7f2d534b23a56c8",

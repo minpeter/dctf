@@ -394,9 +394,7 @@ const Profile = ({ uuid }) => {
               onUpdate: onProfileUpdate,
             }}
           />
-          {config.ctftime && (
-            <CtftimeCard {...{ ctftimeId, onUpdate: onProfileUpdate }} />
-          )}
+          <CtftimeCard {...{ ctftimeId, onUpdate: onProfileUpdate }} />
         </div>
       )}
       <div>

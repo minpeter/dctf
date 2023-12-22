@@ -7,8 +7,8 @@ const makeSolvesCard =
     return (
       <div class={`card`}>
         {solves.length === 0 ? (
-          <div class={classes.title}>
-            <div class={classes.icon}>
+          <div>
+            <div>
               <img src={Clock} />
             </div>
             <h5>This team has no solves.</h5>
