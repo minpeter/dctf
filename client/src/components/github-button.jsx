@@ -1,5 +1,5 @@
 import { Component } from "preact";
-import GithubLogo from "../icons/github_logo.png";
+import GithubLogo from "../icons/github.svg";
 import openPopup from "../util/github";
 import { githubCallback } from "../api/auth";
 import { withToast } from "../components/toast";
@@ -48,6 +48,7 @@ export default withToast(
         <div {...props}>
           <button onClick={this.handleClick}>
             <img src={GithubLogo} />
+            <span>Sign in with GitHub</span>
           </button>
         </div>
       );
