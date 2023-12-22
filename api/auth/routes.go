@@ -103,7 +103,7 @@ func registerHandler(c *gin.Context) {
 		return
 	}
 
-	authToken, err := auth.UserRegister("ab", "test@test.com", githubToken.GithubAuth.GithubData, githubToken.GithubAuth.GithubID, githubToken.GithubAuth.GithubData)
+	authToken, err := auth.UserRegister("open", "test@test.com", githubToken.GithubAuth.GithubData, githubToken.GithubAuth.GithubID)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

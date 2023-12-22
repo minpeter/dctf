@@ -5,10 +5,10 @@ import (
 	"github.com/minpeter/rctf-backend/database"
 )
 
-func UserRegister(division, email, name, ionId, ionData string) (Token, error) {
+func UserRegister(division, email, name, githubId string) (Token, error) {
 
 	userUuid := uuid.New().String()
-	if err := database.MakeUser(userUuid, name, email, division, ionId, 0); err != nil {
+	if err := database.MakeUser(userUuid, name, email, division, githubId, 0); err != nil {
 		return "", err
 	}
 
