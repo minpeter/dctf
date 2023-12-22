@@ -3,6 +3,7 @@ yarn-debug.log*
 yarn-error.log*
 
 rctf.db
+database/rctf.db
 
 /node_modules
 tmp
