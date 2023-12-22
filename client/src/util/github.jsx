@@ -30,12 +30,12 @@ export default () => {
     url:
       "https://github.com/login/oauth/authorize" +
       `?scope=${encodeURIComponent("user")}` +
-      `&client_id=${encodeURIComponent(config.ctftime.clientId)}` +
+      `&client_id=${encodeURIComponent(config.github.clientId)}` +
       `&redirect_uri=${encodeURIComponent(
-        `${location.origin}/integrations/ctftime/callback`
+        `${location.origin}/integrations/github/callback`
       )}` +
       `&state=${encodeURIComponent(state)}`,
-    title: "CTFtime",
+    title: "Github",
     w: 600,
     h: 500,
   });

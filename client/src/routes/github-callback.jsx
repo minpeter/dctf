@@ -1,12 +1,12 @@
 import { Component } from "preact";
 
-export default class CtftimeCallback extends Component {
+export default class GithubCallback extends Component {
   componentDidMount() {
     window.opener.postMessage(
       {
-        kind: "ctftimeCallback",
+        kind: "githubCallback",
         state: this.props.state,
-        ctftimeCode: this.props.code,
+        githubCode: this.props.code,
       },
       location.origin
     );

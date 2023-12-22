@@ -11,7 +11,7 @@ import Login from "./routes/login";
 import Profile from "./routes/profile";
 import Challenges from "./routes/challs";
 import Scoreboard from "./routes/scoreboard";
-import CtftimeCallback from "./routes/ctftime-callback";
+import GithubCallback from "./routes/github-callback";
 
 import AdminChallenges from "./routes/admin/challs";
 
@@ -47,9 +47,9 @@ export function App() {
     <Home key="home" path="/" name="Home" />,
     <Scoreboard key="scoreboard" path="/scores" name="Scoreboard" />,
     <Profile key="multiProfile" path="/profile/:uuid" />,
-    <CtftimeCallback
-      key="ctftimeCallback"
-      path="/integrations/ctftime/callback"
+    <GithubCallback
+      key="githubCallback"
+      path="/integrations/github/callback"
     />,
   ];
 

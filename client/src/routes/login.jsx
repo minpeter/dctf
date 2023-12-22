@@ -2,8 +2,8 @@ import { Component } from "preact";
 import config from "../config";
 
 import { login, setAuthToken } from "../api/auth";
-import CtftimeButton from "../components/ctftime-button";
-import CtftimeAdditional from "../components/ctftime-additional";
+import GithubButton from "../components/github-button";
+import GithubAdditional from "../components/github-additional";
 import PendingToken from "../components/pending-token";
 
 class Login extends Component {
@@ -11,8 +11,8 @@ class Login extends Component {
     teamToken: "",
     errors: {},
     disabledButton: false,
-    ctftimeToken: undefined,
-    ctftimeName: undefined,
+    githubToken: undefined,
+    githubName: undefined,
     pendingAuthToken: null,
     pendingUserName: null,
     pending: false,
@@ -40,13 +40,10 @@ class Login extends Component {
     })();
   }
 
-  render({}, { ctftimeToken, ctftimeName, pendingAuthToken, pending }) {
-    if (ctftimeToken) {
+  render({}, { githubToken, githubName, pendingAuthToken, pending }) {
+    if (githubToken) {
       return (
-        <CtftimeAdditional
-          ctftimeToken={ctftimeToken}
-          ctftimeName={ctftimeName}
-        />
+        <GithubAdditional githubToken={githubToken} githubName={githubName} />
       );
     }
     if (pending) {
@@ -59,23 +56,23 @@ class Login extends Component {
       <div class={`row u-center `}>
         <h4>Log in to {config.ctfName}</h4>
 
-        <CtftimeButton class="col-12" onCtftimeDone={this.handleCtftimeDone} />
+        <GithubButton class="col-12" onGithubDone={this.handleGithubDone} />
       </div>
     );
   }
 
-  handleCtftimeDone = async ({ ctftimeToken, ctftimeName }) => {
+  handleGithubDone = async ({ githubToken, githubName }) => {
     this.setState({
       disabledButton: true,
     });
-    const loginRes = await login({ ctftimeToken });
+    const loginRes = await login({ githubToken });
     if (loginRes.authToken) {
       setAuthToken({ authToken: loginRes.authToken });
     }
     if (loginRes && loginRes.badUnknownUser) {
       this.setState({
-        ctftimeToken,
-        ctftimeName,
+        githubToken,
+        githubName,
       });
     }
   };

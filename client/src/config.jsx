@@ -8,7 +8,7 @@ try {
   console.log("Error parsing JSON from meta tag: meta[name=rctf-config]");
   console.log("=============  Using default config  ===================");
   config = {
-    ctftime: {
+    github: {
       clientId: "0f18c7f2d534b23a56c8",
     },
     meta: {

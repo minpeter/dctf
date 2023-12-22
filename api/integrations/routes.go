@@ -25,10 +25,10 @@ func Routes(integrationRoutes *gin.RouterGroup) {
 		client.GET("/config", clientConfigHandler)
 	}
 
-	ctftime := integrationRoutes.Group("/ctftime")
+	github := integrationRoutes.Group("/github")
 	{
-		ctftime.POST("/callback", ctftimeCallbackHandler)
-		ctftime.GET("/leaderboard", ctftimeLeaderboardHandler)
+		github.POST("/callback", githubCallbackHandler)
+		github.GET("/leaderboard", githubLeaderboardHandler)
 	}
 
 }
@@ -39,10 +39,10 @@ func clientConfigHandler(c *gin.Context) {
 
 var userEndpoint = "https://api.github.com/user"
 
-func ctftimeCallbackHandler(c *gin.Context) {
+func githubCallbackHandler(c *gin.Context) {
 
 	var reqCode struct {
-		Code string `json:"ctftimeCode"`
+		Code string `json:"githubCode"`
 	}
 
 	if err := c.BindJSON(&reqCode); err != nil {
@@ -114,13 +114,13 @@ func ctftimeCallbackHandler(c *gin.Context) {
 		return
 	}
 
-	utils.SendResponse(c, "goodCtftimeToken", gin.H{
-		"ctftimeToken": GithubToken,
-		"ctftimeId":    result.ID,
+	utils.SendResponse(c, "goodGithubToken", gin.H{
+		"githubToken": GithubToken,
+		"githubId":    result.ID,
 	})
 }
 
-func ctftimeLeaderboardHandler(c *gin.Context) {
+func githubLeaderboardHandler(c *gin.Context) {
 	c.Status(http.StatusNoContent)
 }
 

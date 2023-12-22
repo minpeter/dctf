@@ -5,12 +5,12 @@ import { register } from "../api/auth";
 import UserCircle from "../icons/user-circle.svg";
 import { useEffect, useState, useCallback } from "preact/hooks";
 
-export default ({ ctftimeToken, ctftimeName }) => {
+export default ({ githubToken, githubName }) => {
   const [disabledButton, setDisabledButton] = useState(false);
   const division = config.defaultDivision || Object.keys(config.divisions)[0];
   const [showName, setShowName] = useState(false);
 
-  const [name, setName] = useState(ctftimeName);
+  const [name, setName] = useState(githubName);
   const handleNameChange = useCallback((e) => setName(e.target.value), []);
 
   const [errors, setErrors] = useState({});
@@ -20,7 +20,7 @@ export default ({ ctftimeToken, ctftimeName }) => {
     setDisabledButton(true);
 
     const { errors } = await register({
-      ctftimeToken,
+      githubToken,
       name: name || undefined,
       division,
       recaptchaCode: await requestRecaptchaCode?.(),
@@ -35,7 +35,7 @@ export default ({ ctftimeToken, ctftimeName }) => {
     }
 
     setErrors(errors);
-  }, [ctftimeToken, name, division, requestRecaptchaCode]);
+  }, [githubToken, name, division, requestRecaptchaCode]);
 
   const handleSubmit = useCallback(
     (e) => {
@@ -46,7 +46,7 @@ export default ({ ctftimeToken, ctftimeName }) => {
     [handleRegister]
   );
 
-  // Try login with CTFtime token only, if fails prompt for name
+  // Try login with Github token only, if fails prompt for name
   useEffect(handleRegister, []);
 
   return (

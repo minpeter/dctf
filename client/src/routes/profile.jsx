@@ -12,7 +12,7 @@ import {
 import { useToast } from "../components/toast";
 import Form from "../components/form";
 import MembersCard from "../components/profile/members-card";
-import CtftimeCard from "../components/profile/ctftime-card";
+import GithubCard from "../components/profile/github-card";
 import {
   PublicSolvesCard,
   PrivateSolvesCard,
@@ -24,7 +24,7 @@ import AddressBook from "../icons/address-book.svg";
 import UserCircle from "../icons/user-circle.svg";
 import EnvelopeOpen from "../icons/envelope-open.svg";
 import Rank from "../icons/rank.svg";
-import Ctftime from "../icons/ctftime.svg";
+import Github from "../icons/github.svg";
 import useRecaptcha, { RecaptchaLegalNotice } from "../components/recaptcha";
 
 const SummaryCard = memo(
@@ -34,7 +34,7 @@ const SummaryCard = memo(
     division,
     divisionPlace,
     globalPlace,
-    ctftimeId,
+    githubId,
     isPrivate,
   }) => (
     <div class="card">
@@ -46,13 +46,13 @@ const SummaryCard = memo(
           >
             {name}
           </h5>
-          {ctftimeId && (
+          {githubId && (
             <a
-              href={`https://ctftime.org/team/${ctftimeId}`}
+              href={`https://github.org/team/${githubId}`}
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Ctftime style="height: 20px;" />
+              <Github style="height: 20px;" />
             </a>
           )}
         </div>
@@ -314,7 +314,7 @@ const Profile = ({ uuid }) => {
     score,
     solves,
     teamToken,
-    ctftimeId,
+    githubId,
     allowedDivisions,
   } = data;
   const division = config.divisions[data.division];
@@ -347,13 +347,13 @@ const Profile = ({ uuid }) => {
   }, [uuid, isPrivate, toast]);
 
   const onProfileUpdate = useCallback(
-    ({ name, email, divisionId, ctftimeId }) => {
+    ({ name, email, divisionId, githubId }) => {
       setData((data) => ({
         ...data,
         name: name === undefined ? data.name : name,
         email: email === undefined ? data.email : email,
         division: divisionId === undefined ? data.division : divisionId,
-        ctftimeId: ctftimeId === undefined ? data.ctftimeId : ctftimeId,
+        githubId: githubId === undefined ? data.githubId : githubId,
       }));
     },
     []
@@ -394,7 +394,7 @@ const Profile = ({ uuid }) => {
               onUpdate: onProfileUpdate,
             }}
           />
-          <CtftimeCard {...{ ctftimeId, onUpdate: onProfileUpdate }} />
+          <GithubCard {...{ githubId, onUpdate: onProfileUpdate }} />
         </div>
       )}
       <div>
@@ -405,7 +405,7 @@ const Profile = ({ uuid }) => {
             division,
             divisionPlace,
             globalPlace,
-            ctftimeId,
+            githubId,
             isPrivate,
           }}
         />

@@ -20,8 +20,8 @@ func Routes(userRoutes *gin.RouterGroup) {
 
 		auth := me.Group("/auth")
 		{
-			auth.DELETE("/ctftime", deleteCtftimeAuthHandler)
-			auth.PUT("/ctftime", putCtftimeAuthHandler)
+			auth.DELETE("/github", deleteGithubAuthHandler)
+			auth.PUT("/github", putGithubAuthHandler)
 			auth.DELETE("/email", deleteEmailAuthHandler)
 			auth.PUT("/email", putEmailAuthHandler)
 		}
@@ -48,7 +48,7 @@ func getMeHandler(c *gin.Context) {
 
 	utils.SendResponse(c, "goodUserData", gin.H{
 		"name":             user.Name,
-		"ctftimeId":        nil,
+		"githubId":         nil,
 		"division":         "open",
 		"score":            20000,
 		"globalPlace":      nil,

@@ -21,31 +21,31 @@ func Routes(authRoutes *gin.RouterGroup) {
 }
 
 func loginHandler(c *gin.Context) {
-	// ctftimeToken body에서 읽어오기
+	// githubToken body에서 읽어오기
 	var req struct {
-		CtftimeToken string `json:"ctftimeToken"`
+		GithubToken string `json:"githubToken"`
 	}
 	if err := c.BindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	// ctftimeToken이 없으면 에러
-	if req.CtftimeToken == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing ctftimeToken"})
+	// githubToken이 없으면 에러
+	if req.GithubToken == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing githubToken"})
 		return
 	}
 
-	ctftimeToken, err := auth.GetData(auth.GithubAuth, auth.Token(req.CtftimeToken))
+	githubToken, err := auth.GetData(auth.GithubAuth, auth.Token(req.GithubToken))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	fmt.Println("ctftime ID:", ctftimeToken.GithubAuth.GithubID)
-	fmt.Println("ctftime Data:", ctftimeToken.GithubAuth.GithubData)
+	fmt.Println("github ID:", githubToken.GithubAuth.GithubID)
+	fmt.Println("github Data:", githubToken.GithubAuth.GithubData)
 
-	user, has, err := database.GetUserById(ctftimeToken.GithubAuth.GithubID)
+	user, has, err := database.GetUserById(githubToken.GithubAuth.GithubID)
 
 	fmt.Println("user:", user)
 	fmt.Println("has:", has)
@@ -84,26 +84,26 @@ func recoverHandler(c *gin.Context) {
 func registerHandler(c *gin.Context) {
 
 	var req struct {
-		CtftimeToken string `json:"ctftimeToken"`
+		GithubToken string `json:"githubToken"`
 	}
 	if err := c.BindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	// ctftimeToken이 없으면 에러
-	if req.CtftimeToken == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing ctftimeToken"})
+	// githubToken이 없으면 에러
+	if req.GithubToken == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing githubToken"})
 		return
 	}
 
-	ctftimeToken, err := auth.GetData(auth.GithubAuth, auth.Token(req.CtftimeToken))
+	githubToken, err := auth.GetData(auth.GithubAuth, auth.Token(req.GithubToken))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	authToken, err := auth.UserRegister("ab", "test@test.com", ctftimeToken.GithubAuth.GithubData, ctftimeToken.GithubAuth.GithubID, ctftimeToken.GithubAuth.GithubData)
+	authToken, err := auth.UserRegister("ab", "test@test.com", githubToken.GithubAuth.GithubData, githubToken.GithubAuth.GithubID, githubToken.GithubAuth.GithubData)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

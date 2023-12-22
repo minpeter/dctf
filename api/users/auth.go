@@ -6,11 +6,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func deleteCtftimeAuthHandler(c *gin.Context) {
+func deleteGithubAuthHandler(c *gin.Context) {
 	c.Status(http.StatusNoContent)
 }
 
-func putCtftimeAuthHandler(c *gin.Context) {
+func putGithubAuthHandler(c *gin.Context) {
 	c.Status(http.StatusNoContent)
 }
 

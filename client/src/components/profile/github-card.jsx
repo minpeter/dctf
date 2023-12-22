@@ -1,51 +1,51 @@
-import { putCtftime, deleteCtftime } from "../../api/auth";
+import { putGithub, deleteGithub } from "../../api/auth";
 import { useCallback } from "preact/hooks";
 import { useToast } from "../toast";
-import CtftimeButton from "../ctftime-button";
+import GithubButton from "../github-button";
 
-export default function CtftimeCard(ctftimeId, onUpdate) {
+export default function GithubCard(githubId, onUpdate) {
   const { toast } = useToast();
 
-  const handleCtftimeDone = useCallback(
-    async ({ ctftimeToken, ctftimeId }) => {
-      const { kind, message } = await putCtftime({ ctftimeToken });
-      if (kind !== "goodCtftimeAuthSet") {
+  const handleGithubDone = useCallback(
+    async ({ githubToken, githubId }) => {
+      const { kind, message } = await putGithub({ githubToken });
+      if (kind !== "goodGithubAuthSet") {
         toast({ body: message, type: "error" });
         return;
       }
-      onUpdate({ ctftimeId });
+      onUpdate({ githubId });
     },
     [toast, onUpdate]
   );
 
   const handleRemoveClick = useCallback(async () => {
-    const { kind, message } = await deleteCtftime();
-    if (kind !== "goodCtftimeRemoved") {
+    const { kind, message } = await deleteGithub();
+    if (kind !== "goodGithubRemoved") {
       toast({ body: message, type: "error" });
       return;
     }
-    onUpdate({ ctftimeId: null });
+    onUpdate({ githubId: null });
   }, [toast, onUpdate]);
 
   return (
     <div class="card">
       <div class="content p-4 w-80">
-        <p>CTFtime Integration</p>
-        {ctftimeId === null ? (
+        <p>Github Integration</p>
+        {githubId === null ? (
           <>
             <p class="font-thin m-0">
-              To login with CTFtime and get a badge on your profile, connect
-              CTFtime to your account.
+              To login with Github and get a badge on your profile, connect
+              Github to your account.
             </p>
             <div class="row u-center">
-              <CtftimeButton onCtftimeDone={handleCtftimeDone} />
+              <GithubButton onGithubDone={handleGithubDone} />
             </div>
           </>
         ) : (
           <>
             <p class="font-thin m-0">
-              Your account is already connected to CTFtime. You can disconnect
-              CTFtime from your account.
+              Your account is already connected to Github. You can disconnect
+              Github from your account.
             </p>
             <div class="row u-center">
               <button class="btn-info u-center" onClick={handleRemoveClick}>

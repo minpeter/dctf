@@ -77,30 +77,30 @@ var Responses = map[string]Response{
 		Status:  400,
 		Message: "The name should only use English letters, numbers, and symbols.",
 	},
-	"badKnownCtftimeId": {
+	"badKnownGithubId": {
 		Status:  409,
-		Message: "An account with this CTFtime ID already exists.",
+		Message: "An account with this Github ID already exists.",
 	},
 	"goodLeaderboard": {
 		Status:  200,
 		Message: "The leaderboard was retrieved.",
 	},
-	"goodCtftimeLeaderboard": {
+	"goodGithubLeaderboard": {
 		Status:         200,
 		Message:        "",
 		RawContentType: "application/json",
 	},
-	"goodCtftimeToken": {
+	"goodGithubToken": {
 		Status:  200,
-		Message: "The CTFtime token was created.",
+		Message: "The Github token was created.",
 	},
-	"goodCtftimeAuthSet": {
+	"goodGithubAuthSet": {
 		Status:  200,
-		Message: "The CTFtime team was successfully updated.",
+		Message: "The Github team was successfully updated.",
 	},
-	"goodCtftimeRemoved": {
+	"goodGithubRemoved": {
 		Status:  200,
-		Message: "The CTFtime team was removed from the user.",
+		Message: "The Github team was removed from the user.",
 	},
 	"goodEmailSet": {
 		Status:  200,
@@ -110,9 +110,9 @@ var Responses = map[string]Response{
 		Status:  200,
 		Message: "The email address was removed from the user.",
 	},
-	"badCtftimeNoExists": {
+	"badGithubNoExists": {
 		Status:  404,
-		Message: "There is no CTFtime team associated with the user.",
+		Message: "There is no Github team associated with the user.",
 	},
 	"badZeroAuth": {
 		Status:  409,
@@ -122,9 +122,9 @@ var Responses = map[string]Response{
 		Status:  404,
 		Message: "There is no email address associated with the user.",
 	},
-	"badCtftimeCode": {
+	"badGithubCode": {
 		Status:  401,
-		Message: "The CTFtime code is invalid.",
+		Message: "The Github code is invalid.",
 	},
 	"goodFlag": {
 		Status:  200,
@@ -174,9 +174,9 @@ var Responses = map[string]Response{
 		Status:  401,
 		Message: "The token provided is invalid.",
 	},
-	"badCtftimeToken": {
+	"badGithubToken": {
 		Status:  401,
-		Message: "The CTFtime token provided is invalid.",
+		Message: "The Github token provided is invalid.",
 	},
 	"badJson": {
 		Status:  400,

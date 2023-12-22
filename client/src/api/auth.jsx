@@ -6,10 +6,10 @@ export const setAuthToken = ({ authToken }) => {
   route("/profile");
 };
 
-export const login = async ({ teamToken, ctftimeToken }) => {
+export const login = async ({ teamToken, githubToken }) => {
   const resp = await request("POST", "/auth/login", {
     teamToken,
-    ctftimeToken,
+    githubToken,
   });
   switch (resp.kind) {
     case "goodLogin":
@@ -59,16 +59,11 @@ export const verify = async ({ verifyToken }) => {
   }
 };
 
-export const register = async ({
-  email,
-  name,
-  ctftimeToken,
-  recaptchaCode,
-}) => {
+export const register = async ({ email, name, githubToken, recaptchaCode }) => {
   const resp = await request("POST", "/auth/register", {
     email,
     name,
-    ctftimeToken,
+    githubToken,
     recaptchaCode,
   });
   switch (resp.kind) {
@@ -104,20 +99,20 @@ export const register = async ({
   }
 };
 
-export const ctftimeCallback = ({ ctftimeCode }) => {
-  return request("POST", "/integrations/ctftime/callback", {
-    ctftimeCode,
+export const githubCallback = ({ githubCode }) => {
+  return request("POST", "/integrations/github/callback", {
+    githubCode,
   });
 };
 
-export const putCtftime = ({ ctftimeToken }) => {
-  return request("PUT", "/users/me/auth/ctftime", {
-    ctftimeToken,
+export const putGithub = ({ githubToken }) => {
+  return request("PUT", "/users/me/auth/github", {
+    githubToken,
   });
 };
 
-export const deleteCtftime = () => {
-  return request("DELETE", "/users/me/auth/ctftime");
+export const deleteGithub = () => {
+  return request("DELETE", "/users/me/auth/github");
 };
 
 export const recover = async ({ email, recaptchaCode }) => {
