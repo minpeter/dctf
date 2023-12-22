@@ -1,7 +1,5 @@
-import withStyles from "./jss";
-
-export default withStyles({}, (props) => {
-  const { classes, children, onSubmit, disabled, buttonText, errors } = props;
+export default (props) => {
+  const { children, onSubmit, disabled, buttonText, errors } = props;
 
   return (
     <form onSubmit={onSubmit} class={props.class}>
@@ -27,12 +25,10 @@ export default withStyles({}, (props) => {
             {hasError && (
               <label class="text-danger info font-light">{error}</label>
             )}
-            <div class={`${classes.input} input-control`}>
+            <div class={`  input-control`}>
               {input}
               <span class="icon">
-                {icon !== undefined && (
-                  <div class={`icon ${classes.icon}`}>{icon}</div>
-                )}
+                {icon !== undefined && <div class={`icon  `}>{icon}</div>}
               </span>
             </div>
           </div>
@@ -40,7 +36,7 @@ export default withStyles({}, (props) => {
       })}
       <button
         disabled={disabled}
-        class={`${classes.submit} btn-info u-center`}
+        class={`  btn-info u-center`}
         name="btn"
         value="submit"
         type="submit"
@@ -50,4 +46,4 @@ export default withStyles({}, (props) => {
       <span class="fg-danger info" />
     </form>
   );
-});
+};

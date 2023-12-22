@@ -6,7 +6,6 @@ import {
   useCallback,
   useRef,
 } from "preact/hooks";
-import withStyles from "./jss";
 import config from "../config";
 import { memo } from "preact/compat";
 
@@ -103,7 +102,7 @@ const GraphLine = memo(
   )
 );
 
-function Graph({ graphData, classes }) {
+function Graph({ graphData }) {
   const svgRef = useRef(null);
   const [width, setWidth] = useState(window.innerWidth);
   const updateWidth = useCallback(() => {
@@ -191,7 +190,7 @@ function Graph({ graphData, classes }) {
   }
 
   return (
-    <div class={`frame ${classes.root}`}>
+    <div>
       <div class="frame__body">
         <svg
           ref={svgRef}
@@ -242,7 +241,6 @@ function Graph({ graphData, classes }) {
       </div>
       {tooltipData.content && (
         <div
-          class={classes.tooltip}
           style={{
             transform: `translate(${tooltipData.x}px, ${tooltipData.y}px)`,
           }}
@@ -254,4 +252,4 @@ function Graph({ graphData, classes }) {
   );
 }
 
-export default withStyles({}, Graph);
+export default Graph;

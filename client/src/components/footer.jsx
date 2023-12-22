@@ -1,7 +1,5 @@
-import withStyles from "./jss";
-
-const Footer = ({ classes }) => (
-  <div class={classes.root}>
+const Footer = () => (
+  <div>
     <span>
       Powered by{" "}
       <a
@@ -15,4 +13,4 @@ const Footer = ({ classes }) => (
   </div>
 );
 
-export default withStyles({}, Footer);
+export default Footer;

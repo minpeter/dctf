@@ -1,9 +1,3 @@
-import withStyles from "./jss";
-
-export default withStyles({}, ({ classes, token, ...props }) => {
-  return (
-    <blockquote class={classes.quote} {...props}>
-      {token}
-    </blockquote>
-  );
-});
+export default function tokenPreview(token, ...props) {
+  return <blockquote {...props}>{token}</blockquote>;
+}

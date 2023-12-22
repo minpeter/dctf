@@ -1,10 +1,9 @@
 import { useState, useEffect } from "preact/hooks";
 import { createPortal } from "preact/compat";
-import withStyles from "./jss";
 
 const ANIMATION_DURATION = 150;
 
-function Modal({ classes, open, onClose, children }) {
+export default function Modal({ open, onClose, children }) {
   const [isLinger, setIsLinger] = useState(open);
 
   useEffect(() => {
@@ -34,13 +33,11 @@ function Modal({ classes, open, onClose, children }) {
     (open || isLinger) &&
     createPortal(
       <div
-        class={`modal modal--visible ${classes.animated}${
-          open ? "" : " leaving"
-        }`}
+        class={`modal modal--visible  ${open ? "" : " leaving"}`}
         hidden={!(open || isLinger)}
       >
         <div class="modal-overlay" onClick={onClose} aria-label="Close" />
-        <div class={`modal-content ${classes.modal}`} role="document">
+        <div class={`modal-content  `} role="document">
           {children}
         </div>
       </div>,
@@ -48,7 +45,3 @@ function Modal({ classes, open, onClose, children }) {
     )
   );
 }
-
-const ANIMATION_INITIAL_SCALE = 0.8;
-
-export default withStyles({}, Modal);
