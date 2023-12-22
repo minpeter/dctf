@@ -9,10 +9,8 @@ import (
 )
 
 func TestAuthToken(t *testing.T) {
-	// Create dummy data for Auth token
-	authTokenData := auth.AuthTokenData("sample-auth-data")
 	data := auth.TokenDataTypes{
-		Auth: authTokenData,
+		Auth: auth.AuthTokenData("sample-auth-data"),
 	}
 
 	// Generate Auth token

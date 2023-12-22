@@ -79,7 +79,10 @@ func registerHandler(c *gin.Context) {
 		return
 	}
 
-	token, err := auth.GetToken(userUuid)
+	token, err := auth.GetToken(auth.Auth, auth.TokenDataTypes{
+		Auth: auth.AuthTokenData("sample-auth-data"),
+	},
+	)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

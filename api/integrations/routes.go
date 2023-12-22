@@ -12,6 +12,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/minpeter/rctf-backend/auth"
+	"github.com/minpeter/rctf-backend/utils"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/github"
 )
@@ -100,6 +102,23 @@ func ctftimeCallbackHandler(c *gin.Context) {
 	fmt.Printf("email: %s\n", result.Email)
 	fmt.Printf("githubId: %d\n", result.ID)
 	fmt.Printf("githubUsername: %s\n", result.Login)
+
+	Iontoken, err := auth.GetToken(auth.IonAuth, auth.TokenDataTypes{
+		IonAuth: auth.IonAuthTokenData{
+			IonID:   result.Login,
+			IonData: string(body),
+		},
+	})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	utils.SendResponse(c, "goodIonToken", gin.H{
+		"ionToken": Iontoken,
+		"ionId":    result.Login,
+		"ionName":  result.Name,
+	})
 }
 
 func ctftimeLeaderboardHandler(c *gin.Context) {

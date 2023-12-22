@@ -17,7 +17,7 @@ func TokenAuthMiddleware() gin.HandlerFunc {
 			SendResponse(c, "badToken", nil)
 			return
 		}
-		uuid, err := auth.GetData(authHeader[7:])
+		uuid, err := auth.GetData(auth.Auth, auth.Token(authHeader[7:]))
 		if err != nil {
 			// utils.SendResponse
 			SendResponse(c, "badToken", nil)
@@ -25,7 +25,7 @@ func TokenAuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		user, err := database.GetUserById(uuid)
+		user, err := database.GetUserById(string(uuid.Auth))
 		if err != nil {
 			// utils.SendResponse
 			SendResponse(c, "badToken", nil)
