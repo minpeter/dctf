@@ -1,65 +1,283 @@
 package auth
 
 import (
+	"crypto/aes"
+	"crypto/cipher"
+	"crypto/rand"
 	"encoding/base64"
+	"encoding/json"
+	"errors"
 	"fmt"
+	"io"
+	"math"
 	"time"
-
-	"github.com/golang-jwt/jwt"
 )
 
-var secretKey = []byte("your-secret-key")
+type TokenKinds int
 
-func GetToken(uuid string) (string, error) {
-	// 만료 1시간
-	expirationTime := time.Now().Add(1 * time.Hour)
+const (
+	Auth TokenKinds = iota
+	Team
+	Verify
+	IonAuth
+)
 
-	claims := jwt.MapClaims{
-		"uuid": uuid,
-		"exp":  expirationTime.Unix(),
-	}
+// VerifyTokenKinds represents verification token kinds
+type VerifyTokenKinds string
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+const (
+	Update   VerifyTokenKinds = "update"
+	Register VerifyTokenKinds = "register"
+	Recover  VerifyTokenKinds = "recover"
+)
 
-	fmt.Println("token:", token)
-	signedToken, err := token.SignedString(secretKey)
-	if err != nil {
-		return "", err
-	}
+// AuthTokenData represents authentication token data
+type AuthTokenData string
 
-	encodedToken := base64.StdEncoding.EncodeToString([]byte(signedToken))
+// TeamTokenData represents team token data
+type TeamTokenData string
 
-	return encodedToken, nil
+// BaseVerifyTokenData represents base verification token data
+type BaseVerifyTokenData struct {
+	VerifyID string
+	Kind     VerifyTokenKinds
 }
 
-func GetData(encodedToken string) (string, error) {
-	decodedToken, err := base64.StdEncoding.DecodeString(encodedToken)
-	if err != nil {
-		return "", err
-	}
-
-	claims := jwt.MapClaims{
-		"uuid": "",
-		"exp":  0,
-	}
-
-	token, err := jwt.ParseWithClaims(string(decodedToken), claims, func(token *jwt.Token) (interface{}, error) {
-		return secretKey, nil
-	})
-
-	if err != nil {
-		return "", err
-	}
-
-	// 토큰이 유효한지 검사합니다.
-	if !token.Valid {
-		return "", fmt.Errorf("invalid token")
-	}
-
-	// 토큰이 만료되었는지 검사합니다.
-	if claims["exp"].(float64) < float64(time.Now().Unix()) {
-		return "", fmt.Errorf("expired token")
-	}
-
-	return claims["uuid"].(string), nil
+// RegisterVerifyTokenData represents register verification token data
+type RegisterVerifyTokenData struct {
+	BaseVerifyTokenData
+	Email    string
+	Name     string
+	Division string
 }
+
+// UpdateVerifyTokenData represents update verification token data
+type UpdateVerifyTokenData struct {
+	BaseVerifyTokenData
+	UserID   string
+	Email    string
+	Division string
+}
+
+// RecoverTokenData represents recover verification token data
+type RecoverTokenData struct {
+	BaseVerifyTokenData
+	UserID string
+	Email  string
+}
+
+// VerifyTokenData represents union type for verification token data
+type VerifyTokenData interface {
+	isVerifyTokenData()
+}
+
+// Implement isVerifyTokenData method for each struct to satisfy the interface
+func (r RegisterVerifyTokenData) isVerifyTokenData() {}
+func (u UpdateVerifyTokenData) isVerifyTokenData()   {}
+func (r RecoverTokenData) isVerifyTokenData()        {}
+
+// IonAuthTokenData represents ion authentication token data
+type IonAuthTokenData struct {
+	IonID   string
+	IonData string
+}
+
+// TokenDataTypes represents internal map of token types
+type TokenDataTypes struct {
+	Auth    AuthTokenData
+	Team    TeamTokenData
+	Verify  VerifyTokenData
+	IonAuth IonAuthTokenData
+}
+
+// Token represents a string token
+type Token string
+
+// InternalTokenData represents internal token data structure
+type InternalTokenData struct {
+	K TokenKinds
+	T int64
+	D TokenDataTypes
+}
+
+// TokenExpiries represents token expiration times
+var TokenExpiries = map[TokenKinds]float64{
+	// Inf(1) means infinite
+	Auth: math.Inf(1),
+	Team: math.Inf(1),
+	// 1 hour
+	Verify:  3600,
+	IonAuth: 3600,
+}
+
+// TimeNow returns the current time in seconds since epoch
+func TimeNow() int64 {
+	return time.Now().Unix()
+}
+
+func generateRandomKey(size int) ([]byte, error) {
+	key := make([]byte, size)
+	_, err := rand.Read(key)
+	if err != nil {
+		return nil, err
+	}
+	return key, nil
+}
+
+// var tokenKey = []byte("your-secret-key")
+var tokenKey, _ = generateRandomKey(32) // 32 bytes for AES-256
+
+func encryptToken(content InternalTokenData) (Token, error) {
+	iv := make([]byte, 12)
+	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
+		return "", err
+	}
+
+	fmt.Println("iv:", iv)
+	block, err := aes.NewCipher(tokenKey)
+	if err != nil {
+		return "", err
+	}
+
+	aesgcm, err := cipher.NewGCM(block)
+	if err != nil {
+		return "", err
+	}
+
+	// Convert content to JSON
+	contentJSON, err := json.Marshal(content)
+	if err != nil {
+		return "", err
+	}
+
+	cipherText := aesgcm.Seal(nil, iv, contentJSON, nil)
+
+	// Append iv and nonce to the cipherText
+	tokenContent := append(iv, cipherText...)
+
+	return Token(base64.StdEncoding.EncodeToString(tokenContent)), nil
+}
+func decryptToken(token Token) (InternalTokenData, error) {
+	tokenContent, err := base64.StdEncoding.DecodeString(string(token))
+	if err != nil {
+		return InternalTokenData{}, err
+	}
+
+	iv := tokenContent[:12]
+
+	cipherText := tokenContent[12:]
+
+	block, err := aes.NewCipher(tokenKey)
+	if err != nil {
+		return InternalTokenData{}, err
+	}
+
+	aesgcm, err := cipher.NewGCM(block)
+	if err != nil {
+		return InternalTokenData{}, err
+	}
+
+	plainText, err := aesgcm.Open(nil, iv, cipherText, nil)
+	if err != nil {
+		return InternalTokenData{}, err
+	}
+
+	var decodedData InternalTokenData
+	err = json.Unmarshal(plainText, &decodedData)
+	if err != nil {
+		return InternalTokenData{}, err
+	}
+
+	return decodedData, nil
+}
+
+func GetData(expectedTokenKind TokenKinds, token Token) (TokenDataTypes, error) {
+
+	content, err := decryptToken(token)
+	if err != nil {
+		return TokenDataTypes{}, err
+	}
+
+	if content.K != expectedTokenKind {
+		return TokenDataTypes{}, errors.New("unexpected token kind")
+	}
+
+	// fmt.Printf("Token Expiry: %v\n", TokenExpiries[content.K])
+	// fmt.Printf("Token Time: %v\n", content.T)
+	// fmt.Printf("Time Now: %v\n", TimeNow())
+
+	if !math.IsInf(TokenExpiries[content.K], 1) && content.T+int64(TokenExpiries[content.K]) < TimeNow() {
+		return TokenDataTypes{}, errors.New("Token expired")
+	}
+
+	return content.D, nil
+}
+
+func GetToken(tokenKind TokenKinds, data TokenDataTypes) (Token, error) {
+	token := InternalTokenData{
+		K: tokenKind,
+		T: TimeNow(),
+		D: data,
+	}
+
+	encryptedToken, err := encryptToken(token)
+	if err != nil {
+		return "", err
+	}
+
+	return Token(encryptedToken), nil
+}
+
+// func GetToken(uuid string) (string, error) {
+// 	// 만료 1시간
+// 	expirationTime := time.Now().Add(1 * time.Hour)
+
+// 	claims := jwt.MapClaims{
+// 		"uuid": uuid,
+// 		"exp":  expirationTime.Unix(),
+// 	}
+
+// 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+// 	fmt.Println("token:", token)
+// 	signedToken, err := token.SignedString(secretKey)
+// 	if err != nil {
+// 		return "", err
+// 	}
+
+// 	encodedToken := base64.StdEncoding.EncodeToString([]byte(signedToken))
+
+// 	return encodedToken, nil
+// }
+
+// func GetData(encodedToken string) (string, error) {
+// 	decodedToken, err := base64.StdEncoding.DecodeString(encodedToken)
+// 	if err != nil {
+// 		return "", err
+// 	}
+
+// 	claims := jwt.MapClaims{
+// 		"uuid": "",
+// 		"exp":  0,
+// 	}
+
+// 	token, err := jwt.ParseWithClaims(string(decodedToken), claims, func(token *jwt.Token) (interface{}, error) {
+// 		return secretKey, nil
+// 	})
+
+// 	if err != nil {
+// 		return "", err
+// 	}
+
+// 	// 토큰이 유효한지 검사합니다.
+// 	if !token.Valid {
+// 		return "", fmt.Errorf("invalid token")
+// 	}
+
+// 	// 토큰이 만료되었는지 검사합니다.
+// 	if claims["exp"].(float64) < float64(time.Now().Unix()) {
+// 		return "", fmt.Errorf("expired token")
+// 	}
+
+// 	return claims["uuid"].(string), nil
+// }
