@@ -1,5 +1,4 @@
 import { useMemo, useCallback } from "preact/hooks";
-import withStyles from "./jss";
 
 function PaginationItem({
   onClick,
@@ -35,17 +34,15 @@ function PaginationItem({
   );
 }
 
-const PaginationEllipses = withStyles({}, ({ classes }) => {
+const PaginationEllipses = ({}) => {
   const noFocus = useCallback((e) => e.target.blur(), []);
   // TODO: pass props through
   return (
-    <div class={`pagination-item short ${classes.noHover}`}>
-      <a class={`ellipses ${classes.ellipses}`} tabindex="-1" onFocus={noFocus}>
-        &hellip;
-      </a>
-    </div>
+    <a tabindex="-1" onFocus={noFocus}>
+      &hellip;
+    </a>
   );
-});
+};
 
 function Pagination({ totalItems, pageSize, page, setPage, numVisiblePages }) {
   numVisiblePages = numVisiblePages || 9;

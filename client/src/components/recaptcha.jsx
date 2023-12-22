@@ -1,5 +1,4 @@
 import config from "../config";
-import withStyles from "./jss";
 import { useEffect, useCallback } from "preact/hooks";
 
 const loadRecaptchaScript = () =>
@@ -55,13 +54,12 @@ const requestRecaptchaCode = () =>
 // exported for legacy class component usage
 export { loadRecaptcha, requestRecaptchaCode };
 
-export const RecaptchaLegalNotice = withStyles({}, ({ classes }) => (
-  <div class={classes.root}>
+export const RecaptchaLegalNotice = ({}) => (
+  <div>
     This site is protected by reCAPTCHA.
     <br />
     The Google{" "}
     <a
-      class={classes.link}
       href="https://policies.google.com/privacy"
       target="_blank"
       rel="noopener noreferrer"
@@ -70,7 +68,6 @@ export const RecaptchaLegalNotice = withStyles({}, ({ classes }) => (
     </a>{" "}
     and{" "}
     <a
-      class={classes.link}
       href="https://policies.google.com/terms"
       target="_blank"
       rel="noopener noreferrer"
@@ -79,7 +76,7 @@ export const RecaptchaLegalNotice = withStyles({}, ({ classes }) => (
     </a>{" "}
     apply.
   </div>
-));
+);
 
 export default (action) => {
   const recaptchaEnabled = config.recaptcha?.protectedActions.includes(action);

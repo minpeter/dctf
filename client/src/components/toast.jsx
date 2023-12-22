@@ -1,6 +1,5 @@
 import { createContext } from "preact";
 import { useState, useContext, useCallback, useEffect } from "preact/hooks";
-import withStyles from "./jss";
 
 const ToastCtx = createContext();
 
@@ -28,9 +27,7 @@ function Toast({ children, remove, type, id }) {
   );
 }
 
-const ToastContainer = withStyles({}, ({ classes, ...props }) => (
-  <div class={classes.container} {...props} />
-));
+const ToastContainer = ({ ...props }) => <div {...props} />;
 
 export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([]);

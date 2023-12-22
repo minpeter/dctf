@@ -1,9 +1,8 @@
 import { useState, useCallback } from "preact/hooks";
 import Modal from "./modal";
 import { logout } from "../api/auth";
-import withStyles from "./jss";
 
-const LogoutDialog = withStyles({}, ({ onClose, classes, ...props }) => {
+const LogoutDialog = ({ onClose, ...props }) => {
   const wrappedOnClose = useCallback(
     (e) => {
       e.preventDefault();
@@ -30,25 +29,19 @@ const LogoutDialog = withStyles({}, ({ onClose, classes, ...props }) => {
       </div>
       <div class="modal-footer">
         <div class="btn-container u-inline-block">
-          <button
-            class={`btn-small outline ${classes.button}`}
-            onClick={wrappedOnClose}
-          >
+          <button class={`btn-small outline `} onClick={wrappedOnClose}>
             Cancel
           </button>
         </div>
         <div class="btn-container u-inline-block">
-          <button
-            class={`btn-small btn-danger outline ${classes.button}`}
-            onClick={doLogout}
-          >
+          <button class={`btn-small btn-danger outline  `} onClick={doLogout}>
             Logout
           </button>
         </div>
       </div>
     </Modal>
   );
-});
+};
 
 function LogoutButton({ ...props }) {
   const [isDialogVisible, setIsDialogVisible] = useState(false);

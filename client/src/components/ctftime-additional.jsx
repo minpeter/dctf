@@ -1,12 +1,11 @@
 import Form from "../components/form";
 import useRecaptcha from "../components/recaptcha";
 import config from "../config";
-import withStyles from "../components/jss";
 import { register } from "../api/auth";
 import UserCircle from "../icons/user-circle.svg";
 import { useEffect, useState, useCallback } from "preact/hooks";
 
-export default withStyles({}, ({ classes, ctftimeToken, ctftimeName }) => {
+export default ({ ctftimeToken, ctftimeName }) => {
   const [disabledButton, setDisabledButton] = useState(false);
   const division = config.defaultDivision || Object.keys(config.divisions)[0];
   const [showName, setShowName] = useState(false);
@@ -53,7 +52,7 @@ export default withStyles({}, ({ classes, ctftimeToken, ctftimeName }) => {
   return (
     <div class="row u-center">
       <Form
-        class={`${classes.root} col-6`}
+        class={` col-6`}
         onSubmit={handleSubmit}
         disabled={disabledButton}
         errors={errors}
@@ -78,4 +77,4 @@ export default withStyles({}, ({ classes, ctftimeToken, ctftimeName }) => {
       </Form>
     </div>
   );
-});
+};

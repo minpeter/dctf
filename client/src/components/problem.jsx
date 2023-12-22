@@ -1,4 +1,3 @@
-import withStyles from "../components/jss";
 import { useState, useCallback, useRef } from "preact/hooks";
 
 import { submitFlag, getSolves } from "../api/challenges";
@@ -14,7 +13,7 @@ const markdownComponents = {
 
 const solvesPageSize = 10;
 
-const Problem = ({ classes, problem, solved, setSolved }) => {
+const Problem = ({ problem, solved, setSolved }) => {
   const { toast } = useToast();
 
   const hasDownloads = problem.files.length !== 0;
@@ -89,7 +88,7 @@ const Problem = ({ classes, problem, solved, setSolved }) => {
   const onSolvesClose = useCallback(() => setSolves(null), []);
 
   return (
-    <div class={`frame ${classes.frame}`}>
+    <div>
       <div class="frame__body">
         <div class="row p-0">
           <div class="col-6 p-0">
@@ -100,9 +99,7 @@ const Problem = ({ classes, problem, solved, setSolved }) => {
           </div>
           <div class="col-6 p-0 u-text-right">
             <a
-              class={`${classes.points} ${
-                solvesPending ? classes.solvesPending : ""
-              }`}
+              class={` ${solvesPending ? "solvesPending" : ""}`}
               onClick={onSolvesClick}
             >
               {problem.solves}
@@ -114,10 +111,10 @@ const Problem = ({ classes, problem, solved, setSolved }) => {
         </div>
 
         <div class="p-0 content p-4 w-80 u-center">
-          <div class={`divider ${classes.divider}`} />
+          <div class={`divider  `} />
         </div>
 
-        <div class={`${classes.description} frame__subtitle`}>
+        <div>
           <Markdown
             content={problem.description}
             components={markdownComponents}
@@ -128,16 +125,14 @@ const Problem = ({ classes, problem, solved, setSolved }) => {
             <input
               autocomplete="off"
               autocorrect="off"
-              class={`form-group-input input-small ${classes.input} ${
+              class={`form-group-input input-small  ${
                 hasError ? "input-error" : ""
               } ${solved ? "input-success" : ""}`}
               placeholder={`Flag${solved ? " (solved)" : ""}`}
               value={value}
               onChange={handleInputChange}
             />
-            <button class={`form-group-btn btn-small ${classes.submit}`}>
-              Submit
-            </button>
+            <button class={`form-group-btn btn-small`}>Submit</button>
           </div>
         </form>
 
@@ -147,7 +142,7 @@ const Problem = ({ classes, problem, solved, setSolved }) => {
             <div class="tag-container">
               {problem.files.map((file) => {
                 return (
-                  <div class={`tag ${classes.tag}`} key={file.url}>
+                  <div class={`tag`} key={file.url}>
                     <a native download href={`${file.url}`}>
                       {file.name}
                     </a>
@@ -172,4 +167,4 @@ const Problem = ({ classes, problem, solved, setSolved }) => {
   );
 };
 
-export default withStyles({}, Problem);
+export default Problem;
