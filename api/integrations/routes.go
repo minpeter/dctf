@@ -103,10 +103,10 @@ func ctftimeCallbackHandler(c *gin.Context) {
 	fmt.Printf("githubId: %d\n", result.ID)
 	fmt.Printf("githubUsername: %s\n", result.Login)
 
-	GithubToken, err := auth.GetToken(auth.IonAuth, auth.TokenDataTypes{
-		IonAuth: auth.IonAuthTokenData{
-			IonID:   result.Login,
-			IonData: result.Name,
+	GithubToken, err := auth.GetToken(auth.GithubAuth, auth.TokenDataTypes{
+		GithubAuth: auth.GithubAuthTokenData{
+			GithubID:   result.Login,
+			GithubData: result.Name,
 		},
 	})
 	if err != nil {

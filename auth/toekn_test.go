@@ -37,17 +37,17 @@ func TestAuthToken(t *testing.T) {
 	}
 }
 
-func TestIonAuthToken(t *testing.T) {
+func TestGithubAuthToken(t *testing.T) {
 
 	data := auth.TokenDataTypes{
-		IonAuth: auth.IonAuthTokenData{
-			IonID:   "sample-ion-id",
-			IonData: "sample-ion-data",
+		GithubAuth: auth.GithubAuthTokenData{
+			GithubID:   "sample-id",
+			GithubData: "sample-data",
 		},
 	}
 
 	// Generate Auth token
-	authToken, err := auth.GetToken(auth.IonAuth, data)
+	authToken, err := auth.GetToken(auth.GithubAuth, data)
 	if err != nil {
 		t.Fatalf("Error generating Auth token: %v", err)
 	}
@@ -55,14 +55,14 @@ func TestIonAuthToken(t *testing.T) {
 	fmt.Println("authToken:", authToken)
 
 	// Verify the generated token
-	retrievedData, err := auth.GetData(auth.IonAuth, authToken)
+	retrievedData, err := auth.GetData(auth.GithubAuth, authToken)
 	if err != nil {
 		t.Fatalf("Error verifying Auth token: %v", err)
 	}
 
-	fmt.Println("originalData:", data.IonAuth.IonData)
+	fmt.Println("originalData:", data.GithubAuth.GithubData)
 
-	fmt.Println("retrievedData:", retrievedData.IonAuth.IonData)
+	fmt.Println("retrievedData:", retrievedData.GithubAuth.GithubData)
 
 	// Check if the retrieved data matches the original data
 	if !reflect.DeepEqual(data, retrievedData) {

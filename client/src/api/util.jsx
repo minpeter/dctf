@@ -12,7 +12,6 @@ export const handleResponse = ({ resp, valid, resolveDataMessage }) => {
         data: resp.message,
       };
     }
-
     return {
       data: resp.data,
     };

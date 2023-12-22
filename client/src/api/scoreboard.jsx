@@ -7,10 +7,3 @@ export const getScoreboard = ({ division, limit = 100, offset = 0 }) => {
     offset,
   });
 };
-
-export const getGraph = async ({ division }) => {
-  return request("GET", "/leaderboard/graph", {
-    division,
-    limit: 10,
-  });
-};

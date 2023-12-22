@@ -19,7 +19,7 @@ const (
 	Auth TokenKinds = iota
 	Team
 	Verify
-	IonAuth
+	GithubAuth
 )
 
 // VerifyTokenKinds represents verification token kinds
@@ -76,18 +76,17 @@ func (r RegisterVerifyTokenData) isVerifyTokenData() {}
 func (u UpdateVerifyTokenData) isVerifyTokenData()   {}
 func (r RecoverTokenData) isVerifyTokenData()        {}
 
-// IonAuthTokenData represents ion authentication token data
-type IonAuthTokenData struct {
-	IonID   string
-	IonData string
+type GithubAuthTokenData struct {
+	GithubID   string
+	GithubData string
 }
 
 // TokenDataTypes represents internal map of token types
 type TokenDataTypes struct {
-	Auth    AuthTokenData
-	Team    TeamTokenData
-	Verify  VerifyTokenData
-	IonAuth IonAuthTokenData
+	Auth       AuthTokenData
+	Team       TeamTokenData
+	Verify     VerifyTokenData
+	GithubAuth GithubAuthTokenData
 }
 
 // Token represents a string token
@@ -106,8 +105,8 @@ var TokenExpiries = map[TokenKinds]float64{
 	Auth: math.Inf(1),
 	Team: math.Inf(1),
 	// 1 hour
-	Verify:  3600,
-	IonAuth: 3600,
+	Verify:     3600,
+	GithubAuth: 3600,
 }
 
 // TimeNow returns the current time in seconds since epoch

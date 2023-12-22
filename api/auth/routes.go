@@ -36,16 +36,16 @@ func loginHandler(c *gin.Context) {
 		return
 	}
 
-	ctftimeToken, err := auth.GetData(auth.IonAuth, auth.Token(req.CtftimeToken))
+	ctftimeToken, err := auth.GetData(auth.GithubAuth, auth.Token(req.CtftimeToken))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	fmt.Println("ctftime Ion ID:", ctftimeToken.IonAuth.IonID)
-	fmt.Println("ctftime Ion Data:", ctftimeToken.IonAuth.IonData)
+	fmt.Println("ctftime ID:", ctftimeToken.GithubAuth.GithubID)
+	fmt.Println("ctftime Data:", ctftimeToken.GithubAuth.GithubData)
 
-	user, has, err := database.GetUserById(ctftimeToken.IonAuth.IonID)
+	user, has, err := database.GetUserById(ctftimeToken.GithubAuth.GithubID)
 
 	fmt.Println("user:", user)
 	fmt.Println("has:", has)
@@ -97,13 +97,13 @@ func registerHandler(c *gin.Context) {
 		return
 	}
 
-	ctftimeToken, err := auth.GetData(auth.IonAuth, auth.Token(req.CtftimeToken))
+	ctftimeToken, err := auth.GetData(auth.GithubAuth, auth.Token(req.CtftimeToken))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	authToken, err := auth.UserRegister("ab", "test@test.com", ctftimeToken.IonAuth.IonData, ctftimeToken.IonAuth.IonID, ctftimeToken.IonAuth.IonData)
+	authToken, err := auth.UserRegister("ab", "test@test.com", ctftimeToken.GithubAuth.GithubData, ctftimeToken.GithubAuth.GithubID, ctftimeToken.GithubAuth.GithubData)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
