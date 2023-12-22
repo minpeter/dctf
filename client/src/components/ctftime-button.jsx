@@ -1,5 +1,5 @@
-import { Component } from "preact";
-import Ctftime from "../icons/ctftime.svg";
+import { Component, h } from "preact";
+import GithubLogo from "../icons/github_logo.png";
 import openPopup from "../util/ctftime";
 import withStyles from "../components/jss";
 import { ctftimeCallback } from "../api/auth";
@@ -7,14 +7,10 @@ import { withToast } from "../components/toast";
 
 export default withStyles(
   {
-    ctftimeButton: {
-      background: "none",
-      border: "none",
-      cursor: "pointer",
-      padding: "0",
-      "& img": {
-        width: "100%",
-      },
+    githubButton: {
+      height: "auto",
+      width: "140px",
+      padding: "10px",
     },
   },
   withToast(
@@ -59,8 +55,8 @@ export default withStyles(
       render({ classes, ...props }) {
         return (
           <div {...props}>
-            <button class={classes.ctftimeButton} onClick={this.handleClick}>
-              <img src={Ctftime} />
+            <button class={classes.githubButton} onClick={this.handleClick}>
+              <img src={GithubLogo} className={classes.GithubLogo} />
             </button>
           </div>
         );
