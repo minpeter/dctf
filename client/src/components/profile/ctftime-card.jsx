@@ -1,10 +1,9 @@
-import withStyles from "../jss";
 import { putCtftime, deleteCtftime } from "../../api/auth";
 import { useCallback } from "preact/hooks";
 import { useToast } from "../toast";
 import CtftimeButton from "../ctftime-button";
 
-const CtftimeCard = withStyles({}, ({ classes, ctftimeId, onUpdate }) => {
+export default function CtftimeCard(ctftimeId, onUpdate) {
   const { toast } = useToast();
 
   const handleCtftimeDone = useCallback(
@@ -39,10 +38,7 @@ const CtftimeCard = withStyles({}, ({ classes, ctftimeId, onUpdate }) => {
               CTFtime to your account.
             </p>
             <div class="row u-center">
-              <CtftimeButton
-                class={classes.ctftimeButton}
-                onCtftimeDone={handleCtftimeDone}
-              />
+              <CtftimeButton onCtftimeDone={handleCtftimeDone} />
             </div>
           </>
         ) : (
@@ -61,6 +57,4 @@ const CtftimeCard = withStyles({}, ({ classes, ctftimeId, onUpdate }) => {
       </div>
     </div>
   );
-});
-
-export default CtftimeCard;
+}

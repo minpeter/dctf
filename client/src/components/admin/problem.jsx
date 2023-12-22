@@ -1,4 +1,3 @@
-import withStyles from "../../components/jss";
 import { useState, useCallback } from "preact/hooks";
 import Modal from "../../components/modal";
 
@@ -10,7 +9,7 @@ import {
 import { useToast } from "../../components/toast";
 import { encodeFile } from "../../util";
 
-const DeleteModal = withStyles({}, ({ open, onClose, onDelete, classes }) => {
+const DeleteModal = ({ open, onClose, onDelete }) => {
   const wrappedOnClose = useCallback(
     (e) => {
       e.preventDefault();
@@ -31,10 +30,10 @@ const DeleteModal = withStyles({}, ({ open, onClose, onDelete, classes }) => {
       <div class="modal-header">
         <div class="modal-title">Delete Challenge?</div>
       </div>
-      <div class={`modal-body ${classes.modalBody}`}>
+      <div class={`modal-body `}>
         This is an irreversible action that permanently deletes the challenge
         and revokes all solves.
-        <div class={classes.controls}>
+        <div>
           <div class="btn-container u-inline-block">
             <button type="button" class="btn-small" onClick={wrappedOnClose}>
               Cancel
@@ -53,9 +52,9 @@ const DeleteModal = withStyles({}, ({ open, onClose, onDelete, classes }) => {
       </div>
     </Modal>
   );
-});
+};
 
-const Problem = ({ classes, problem, update: updateClient }) => {
+const Problem = ({ problem, update: updateClient }) => {
   const { toast } = useToast();
 
   const [flag, setFlag] = useState(problem.flag);
@@ -208,11 +207,11 @@ const Problem = ({ classes, problem, update: updateClient }) => {
 
   return (
     <>
-      <div class={`frame ${classes.frame}`}>
+      <div class={`frame `}>
         <div class="frame__body">
           <form onSubmit={handleUpdate}>
             <div class="row p-0">
-              <div class={`col-6 ${classes.header}`}>
+              <div class={`col-6 `}>
                 <input
                   autocomplete="off"
                   autocorrect="off"
@@ -247,7 +246,7 @@ const Problem = ({ classes, problem, update: updateClient }) => {
                   </label>
                 </div>
               </div>
-              <div class={`col-6 ${classes.header}`}>
+              <div class={`col-6  `}>
                 <input
                   autocomplete="off"
                   autocorrect="off"
@@ -275,7 +274,7 @@ const Problem = ({ classes, problem, update: updateClient }) => {
             </div>
 
             <div class="p-0 content p-4 w-80 u-center">
-              <div class={`divider ${classes.divider}`} />
+              <div class={`divider  `} />
             </div>
 
             <textarea
@@ -299,13 +298,11 @@ const Problem = ({ classes, problem, update: updateClient }) => {
 
             {problem.files.length !== 0 && (
               <div>
-                <p class={`frame__subtitle m-0 ${classes.downloadsHeader}`}>
-                  Downloads
-                </p>
+                <p class={`frame__subtitle m-0  `}>Downloads</p>
                 <div class="tag-container">
                   {problem.files.map((file) => {
                     return (
-                      <div class={`tag ${classes.tag}`} key={file.url}>
+                      <div class={`tag  `} key={file.url}>
                         <a native download href={file.url}>
                           {file.name}
                         </a>
@@ -330,7 +327,7 @@ const Problem = ({ classes, problem, update: updateClient }) => {
               />
             </div>
 
-            <div class={`form-section ${classes.controls}`}>
+            <div class={`form-section `}>
               <button class="btn-small btn-info">Update</button>
               <button
                 class="btn-small btn-danger"
@@ -352,46 +349,4 @@ const Problem = ({ classes, problem, update: updateClient }) => {
   );
 };
 
-export default withStyles(
-  {
-    frame: {
-      marginBottom: "1em",
-      paddingBottom: "0.625em",
-      background: "#222",
-      "& input, & textarea": {
-        color: "#fff !important",
-        background: "#111",
-      },
-    },
-    downloadsHeader: {
-      color: "#fff !important",
-    },
-    description: {
-      "& a": {
-        display: "inline",
-        padding: 0,
-      },
-    },
-    tag: {
-      background: "#111",
-    },
-    divider: {
-      margin: "0.625em !important",
-      width: "80% !important",
-    },
-    header: {
-      marginTop: "15px",
-      "& input": {
-        margin: "5px 0",
-      },
-    },
-    controls: {
-      display: "flex",
-      justifyContent: "space-between",
-    },
-    tiebreak: {
-      margin: "auto",
-    },
-  },
-  Problem
-);
+export default Problem;

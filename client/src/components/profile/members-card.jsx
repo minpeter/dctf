@@ -31,91 +31,79 @@ const MemberRow = withStyles({}, ({ classes, id, email, setMembers }) => {
   );
 });
 
-const MembersCard = withStyles(
-  {
-    form: {
-      "& button": {
-        display: "block",
-        marginLeft: "auto",
-        marginRight: "0",
-        marginTop: "10px",
-      },
+const MembersCard = withStyles({}, ({ classes }) => {
+  const { toast } = useToast();
+
+  const [email, setEmail] = useState("");
+  const handleEmailChange = useCallback((e) => setEmail(e.target.value), []);
+
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+
+  const [members, setMembers] = useState([]);
+
+  const handleSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      setButtonDisabled(true);
+
+      addMember({ email }).then(({ error, data }) => {
+        setButtonDisabled(false);
+
+        if (error) {
+          toast({ body: error, type: "error" });
+        } else {
+          toast({ body: "Team member successfully added" });
+          setMembers((members) => [...members, data]);
+          setEmail("");
+        }
+      });
     },
-  },
-  ({ classes }) => {
-    const { toast } = useToast();
+    [email, toast]
+  );
 
-    const [email, setEmail] = useState("");
-    const handleEmailChange = useCallback((e) => setEmail(e.target.value), []);
+  useEffect(() => {
+    getMembers().then((data) => setMembers(data));
+  }, []);
 
-    const [buttonDisabled, setButtonDisabled] = useState(false);
-
-    const [members, setMembers] = useState([]);
-
-    const handleSubmit = useCallback(
-      (e) => {
-        e.preventDefault();
-        setButtonDisabled(true);
-
-        addMember({ email }).then(({ error, data }) => {
-          setButtonDisabled(false);
-
-          if (error) {
-            toast({ body: error, type: "error" });
-          } else {
-            toast({ body: "Team member successfully added" });
-            setMembers((members) => [...members, data]);
-            setEmail("");
-          }
-        });
-      },
-      [email, toast]
-    );
-
-    useEffect(() => {
-      getMembers().then((data) => setMembers(data));
-    }, []);
-
-    return (
-      <div class="card">
-        <div class="content p-4 w-80">
-          <p>Team Information</p>
-          <p class="font-thin m-0">
-            Please enter a separate email for each team member. This data is
-            collected for informational purposes only. Ensure that this section
-            is up to date in order to remain prize eligible.
-          </p>
-          <div class="row u-center">
-            <Form
-              class={`col-12 ${classes.form}`}
-              onSubmit={handleSubmit}
-              disabled={buttonDisabled}
-              buttonText="Add Member"
-            >
-              <input
-                required
-                autocomplete="email"
-                autocorrect="off"
-                icon={<img src={EnvelopeOpen} />}
-                name="email"
-                placeholder="Email"
-                type="email"
-                value={email}
-                onChange={handleEmailChange}
-              />
-            </Form>
-            {members.length !== 0 && (
-              <div class="row">
-                {members.map((data) => (
-                  <MemberRow setMembers={setMembers} {...data} />
-                ))}
-              </div>
-            )}
-          </div>
+  return (
+    <div class="card">
+      <div class="content p-4 w-80">
+        <p>Team Information</p>
+        <p class="font-thin m-0">
+          Please enter a separate email for each team member. This data is
+          collected for informational purposes only. Ensure that this section is
+          up to date in order to remain prize eligible.
+        </p>
+        <div class="row u-center">
+          <Form
+            class={`col-12 ${classes.form}`}
+            onSubmit={handleSubmit}
+            disabled={buttonDisabled}
+            buttonText="Add Member"
+          >
+            <input
+              required
+              autocomplete="email"
+              autocorrect="off"
+              icon={<img src={EnvelopeOpen} />}
+              name="email"
+              placeholder="Email"
+              type="email"
+              value={email}
+              onChange={handleEmailChange}
+            />
+          </Form>
+          {members.length !== 0 && (
+            <div class="row">
+              {members.map((data) => (
+                <MemberRow setMembers={setMembers} {...data} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
-    );
-  }
-);
+    </div>
+  );
+});
 
 export default MembersCard;

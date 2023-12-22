@@ -1,7 +1,6 @@
 import { useCallback, useState, useEffect, useMemo } from "preact/hooks";
 
 import config from "../config";
-import withStyles from "../components/jss";
 import Problem from "../components/problem";
 import NotStarted from "../components/not-started";
 import { useToast } from "../components/toast";
@@ -14,7 +13,7 @@ const loadStates = {
   loaded: 2,
 };
 
-const Challenges = ({ classes }) => {
+export default function Challenges() {
   const challPageState = useMemo(
     () => JSON.parse(localStorage.getItem("challPageState") || "{}"),
     []
@@ -172,12 +171,12 @@ const Challenges = ({ classes }) => {
   }
 
   return (
-    <div class={`row ${classes.row}`}>
+    <div class={`row  `}>
       <div class="col-3">
-        <div class={`frame ${classes.frame}`}>
+        <div class={`frame  `}>
           <div class="frame__body">
             <div class="frame__title title">Filters</div>
-            <div class={classes.showSolved}>
+            <div>
               <div class="form-ext-control form-ext-checkbox">
                 <input
                   id="show-solved"
@@ -193,7 +192,7 @@ const Challenges = ({ classes }) => {
             </div>
           </div>
         </div>
-        <div class={`frame ${classes.frame}`}>
+        <div class={`frame  `}>
           <div class="frame__body">
             <div class="frame__title title">Categories</div>
             {Array.from(categoryCounts.entries())
@@ -235,6 +234,4 @@ const Challenges = ({ classes }) => {
       </div>
     </div>
   );
-};
-
-export default withStyles({}, Challenges);
+}

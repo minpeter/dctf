@@ -2,6 +2,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+rctf.db
+
 /node_modules
 tmp
 /build
