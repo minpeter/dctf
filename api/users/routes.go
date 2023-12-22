@@ -1,9 +1,11 @@
 package users
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/minpeter/rctf-backend/database"
 	"github.com/minpeter/rctf-backend/utils"
 )
 
@@ -13,7 +15,7 @@ func Routes(userRoutes *gin.RouterGroup) {
 
 	me := userRoutes.Group("/me")
 	{
-		me.GET("", getMeHandler)
+		me.GET("", utils.TokenAuthMiddleware(), getMeHandler)
 		me.PATCH("", updateMeHandler)
 
 		auth := me.Group("/auth")
@@ -39,8 +41,13 @@ func getUserHandler(c *gin.Context) {
 
 func getMeHandler(c *gin.Context) {
 
+	// c.Set("user", user)
+	user := c.MustGet("user").(database.User)
+
+	fmt.Println("user:", user)
+
 	utils.SendResponse(c, "goodUserData", gin.H{
-		"name":             "admin",
+		"name":             user.Name,
 		"ctftimeId":        nil,
 		"division":         "open",
 		"score":            20000,
@@ -49,8 +56,8 @@ func getMeHandler(c *gin.Context) {
 		"solves":           []string{},
 		"teamToken":        "testToken",
 		"allowedDivisions": []string{"open"},
-		"id":               "5f925ecc-89e3-4e2d-9b5d-1219e9abc8d1",
-		"email":            "admin@admin.com",
+		"id":               user.Id,
+		"email":            user.Email,
 	})
 }
 

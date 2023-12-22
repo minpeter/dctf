@@ -12,11 +12,8 @@ func UserRegister(division, email, name, ionId, ionData string) (Token, error) {
 		return "", err
 	}
 
-	return GetToken(IonAuth, TokenDataTypes{
-		IonAuth: IonAuthTokenData{
-			IonID:   ionId,
-			IonData: ionData,
-		},
+	return GetToken(Auth, TokenDataTypes{
+		Auth: AuthTokenData(userUuid),
 	})
 
 }

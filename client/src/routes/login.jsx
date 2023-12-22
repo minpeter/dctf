@@ -123,15 +123,15 @@ export default withStyles(
               </Link>
             )}
           </Form>
-          {config.ctftime && (
+          {/* {config.ctftime && (
             <>
-              <AuthOr />
-              <CtftimeButton
-                class="col-12"
-                onCtftimeDone={this.handleCtftimeDone}
-              />
-            </>
-          )}
+              <AuthOr /> */}
+          <CtftimeButton
+            class="col-12"
+            onCtftimeDone={this.handleCtftimeDone}
+          />
+          {/* </>
+          )} */}
         </div>
       );
     }

@@ -4,7 +4,6 @@ go 1.21.5
 
 require (
 	github.com/gin-gonic/gin v1.9.1
-	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/google/uuid v1.5.0
 	github.com/hoisie/mustache v0.0.0-20160804235033-6375acf62c69
 	github.com/joho/godotenv v1.5.1

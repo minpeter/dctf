@@ -1,11 +1,10 @@
 package auth
 
 import (
+	"fmt"
 	"net/http"
-	"regexp"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"github.com/minpeter/rctf-backend/auth"
 	"github.com/minpeter/rctf-backend/database"
 	"github.com/minpeter/rctf-backend/utils"
@@ -22,65 +21,49 @@ func Routes(authRoutes *gin.RouterGroup) {
 }
 
 func loginHandler(c *gin.Context) {
-
-	utils.SendResponse(c, "goodLogin", gin.H{
-		"authToken": "testAuthToken",
-	})
-}
-
-func recoverHandler(c *gin.Context) {
-	c.Status(http.StatusNoContent)
-}
-
-func registerHandler(c *gin.Context) {
-	// Extract request data
+	// ctftimeToken body에서 읽어오기
 	var req struct {
-		Email string `json:"email"`
-		Name  string `json:"name"`
+		CtftimeToken string `json:"ctftimeToken"`
 	}
 	if err := c.BindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	// Validate request data
-	if req.Email == "" || req.Name == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing email or name"})
+	// ctftimeToken이 없으면 에러
+	if req.CtftimeToken == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing ctftimeToken"})
 		return
 	}
 
-	emailRegex := regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
-	if !emailRegex.MatchString(req.Email) {
-		utils.SendResponse(c, "badEmail", nil)
-		return
-	}
-
-	nameRegex := regexp.MustCompile(`^[a-zA-Z0-9_-]{2,64}$`)
-	if !nameRegex.MatchString(req.Name) {
-		utils.SendResponse(c, "badName", nil)
-		return
-	}
-
-	user, err := database.GetUserByNameOrEmail(req.Name, req.Email)
+	ctftimeToken, err := auth.GetData(auth.IonAuth, auth.Token(req.CtftimeToken))
 	if err != nil {
-		if user.Email == req.Email {
-			utils.SendResponse(c, "badEmail", nil)
-			return
-		}
-		utils.SendResponse(c, "badName", nil)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	userUuid := uuid.New().String()
+	fmt.Println("ctftime Ion ID:", ctftimeToken.IonAuth.IonID)
+	fmt.Println("ctftime Ion Data:", ctftimeToken.IonAuth.IonData)
 
-	err = database.MakeUser(userUuid, req.Name, req.Email, "open", "", 0)
+	user, has, err := database.GetUserById(ctftimeToken.IonAuth.IonID)
+
+	fmt.Println("user:", user)
+	fmt.Println("has:", has)
+	fmt.Println("err:", err)
+
 	if err != nil {
+		// utils.SendResponse
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
+	if !has {
+		utils.SendResponse(c, "badUnknownUser", gin.H{})
+		return
+	}
+
 	token, err := auth.GetToken(auth.Auth, auth.TokenDataTypes{
-		Auth: auth.AuthTokenData("sample-auth-data"),
+		Auth: auth.AuthTokenData(user.Id),
 	},
 	)
 	if err != nil {
@@ -88,8 +71,46 @@ func registerHandler(c *gin.Context) {
 		return
 	}
 
-	utils.SendResponse(c, "goodRegister", gin.H{
+	utils.SendResponse(c, "goodLogin", gin.H{
 		"authToken": token,
+	})
+
+}
+
+func recoverHandler(c *gin.Context) {
+	c.Status(http.StatusNoContent)
+}
+
+func registerHandler(c *gin.Context) {
+
+	var req struct {
+		CtftimeToken string `json:"ctftimeToken"`
+	}
+	if err := c.BindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// ctftimeToken이 없으면 에러
+	if req.CtftimeToken == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing ctftimeToken"})
+		return
+	}
+
+	ctftimeToken, err := auth.GetData(auth.IonAuth, auth.Token(req.CtftimeToken))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	authToken, err := auth.UserRegister("ab", "test@test.com", ctftimeToken.IonAuth.IonData, ctftimeToken.IonAuth.IonID, ctftimeToken.IonAuth.IonData)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	utils.SendResponse(c, "goodRegister", gin.H{
+		"authToken": authToken,
 	})
 }
 

@@ -33,8 +33,8 @@ func GetAllUsers() ([]User, error) {
 	return users, err
 }
 
-func GetUserById(id string) (User, error) {
+func GetUserById(id string) (User, bool, error) {
 	var user User
-	_, err := DB.Where("id = ?", id).Get(&user)
-	return user, err
+	has, err := DB.Where("id = ?", id).Get(&user)
+	return user, has, err
 }
