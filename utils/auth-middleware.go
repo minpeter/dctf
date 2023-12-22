@@ -1,8 +1,11 @@
 package utils
 
 import (
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 	"github.com/minpeter/rctf-backend/auth"
+	"github.com/minpeter/rctf-backend/database"
 )
 
 func TokenAuthMiddleware() gin.HandlerFunc {
@@ -18,12 +21,11 @@ func TokenAuthMiddleware() gin.HandlerFunc {
 		if err != nil {
 			// utils.SendResponse
 			SendResponse(c, "badToken", nil)
+			c.Abort()
 			return
 		}
 
-		// fmt.Println("token:", token)
-
-		data, err := auth.GetData(token)
+		user, err := database.GetUserById(uuid)
 		if err != nil {
 			// utils.SendResponse
 			SendResponse(c, "badToken", nil)
@@ -31,9 +33,10 @@ func TokenAuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		// fmt.Println("data:", data)
+		c.Set("user", user)
 
-		c.Set("user", data)
+		fmt.Println("user authenticated")
+
 		c.Next()
 	}
 }

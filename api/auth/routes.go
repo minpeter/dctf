@@ -79,12 +79,11 @@ func registerHandler(c *gin.Context) {
 		return
 	}
 
-	token := auth.GetToken(auth.TokenData{
-		Kind:     "register",
-		Email:    req.Email,
-		Name:     req.Name,
-		Division: "open",
-	})
+	token, err := auth.GetToken(userUuid)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 
 	utils.SendResponse(c, "goodRegister", gin.H{
 		"authToken": token,
