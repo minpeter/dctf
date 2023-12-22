@@ -28,7 +28,7 @@ func Routes(integrationRoutes *gin.RouterGroup) {
 	github := integrationRoutes.Group("/github")
 	{
 		github.POST("/callback", githubCallbackHandler)
-		github.GET("/leaderboard", githubLeaderboardHandler)
+		github.GET("/leaderboard", utils.TokenAuthMiddleware(), githubLeaderboardHandler)
 	}
 
 }

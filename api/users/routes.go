@@ -16,7 +16,7 @@ func Routes(userRoutes *gin.RouterGroup) {
 	me := userRoutes.Group("/me")
 	{
 		me.GET("", utils.TokenAuthMiddleware(), getMeHandler)
-		me.PATCH("", updateMeHandler)
+		me.PATCH("", utils.TokenAuthMiddleware(), updateMeHandler)
 
 		auth := me.Group("/auth")
 		{

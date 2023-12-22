@@ -9,9 +9,9 @@ import (
 
 func Routes(challRoutes *gin.RouterGroup) {
 
-	challRoutes.GET("", getChallsHandler)
+	challRoutes.GET("", utils.TokenAuthMiddleware(), getChallsHandler)
 	challRoutes.GET("/:id/solves", getChallSolvesHandler)
-	challRoutes.POST("/:id/submit", submitChallHandler)
+	challRoutes.POST("/:id/submit", utils.TokenAuthMiddleware(), submitChallHandler)
 
 }
 
