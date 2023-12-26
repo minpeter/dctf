@@ -83,7 +83,12 @@ func main() {
 
 	err := godotenv.Load(".env")
 	if err != nil {
-		log.Fatalf("Some error occured. Err: %s", err)
+		fmt.Printf("missing .env file\n")
+		fmt.Printf("using environment variables\n\n")
+		fmt.Println("===== ENVIRONMENT VARIABLES =====")
+		fmt.Println("PORT: port to run the server on (optional, default 4000)")
+		fmt.Println("GITHUB_CLIENT_ID: GitHub OAuth client ID (required)")
+		fmt.Printf("GITHUB_CLIENT_SECRET: GitHub OAuth client secret (required)\n\n\n")
 	}
 
 	if err := database.ConnectDatabase(); err != nil {
