@@ -9,6 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/hoisie/mustache"
+	"github.com/joho/godotenv"
 	"github.com/minpeter/rctf-backend/api"
 	"github.com/minpeter/rctf-backend/database"
 )
@@ -29,7 +30,7 @@ type ClientConfig struct {
 	FaviconUrl      string            `json:"faviconUrl"`
 	Github          struct {
 		ClientId string `json:"clientId"`
-	}
+	} `json:"github"`
 }
 
 type Meta struct {
@@ -79,6 +80,12 @@ func loadClientConfig() {
 }
 
 func main() {
+
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatalf("Some error occured. Err: %s", err)
+	}
+
 	if err := database.ConnectDatabase(); err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}

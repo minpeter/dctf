@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 	"github.com/minpeter/rctf-backend/auth"
 	"github.com/minpeter/rctf-backend/utils"
 	"golang.org/x/oauth2"
@@ -51,11 +50,6 @@ func githubCallbackHandler(c *gin.Context) {
 	}
 
 	log.Println("code:", reqCode.Code)
-
-	err := godotenv.Load(".env")
-	if err != nil {
-		log.Fatalf("Some error occured. Err: %s", err)
-	}
 
 	githubcon := oauth2.Config{
 		ClientID:     os.Getenv("GITHUB_CLIENT_ID"),
