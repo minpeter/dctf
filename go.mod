@@ -1,4 +1,4 @@
-module github.com/minpeter/rctf-backend
+module github.com/minpeter/dctf-backend
 
 go 1.21.5
 

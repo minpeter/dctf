@@ -10,8 +10,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/hoisie/mustache"
 	"github.com/joho/godotenv"
-	"github.com/minpeter/rctf-backend/api"
-	"github.com/minpeter/rctf-backend/database"
+	"github.com/minpeter/dctf-backend/api"
+	"github.com/minpeter/dctf-backend/database"
 )
 
 type ClientConfig struct {
@@ -82,13 +82,15 @@ func loadClientConfig() {
 func main() {
 
 	err := godotenv.Load(".env")
+
+	fmt.Println("\n\n===== ENVIRONMENT VARIABLES =====")
+	fmt.Println("PORT: port to run the server on (optional, default 4000)")
+	fmt.Println("GITHUB_CLIENT_ID: GitHub OAuth client ID (required)")
+	fmt.Printf("GITHUB_CLIENT_SECRET: GitHub OAuth client secret (required)\n\n")
+
 	if err != nil {
-		fmt.Printf("missing .env file\n")
-		fmt.Printf("using environment variables\n\n")
-		fmt.Println("===== ENVIRONMENT VARIABLES =====")
-		fmt.Println("PORT: port to run the server on (optional, default 4000)")
-		fmt.Println("GITHUB_CLIENT_ID: GitHub OAuth client ID (required)")
-		fmt.Printf("GITHUB_CLIENT_SECRET: GitHub OAuth client secret (required)\n\n\n")
+		fmt.Println("missing .env file")
+		fmt.Println("using environment variables")
 	}
 
 	if err := database.ConnectDatabase(); err != nil {

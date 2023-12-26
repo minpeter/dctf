@@ -2,10 +2,10 @@ let config;
 
 try {
   config = JSON.parse(
-    document.head.querySelector("meta[name=rctf-config]").content
+    document.head.querySelector("meta[name=dctf-config]").content
   );
 } catch (error) {
-  console.log("Error parsing JSON from meta tag: meta[name=rctf-config]");
+  console.log("Error parsing JSON from meta tag: meta[name=dctf-config]");
   console.log("=============  Using default config  ===================");
   config = {
     github: {
@@ -18,7 +18,7 @@ try {
     homeContent: "A description of your CTF. Markdown supported.",
     sponsors: [],
     globalSiteTag: "undefined",
-    ctfName: "rCTF",
+    ctfName: "dCTF",
     divisions: {
       open: "Open",
     },

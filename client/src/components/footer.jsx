@@ -3,11 +3,11 @@ const Footer = () => (
     <span>
       Powered by{" "}
       <a
-        href="https://rctf.redpwn.net/"
+        href="https://github.com/minpeter/dctf"
         target="_blank"
         rel="noopener noreferrer"
       >
-        rCTF
+        dCTF
       </a>
     </span>
   </div>

@@ -1,7 +1,7 @@
 {
-  "name": "rctf",
+  "name": "dctf",
   "version": "1.0.0",
-  "repository": "https://github.com/minpeter/rctf.git",
+  "repository": "https://github.com/minpeter/dctf.git",
   "author": "Woonggi Min <minpeter@friendli.ai>",
   "license": "MIT",
   "scripts": {
@@ -9,7 +9,7 @@
     "dev:server": "air",
     "dev": "concurrently \"yarn dev:client\" \"yarn dev:server\"",
     "build:client": "cd client && yarn build",
-    "build:server": "go build -o rctf",
+    "build:server": "go build -o dctf",
     "build": "yarn build:client && yarn build:server",
     "dep:client": "cd client && yarn",
     "dep:server": "go mod tidy",

@@ -2,8 +2,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-rctf.db
-database/rctf.db
+dctf.db
+database/dctf.db
 
 /node_modules
 tmp
@@ -35,4 +35,4 @@ $RECYCLE.BIN
 # preact-cli build size plugin
 size-plugin.json
 
-rctf
+dctf

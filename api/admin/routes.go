@@ -2,7 +2,7 @@ package admin
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/minpeter/rctf-backend/utils"
+	"github.com/minpeter/dctf-backend/utils"
 )
 
 func Routes(adminRoutes *gin.RouterGroup) {

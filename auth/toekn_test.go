@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/minpeter/rctf-backend/auth"
+	"github.com/minpeter/dctf-backend/auth"
 )
 
 func TestAuthToken(t *testing.T) {

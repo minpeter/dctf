@@ -2,12 +2,12 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/minpeter/rctf-backend/api/admin"
-	"github.com/minpeter/rctf-backend/api/auth"
-	"github.com/minpeter/rctf-backend/api/challs"
-	"github.com/minpeter/rctf-backend/api/integrations"
-	"github.com/minpeter/rctf-backend/api/leaderboard"
-	"github.com/minpeter/rctf-backend/api/users"
+	"github.com/minpeter/dctf-backend/api/admin"
+	"github.com/minpeter/dctf-backend/api/auth"
+	"github.com/minpeter/dctf-backend/api/challs"
+	"github.com/minpeter/dctf-backend/api/integrations"
+	"github.com/minpeter/dctf-backend/api/leaderboard"
+	"github.com/minpeter/dctf-backend/api/users"
 )
 
 func NewRouter() *gin.Engine {

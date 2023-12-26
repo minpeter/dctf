@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/minpeter/rctf-backend/utils"
+	"github.com/minpeter/dctf-backend/utils"
 )
 
 func deleteMemberHandler(c *gin.Context) {

@@ -3,7 +3,7 @@ package database_test
 import (
 	"testing"
 
-	"github.com/minpeter/rctf-backend/database"
+	"github.com/minpeter/dctf-backend/database"
 )
 
 func TestGetUserById(t *testing.T) {

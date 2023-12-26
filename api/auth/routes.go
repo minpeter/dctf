@@ -5,9 +5,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/minpeter/rctf-backend/auth"
-	"github.com/minpeter/rctf-backend/database"
-	"github.com/minpeter/rctf-backend/utils"
+	"github.com/minpeter/dctf-backend/auth"
+	"github.com/minpeter/dctf-backend/database"
+	"github.com/minpeter/dctf-backend/utils"
 )
 
 func Routes(authRoutes *gin.RouterGroup) {

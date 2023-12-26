@@ -5,8 +5,8 @@ import (
 	"log"
 
 	"github.com/gin-gonic/gin"
-	"github.com/minpeter/rctf-backend/auth"
-	"github.com/minpeter/rctf-backend/database"
+	"github.com/minpeter/dctf-backend/auth"
+	"github.com/minpeter/dctf-backend/database"
 )
 
 func TokenAuthMiddleware() gin.HandlerFunc {
