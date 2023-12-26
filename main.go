@@ -27,6 +27,9 @@ type ClientConfig struct {
 	EmailEnabled    bool              `json:"emailEnabled"`
 	UserMembers     bool              `json:"userMembers"`
 	FaviconUrl      string            `json:"faviconUrl"`
+	Github          struct {
+		ClientId string `json:"clientId"`
+	}
 }
 
 type Meta struct {
@@ -66,6 +69,9 @@ func loadClientConfig() {
 
 	decoder := json.NewDecoder(configFile)
 	err = decoder.Decode(&clientConfig)
+
+	clientConfig.Github.ClientId = os.Getenv("GITHUB_CLIENT_ID")
+
 	if err != nil {
 		fmt.Printf("Error decoding client-config.json: %v\n", err)
 		return
