@@ -1,7 +1,7 @@
 package database
 
 import (
-	_ "github.com/mattn/go-sqlite3"
+	_ "modernc.org/sqlite"
 	"xorm.io/xorm"
 )
 
@@ -9,7 +9,7 @@ var DB *xorm.Engine
 
 func ConnectDatabase() error {
 	var err error
-	DB, err = xorm.NewEngine("sqlite3", "rctf.db")
+	DB, err = xorm.NewEngine("sqlite", "rctf.db")
 
 	if err != nil {
 		return err
