@@ -77,8 +77,9 @@ func (u UpdateVerifyTokenData) isVerifyTokenData()   {}
 func (r RecoverTokenData) isVerifyTokenData()        {}
 
 type GithubAuthTokenData struct {
-	GithubID   string
-	GithubData string
+	GithubID           string
+	GithubPrimaryEmail string
+	GithubName         string
 }
 
 // TokenDataTypes represents internal map of token types

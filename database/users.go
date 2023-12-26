@@ -10,7 +10,16 @@ type User struct {
 }
 
 func MakeUser(id string, name string, email string, division string, githubId string, perms int) error {
-	_, err := DB.Insert(&User{
+
+	has, err := DB.IsTableEmpty(&User{})
+	if err != nil {
+		return err
+	}
+	if has {
+		perms = 1
+	}
+
+	_, err = DB.Insert(&User{
 		Id:       id,
 		Name:     name,
 		Email:    email,
@@ -31,6 +40,12 @@ func GetAllUsers() ([]User, error) {
 	var users []User
 	err := DB.Find(&users)
 	return users, err
+}
+
+func GetuserByGithubId(githubId string) (User, bool, error) {
+	var user User
+	has, err := DB.Where("github_id = ?", githubId).Get(&user)
+	return user, has, err
 }
 
 func GetUserById(id string) (User, bool, error) {

@@ -41,8 +41,9 @@ func TestGithubAuthToken(t *testing.T) {
 
 	data := auth.TokenDataTypes{
 		GithubAuth: auth.GithubAuthTokenData{
-			GithubID:   "sample-id",
-			GithubData: "sample-data",
+			GithubID:           "sample-id",
+			GithubPrimaryEmail: "sample-email",
+			GithubName:         "sample-name",
 		},
 	}
 
@@ -60,9 +61,9 @@ func TestGithubAuthToken(t *testing.T) {
 		t.Fatalf("Error verifying Auth token: %v", err)
 	}
 
-	fmt.Println("originalData:", data.GithubAuth.GithubData)
+	fmt.Println("originalData:", data.GithubAuth.GithubPrimaryEmail)
 
-	fmt.Println("retrievedData:", retrievedData.GithubAuth.GithubData)
+	fmt.Println("retrievedData:", retrievedData.GithubAuth.GithubPrimaryEmail)
 
 	// Check if the retrieved data matches the original data
 	if !reflect.DeepEqual(data, retrievedData) {

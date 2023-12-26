@@ -36,16 +36,16 @@ func loginHandler(c *gin.Context) {
 		return
 	}
 
-	githubToken, err := auth.GetData(auth.GithubAuth, auth.Token(req.GithubToken))
+	githubTokenData, err := auth.GetData(auth.GithubAuth, auth.Token(req.GithubToken))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	fmt.Println("github ID:", githubToken.GithubAuth.GithubID)
-	fmt.Println("github Data:", githubToken.GithubAuth.GithubData)
+	fmt.Println("github ID:", githubTokenData.GithubAuth.GithubID)
+	fmt.Println("github email:", githubTokenData.GithubAuth.GithubPrimaryEmail)
 
-	user, has, err := database.GetUserById(githubToken.GithubAuth.GithubID)
+	user, has, err := database.GetuserByGithubId(githubTokenData.GithubAuth.GithubID)
 
 	fmt.Println("user:", user)
 	fmt.Println("has:", has)
@@ -97,13 +97,30 @@ func registerHandler(c *gin.Context) {
 		return
 	}
 
-	githubToken, err := auth.GetData(auth.GithubAuth, auth.Token(req.GithubToken))
+	githubTokenData, err := auth.GetData(auth.GithubAuth, auth.Token(req.GithubToken))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	authToken, err := auth.UserRegister("open", "test@test.com", githubToken.GithubAuth.GithubData, githubToken.GithubAuth.GithubID)
+	user, has, err := database.GetuserByGithubId(githubTokenData.GithubAuth.GithubID)
+
+	fmt.Println("user:", user)
+	fmt.Println("has:", has)
+	fmt.Println("err:", err)
+
+	if err != nil {
+		// utils.SendResponse
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	if has {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "user already exists"})
+		return
+	}
+
+	authToken, err := auth.UserRegister("open", githubTokenData.GithubAuth.GithubPrimaryEmail, "민웅기", githubTokenData.GithubAuth.GithubID)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

@@ -99,8 +99,9 @@ func githubCallbackHandler(c *gin.Context) {
 
 	GithubToken, err := auth.GetToken(auth.GithubAuth, auth.TokenDataTypes{
 		GithubAuth: auth.GithubAuthTokenData{
-			GithubID:   result.Login,
-			GithubData: result.Name,
+			GithubID:           result.Login,
+			GithubPrimaryEmail: result.Email,
+			GithubName:         result.Name,
 		},
 	})
 	if err != nil {

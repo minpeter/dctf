@@ -104,8 +104,9 @@ const Problem = ({ problem, solved, setSolved }) => {
             >
               {problem.solves}
               {problem.solves === 1 ? " solve / " : " solves / "}
-              {problem.points}
-              {problem.points === 1 ? " point" : " points"}
+              {/* TODO points */}
+              {/* {problem.points}
+              {problem.points === 1 ? " point" : " points"} */}
             </a>
           </div>
         </div>

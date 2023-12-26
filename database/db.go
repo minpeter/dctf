@@ -23,7 +23,7 @@ func ConnectDatabase() error {
 }
 
 func syncDatabase() error {
-	err := DB.Sync2(new(User))
+	err := DB.Sync2(new(User), new(Challenge))
 	if err != nil {
 		return err
 	}
