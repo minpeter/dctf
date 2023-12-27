@@ -5,7 +5,7 @@ export default function Header({ paths }) {
   const loggedIn = localStorage.getItem("token") !== null;
 
   return (
-    <div class="tab-container tabs--center">
+    <div class="tab-container tabs--center tabs--xs">
       <ul>
         {paths.map(({ props: { path, name } }) => (
           <Match key={name} path={path}>

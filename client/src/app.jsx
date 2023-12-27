@@ -2,6 +2,9 @@ import { useState, useCallback, useEffect } from "preact/hooks";
 import Router, { route } from "preact-router";
 
 import "cirrus-ui";
+import "./styles/reset-cirrus.css";
+import "./styles/global.css";
+
 import Header from "./components/header";
 import Footer from "./components/footer";
 
