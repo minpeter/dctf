@@ -381,7 +381,7 @@ const Profile = ({ uuid }) => {
   }
 
   return (
-    <div>
+    <div class="row u-center" style="align-items: initial !important">
       {isPrivate && (
         <div>
           <TeamCodeCard {...{ teamToken }} />

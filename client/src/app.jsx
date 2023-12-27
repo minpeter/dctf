@@ -81,10 +81,10 @@ export function App() {
   );
 
   return (
-    <div>
+    <div class="h-100p u-flex u-flex-column  u-justify-space-between u-items-center">
       <ToastProvider>
-        <Header paths={headerPaths} />
-        <div>
+        <div class="w-100p">
+          <Header paths={headerPaths} />
           <Router onChange={triggerRerender}>{currentPaths}</Router>
         </div>
         <Footer />

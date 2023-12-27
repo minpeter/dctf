@@ -172,30 +172,28 @@ export default function Challenges() {
   }
 
   return (
-    <div class={`row  `}>
-      <div class="col-3">
-        <div class={`frame  `}>
-          <div class="frame__body">
-            <div class="frame__title title">Filters</div>
-            <div>
-              <div class="form-ext-control form-ext-checkbox">
-                <input
-                  id="show-solved"
-                  class="form-ext-input"
-                  type="checkbox"
-                  checked={showSolved}
-                  onChange={handleShowSolvedChange}
-                />
-                <label for="show-solved" class="form-ext-label">
-                  Show Solved ({solvedCount}/{problems.length} solved)
-                </label>
-              </div>
+    <div class="row u-center" style="align-items: initial !important">
+      <div class="col-3 u-flex u-flex-column u-gap-2">
+        <div class="frame">
+          <div class="frame__body p-2">
+            <div class="frame__title title mt-0">Filters</div>
+            <div class="form-ext-control form-ext-checkbox">
+              <input
+                id="show-solved"
+                class="form-ext-input"
+                type="checkbox"
+                checked={showSolved}
+                onChange={handleShowSolvedChange}
+              />
+              <label for="show-solved" class="form-ext-label">
+                Show Solved ({solvedCount}/{problems.length} solved)
+              </label>
             </div>
           </div>
         </div>
-        <div class={`frame  `}>
-          <div class="frame__body">
-            <div class="frame__title title">Categories</div>
+        <div class="frame">
+          <div class="frame__body p-2">
+            <div class="frame__title title mt-0">Categories</div>
             {Array.from(categoryCounts.entries())
               .sort((a, b) => a[0].localeCompare(b[0]))
               .map(([category, { solved, total }]) => {

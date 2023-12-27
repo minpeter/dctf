@@ -88,11 +88,11 @@ const Problem = ({ problem, solved, setSolved }) => {
   const onSolvesClose = useCallback(() => setSolves(null), []);
 
   return (
-    <div>
-      <div class="frame__body">
+    <div class="frame">
+      <div class="frame__body p-2">
         <div class="row p-0">
           <div class="col-6 p-0">
-            <div class="frame__title title">
+            <div class="frame__title title mt-0">
               {problem.category}/{problem.name}
             </div>
             <div class="frame__subtitle m-0">{problem.author}</div>
@@ -110,9 +110,7 @@ const Problem = ({ problem, solved, setSolved }) => {
           </div>
         </div>
 
-        <div class="p-0 content p-4 w-80 u-center">
-          <div class={`divider  `} />
-        </div>
+        <div class="divider" />
 
         <div>
           <Markdown
