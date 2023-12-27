@@ -121,18 +121,18 @@ export default function Challenges() {
     }
 
     // TODO: Sort by points, solves, and sortWeight
-    // filtered.sort((a, b) => {
-    //   if (a.points === b.points) {
-    //     if (a.solves === b.solves) {
-    //       const aWeight = a.sortWeight || 0;
-    //       const bWeight = b.sortWeight || 0;
+    filtered.sort((a, b) => {
+      if (a.points === b.points) {
+        if (a.solves === b.solves) {
+          const aWeight = a.sortWeight || 0;
+          const bWeight = b.sortWeight || 0;
 
-    //       return bWeight - aWeight;
-    //     }
-    //     return b.solves - a.solves;
-    //   }
-    //   return a.points - b.points;
-    // });
+          return bWeight - aWeight;
+        }
+        return b.solves - a.solves;
+      }
+      return a.points - b.points;
+    });
 
     return filtered;
   }, [problems, categories, showSolved, solveIDs]);

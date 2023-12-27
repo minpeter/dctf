@@ -26,7 +26,13 @@ type Points struct {
 	Maximum int    `json:"max"`
 }
 
-func GetAllChallenges() ([]Challenge, error) {
+type ChallengeResponse struct {
+	Challenge
+	Points int `json:"points"`
+	Solves int `json:"solves"`
+}
+
+func GetAllChallenges() ([]ChallengeResponse, error) {
 	var challenges []Challenge
 	err := DB.Find(&challenges)
 	if err != nil {
@@ -39,7 +45,25 @@ func GetAllChallenges() ([]Challenge, error) {
 		}
 	}
 
-	return challenges, nil
+	var challengeResponses []ChallengeResponse
+
+	for _, challenge := range challenges {
+		// solves, err := GetChallengeSolves(challenge.Id)
+		// if err != nil {
+		// 	return nil, err
+		// }
+
+		solves := []string{"minpeter", "rooter"}
+
+		challengeResponses = append(challengeResponses, ChallengeResponse{
+			Challenge: challenge,
+			Points:    challenge.Points.Maximum,
+			Solves:    len(solves),
+		})
+	}
+
+	return challengeResponses, nil
+
 }
 
 func CreateChallenge(challenge Challenge) error {

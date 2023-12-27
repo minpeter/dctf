@@ -22,7 +22,6 @@ func getChallsHandler(c *gin.Context) {
 	if err != nil {
 		utils.SendResponse(c, "internalError", gin.H{})
 		return
-
 	}
 
 	utils.SendResponse(c, "goodChallenges", challs)
