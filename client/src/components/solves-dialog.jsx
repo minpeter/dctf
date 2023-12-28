@@ -29,7 +29,7 @@ const SolvesDialog = ({
         <>
           {solves.length === 0 ? (
             <div>
-              <img src={Clock} />
+              <img src={Clock} style={{ filter: "invert(1)" }} />
               <h5>{challName} has no solves.</h5>
             </div>
           ) : (

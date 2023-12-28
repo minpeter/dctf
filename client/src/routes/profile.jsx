@@ -59,13 +59,13 @@ const SummaryCard = memo(
         <div class="action-bar">
           <p>
             <span class={`icon  `}>
-              <img src={Trophy} />
+              <img src={Trophy} style={{ filter: "invert(1)" }} />
             </span>
             {score === 0 ? "No points earned" : `${score} total points`}
           </p>
           <p>
             <span class={`icon  `}>
-              <img src={Rank} />
+              <img src={Rank} style={{ filter: "invert(1)" }} />
             </span>
             {score === 0
               ? "Unranked"
@@ -73,13 +73,13 @@ const SummaryCard = memo(
           </p>
           <p>
             <span class={`icon  `}>
-              <img src={Rank} />
+              <img src={Rank} style={{ filter: "invert(1)" }} />
             </span>
             {score === 0 ? "Unranked" : `${globalPlace} across all teams`}
           </p>
           <p>
             <span class={`icon  `}>
-              <img src={AddressBook} />
+              <img src={AddressBook} style={{ filter: "invert(1)" }} />
             </span>
             {division} division
           </p>
@@ -258,7 +258,7 @@ const UpdateCard = ({
               autocorrect="off"
               maxLength="64"
               minLength="2"
-              icon={<img src={UserCircle} />}
+              icon={<img src={UserCircle} style={{ filter: "invert(1)" }} />}
               name="name"
               placeholder="Team Name"
               type="text"
@@ -268,7 +268,7 @@ const UpdateCard = ({
             <input
               autocomplete="email"
               autocorrect="off"
-              icon={<img src={EnvelopeOpen} />}
+              icon={<img src={EnvelopeOpen} style={{ filter: "invert(1)" }} />}
               name="email"
               placeholder="Email"
               type="email"
@@ -276,7 +276,7 @@ const UpdateCard = ({
               onChange={handleSetEmail}
             />
             <select
-              icon={<img src={AddressBook} />}
+              icon={<img src={AddressBook} style={{ filter: "invert(1)" }} />}
               class={`select  `}
               name="division"
               value={division}

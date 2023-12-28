@@ -64,7 +64,7 @@ export default ({ githubToken, githubName }) => {
             required
             autocomplete="username"
             autocorrect="off"
-            icon={<img src={UserCircle} />}
+            icon={<img src={UserCircle} style={{ filter: "invert(1)" }} />}
             name="name"
             maxLength="64"
             minLength="2"

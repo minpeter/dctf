@@ -83,7 +83,7 @@ const MembersCard = () => {
               required
               autocomplete="email"
               autocorrect="off"
-              icon={<img src={EnvelopeOpen} />}
+              icon={<img src={EnvelopeOpen} style={{ filter: "invert(1)" }} />}
               name="email"
               placeholder="Email"
               type="email"

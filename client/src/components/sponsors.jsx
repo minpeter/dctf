@@ -16,7 +16,7 @@ export default () => {
               <div class="content p-4 w-80">
                 {sponsor.icon && (
                   <figure class={`u-center `}>
-                    <img src={sponsor.icon} />
+                    <img src={sponsor.icon} style={{ filter: "invert(1)" }} />
                   </figure>
                 )}
                 <p class="title level">{sponsor.name}</p>
