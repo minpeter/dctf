@@ -51,5 +51,10 @@ func putChallengeHandler(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+
+	if req.Data.Files == nil {
+		req.Data.Files = []database.File{}
+	}
+
 	c.JSON(http.StatusOK, req)
 }
