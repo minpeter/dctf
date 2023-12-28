@@ -9,7 +9,13 @@ import (
 	"github.com/minpeter/dctf-backend/database"
 )
 
-func TokenAuthMiddleware() gin.HandlerFunc {
+// options: [0] = perms
+func TokenAuthMiddleware(params ...int) gin.HandlerFunc {
+
+	if len(params) == 0 {
+		params = append(params, 0)
+	}
+
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
 
@@ -33,6 +39,12 @@ func TokenAuthMiddleware() gin.HandlerFunc {
 		if err != nil || !has {
 			// utils.SendResponse
 			SendResponse(c, "badToken", nil)
+			c.Abort()
+			return
+		}
+
+		if user.Perms < params[0] {
+			SendResponse(c, "badPerms", nil)
 			c.Abort()
 			return
 		}
