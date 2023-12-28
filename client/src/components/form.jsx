@@ -36,7 +36,7 @@ export default (props) => {
       })}
       <button
         disabled={disabled}
-        class={`  btn-info u-center`}
+        class={`  btn-info  btn--sm u-center`}
         name="btn"
         value="submit"
         type="submit"

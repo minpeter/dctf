@@ -5,12 +5,15 @@ const makeSolvesCard =
   (isPrivate) =>
   ({ solves }) => {
     return (
-      <div class={`card`}>
+      <div class="card">
         {solves.length === 0 ? (
-          <div>
-            <div>
-              <img src={Clock} />
-            </div>
+          <div class="content p-4 w-80 u-flex u-flex-column u-center">
+            <img
+              src={Clock}
+              style={{ filter: "invert(1)" }}
+              height="50"
+              width="50"
+            />
             <h5>This team has no solves.</h5>
           </div>
         ) : (

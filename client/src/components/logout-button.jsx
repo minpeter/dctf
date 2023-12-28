@@ -27,7 +27,7 @@ const LogoutDialog = ({ onClose, ...props }) => {
       <div class="modal-body">
         <div>This will log you out on your current device.</div>
       </div>
-      <div class="modal-footer u-flex u-justify-flex-end u-gap-2">
+      <div class="modal-footer u-flex u-justify-flex-end u-gap-1">
         <button class={`btn--sm outline `} onClick={wrappedOnClose}>
           Cancel
         </button>

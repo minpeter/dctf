@@ -12,7 +12,6 @@ func Routes(adminRoutes *gin.RouterGroup) {
 
 	{
 		challs.DELETE("/:id", deleteChallengeHandler)
-		challs.GET("/:id", getChallengeHandler)
 		challs.GET("", listChallengesHandler)
 		challs.PUT("/:id", putChallengeHandler)
 	}

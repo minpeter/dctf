@@ -53,10 +53,10 @@ class Login extends Component {
       return <PendingToken authToken={pendingAuthToken} />;
     }
     return (
-      <div class={`row u-center `}>
-        <h4>Log in to {config.ctfName}</h4>
+      <div class="u-flex u-flex-column u-items-center u-gap-2 m-2">
+        <h4>Login to {config.ctfName}</h4>
 
-        <GithubButton class="col-12" onGithubDone={this.handleGithubDone} />
+        <GithubButton onGithubDone={this.handleGithubDone} />
       </div>
     );
   }

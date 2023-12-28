@@ -31,7 +31,7 @@ const Challenges = () => {
   });
 
   useEffect(() => {
-    document.title = `Admin Challenges | ${config.ctfName}`;
+    document.title = `Admin Panel | ${config.ctfName}`;
   }, []);
 
   useEffect(() => {
@@ -66,18 +66,12 @@ const Challenges = () => {
   );
 
   return (
-    <div class="row">
-      <div class="col-9">
-        {completeProblems.map((problem) => {
-          return (
-            <Problem
-              update={updateProblem}
-              key={problem.id}
-              problem={problem}
-            />
-          );
-        })}
-      </div>
+    <div class="u-flex u-gap-1 u-flex-column ml-1 mr-1">
+      {completeProblems.map((problem) => {
+        return (
+          <Problem update={updateProblem} key={problem.id} problem={problem} />
+        );
+      })}
     </div>
   );
 };

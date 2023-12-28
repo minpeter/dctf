@@ -48,7 +48,10 @@ export default function GithubCard(githubId, onUpdate) {
               Github from your account.
             </p>
             <div class="row u-center">
-              <button class="btn-info u-center" onClick={handleRemoveClick}>
+              <button
+                class="btn-info btn--sm u-center"
+                onClick={handleRemoveClick}
+              >
                 Remove
               </button>
             </div>

@@ -119,7 +119,7 @@ const TeamCodeCard = ({ teamToken }) => {
 
         <button
           onClick={onCopyClick}
-          class={`  btn-info`}
+          class={` btn--sm btn-info`}
           name="btn"
           value="submit"
           type="submit"
@@ -129,7 +129,7 @@ const TeamCodeCard = ({ teamToken }) => {
 
         <button
           onClick={toggleReveal}
-          class="btn-info pl-2"
+          class="btn-info btn--sm ml-1"
           name="btn"
           value="submit"
           type="submit"
@@ -381,7 +381,8 @@ const Profile = ({ uuid }) => {
   }
 
   return (
-    <div class="row u-center" style="align-items: initial !important">
+    // width 782px 부터 flex 한줄로 정렬
+    <div class="u-flex u-gap-2 u-justify-center ml-2 mr-2 u-flex-row-md u-flex-column">
       {isPrivate && (
         <div>
           <TeamCodeCard {...{ teamToken }} />

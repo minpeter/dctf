@@ -2,7 +2,7 @@ package database
 
 type Challenge struct {
 	// Id는 pk 며 auto increment
-	Id               string `json:"-" xorm:"pk"`
+	Id               string `json:"id" xorm:"pk"`
 	Name             string `json:"name"`
 	Description      string `json:"description"`
 	Category         string `json:"category"`
@@ -64,6 +64,25 @@ func GetAllChallenges() ([]ChallengeResponse, error) {
 
 	return challengeResponses, nil
 
+}
+
+func GetChallengebyId(id string) (Challenge, error) {
+	var challenge Challenge
+	_, err := DB.Where("id = ?", id).Get(&challenge)
+	if err != nil {
+		return Challenge{}, err
+	}
+
+	return challenge, nil
+}
+
+func DeleteChallenge(id string) error {
+	_, err := DB.Delete(&Challenge{Id: id})
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func CreateChallenge(challenge Challenge) error {

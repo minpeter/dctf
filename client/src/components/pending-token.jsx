@@ -25,7 +25,7 @@ const PendingToken = ({ authToken }) => {
         <h3>Login as {user.name}?</h3>
       </div>
       <div class="row u-center">
-        <button class="btn-info" onClick={handleLoginClick}>
+        <button class="btn-info btn--sm" onClick={handleLoginClick}>
           Login
         </button>
       </div>

@@ -34,15 +34,15 @@ const DeleteModal = ({ open, onClose, onDelete }) => {
         This is an irreversible action that permanently deletes the challenge
         and revokes all solves.
         <div>
-          <div class="btn-container u-inline-block">
-            <button type="button" class="btn-small" onClick={wrappedOnClose}>
+          <div class="btn-container u-inline-block mt-2">
+            <button type="button" class="btn--sm mr-1" onClick={wrappedOnClose}>
               Cancel
             </button>
           </div>
           <div class="btn-container u-inline-block">
             <button
               type="submit"
-              class="btn-small btn-danger"
+              class="btn--sm btn-danger"
               onClick={wrappedOnDelete}
             >
               Delete Challenge
@@ -207,138 +207,129 @@ const Problem = ({ problem, update: updateClient }) => {
 
   return (
     <>
-      <div class={`frame `}>
-        <div class="frame__body">
-          <form onSubmit={handleUpdate}>
-            <div class="row p-0">
-              <div class={`col-6 `}>
-                <input
-                  autocomplete="off"
-                  autocorrect="off"
-                  required
-                  class="form-group-input input-small"
-                  placeholder="Category"
-                  value={category}
-                  onChange={handleCategoryChange}
-                />
-                <input
-                  autocomplete="off"
-                  autocorrect="off"
-                  required
-                  class="form-group-input input-small"
-                  placeholder="Problem Name"
-                  value={name}
-                  onChange={handleNameChange}
-                />
-                <div class="form-ext-control form-ext-checkbox">
-                  <input
-                    id={`chall-${problem.id}-tiebreak-eligible`}
-                    type="checkbox"
-                    class="form-ext-input"
-                    checked={tiebreakEligible}
-                    onChange={handleTiebreakEligibleChange}
-                  />
-                  <label
-                    for={`chall-${problem.id}-tiebreak-eligible`}
-                    class="form-ext-label"
-                  >
-                    Eligible for tiebreaks?
-                  </label>
-                </div>
-              </div>
-              <div class={`col-6  `}>
-                <input
-                  autocomplete="off"
-                  autocorrect="off"
-                  required
-                  class="form-group-input input-small"
-                  placeholder="Author"
-                  value={author}
-                  onChange={handleAuthorChange}
-                />
-                <input
-                  class="form-group-input input-small"
-                  type="number"
-                  required
-                  value={minPoints}
-                  onChange={handleMinPointsChange}
-                />
-                <input
-                  class="form-group-input input-small"
-                  type="number"
-                  required
-                  value={maxPoints}
-                  onChange={handleMaxPointsChange}
-                />
-              </div>
-            </div>
-
-            <div class="p-0 content p-4 w-80 u-center">
-              <div class={`divider  `} />
-            </div>
-
-            <textarea
+      <div class="frame p-2">
+        <form onSubmit={handleUpdate} class="frame__body p-0">
+          <div class="p-0 u-flex u-flex-column u-gap-1">
+            <input
               autocomplete="off"
               autocorrect="off"
-              placeholder="Description"
-              value={description}
-              onChange={handleDescriptionChange}
+              required
+              class="form-group-input input-small"
+              placeholder="Category"
+              value={category}
+              onChange={handleCategoryChange}
             />
-            <div class="input-control">
+            <input
+              autocomplete="off"
+              autocorrect="off"
+              required
+              class="form-group-input input-small"
+              placeholder="Problem Name"
+              value={name}
+              onChange={handleNameChange}
+            />
+            <div class="form-ext-control form-ext-checkbox">
               <input
-                autocomplete="off"
-                autocorrect="off"
-                required
-                class="form-group-input input-small"
-                placeholder="Flag"
-                value={flag}
-                onChange={handleFlagChange}
+                id={`chall-${problem.id}-tiebreak-eligible`}
+                type="checkbox"
+                class="form-ext-input"
+                checked={tiebreakEligible}
+                onChange={handleTiebreakEligibleChange}
               />
-            </div>
-
-            {problem.files.length !== 0 && (
-              <div>
-                <p class={`frame__subtitle m-0  `}>Downloads</p>
-                <div class="tag-container">
-                  {problem.files.map((file) => {
-                    return (
-                      <div class={`tag  `} key={file.url}>
-                        <a native download href={file.url}>
-                          {file.name}
-                        </a>
-                        <div
-                          class="tag tag--delete"
-                          style="margin: 0; margin-left: 3px"
-                          onClick={handleRemoveFile(file)}
-                        />
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-
-            <div class="input-control">
-              <input
-                class="form-group-input input-small"
-                type="file"
-                multiple
-                onChange={handleFileUpload}
-              />
-            </div>
-
-            <div class={`form-section `}>
-              <button class="btn-small btn-info">Update</button>
-              <button
-                class="btn-small btn-danger"
-                onClick={openDeleteModal}
-                type="button"
+              <label
+                for={`chall-${problem.id}-tiebreak-eligible`}
+                class="form-ext-label"
               >
-                Delete
-              </button>
+                Eligible for tiebreaks?
+              </label>
             </div>
-          </form>
-        </div>
+            <input
+              autocomplete="off"
+              autocorrect="off"
+              required
+              class="form-group-input input-small"
+              placeholder="Author"
+              value={author}
+              onChange={handleAuthorChange}
+            />
+            <input
+              class="form-group-input input-small"
+              type="number"
+              required
+              value={minPoints}
+              onChange={handleMinPointsChange}
+            />
+            <input
+              class="form-group-input input-small"
+              type="number"
+              required
+              value={maxPoints}
+              onChange={handleMaxPointsChange}
+            />
+          </div>
+
+          <div class="divider" />
+
+          <textarea
+            autocomplete="off"
+            autocorrect="off"
+            placeholder="Description"
+            value={description}
+            onChange={handleDescriptionChange}
+            class="p-2"
+          />
+          <div class="input-control">
+            <input
+              autocomplete="off"
+              autocorrect="off"
+              required
+              class="form-group-input input-small"
+              placeholder="Flag"
+              value={flag}
+              onChange={handleFlagChange}
+            />
+          </div>
+
+          {problem.files.length !== 0 && (
+            <div>
+              <p class={`frame__subtitle m-0  `}>Downloads</p>
+              <div class="tag-container">
+                {problem.files.map((file) => {
+                  return (
+                    <div class="tag" key={file.url}>
+                      <a native download href={file.url}>
+                        {file.name}
+                      </a>
+                      <div
+                        class="tag tag--delete"
+                        style="margin: 0; margin-left: 3px"
+                        onClick={handleRemoveFile(file)}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          <div class="input-control">
+            <input
+              class="form-group-input input-small"
+              type="file"
+              multiple
+              onChange={handleFileUpload}
+            />
+          </div>
+
+          <button class="btn--sm btn-info mr-1">Update</button>
+          <button
+            class="btn--sm btn-danger"
+            onClick={openDeleteModal}
+            type="button"
+          >
+            Delete
+          </button>
+        </form>
       </div>
       <DeleteModal
         open={isDeleteModalOpen}

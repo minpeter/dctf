@@ -45,12 +45,14 @@ export default withToast(
 
     render({ ...props }) {
       return (
-        <div {...props}>
-          <button onClick={this.handleClick}>
-            <img src={GithubLogo} />
-            <span>Sign in with GitHub</span>
-          </button>
-        </div>
+        <button
+          onClick={this.handleClick}
+          {...props}
+          class="u-flex u-gap-1 u-items-end p-1"
+        >
+          <img src={GithubLogo} alt="GitHub Logo" height={24} width={24} />
+          <span>Sign in with GitHub</span>
+        </button>
       );
     }
   }

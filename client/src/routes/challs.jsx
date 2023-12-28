@@ -173,7 +173,7 @@ export default function Challenges() {
 
   return (
     <div class="row u-center" style="align-items: initial !important">
-      <div class="col-3 u-flex u-flex-column u-gap-2">
+      <div class="col-3 u-flex u-flex-column u-gap-1">
         <div class="frame">
           <div class="frame__body p-2">
             <div class="frame__title title mt-0">Filters</div>

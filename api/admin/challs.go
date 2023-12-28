@@ -5,18 +5,29 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/minpeter/dctf-backend/database"
+	"github.com/minpeter/dctf-backend/utils"
 )
 
 func deleteChallengeHandler(c *gin.Context) {
-	c.Status(http.StatusNoContent)
-}
+	id := c.Param("id")
 
-func getChallengeHandler(c *gin.Context) {
-	c.Status(http.StatusNoContent)
+	if err := database.DeleteChallenge(id); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	utils.SendResponse(c, "goodChallengeDelete", gin.H{})
 }
 
 func listChallengesHandler(c *gin.Context) {
-	c.Status(http.StatusNoContent)
+
+	challs, err := database.GetAllChallenges()
+	if err != nil {
+		utils.SendResponse(c, "internalError", gin.H{})
+		return
+	}
+
+	utils.SendResponse(c, "goodChallenges", challs)
 }
 
 func putChallengeHandler(c *gin.Context) {

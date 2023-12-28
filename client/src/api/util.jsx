@@ -2,7 +2,7 @@ import { route } from "preact-router";
 
 export const relog = () => {
   localStorage.removeItem("token");
-  route("/register");
+  route("/login");
 };
 
 export const handleResponse = ({ resp, valid, resolveDataMessage }) => {
