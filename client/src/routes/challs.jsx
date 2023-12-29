@@ -3,7 +3,7 @@ import { useCallback, useState, useEffect, useMemo } from "preact/hooks";
 import config from "../config";
 import Problem from "../components/problem";
 import NotStarted from "../components/not-started";
-import { useToast } from "../components/toast";
+import toast from "react-hot-toast";
 
 import { getChallenges, getPrivateSolves } from "../api/challenges";
 
@@ -25,7 +25,6 @@ export default function Challenges() {
   );
   const [solveIDs, setSolveIDs] = useState([]);
   const [loadState, setLoadState] = useState(loadStates.pending);
-  const { toast } = useToast();
 
   const [isNull, setIsNull] = useState(false);
 
@@ -60,7 +59,7 @@ export default function Challenges() {
       }
       const { data, error, notStarted } = await getChallenges();
       if (error) {
-        toast({ body: error, type: "error" });
+        toast.error(error);
         return;
       }
 
@@ -90,20 +89,20 @@ export default function Challenges() {
       setCategories(newCategories);
     };
     action();
-  }, [toast, categories, problems]);
+  }, [categories, problems]);
 
   useEffect(() => {
     const action = async () => {
       const { data, error } = await getPrivateSolves();
       if (error) {
-        toast({ body: error, type: "error" });
+        toast.error(error);
         return;
       }
 
       setSolveIDs(data.map((solve) => solve.id));
     };
     action();
-  }, [toast]);
+  }, []);
 
   useEffect(() => {
     localStorage.challPageState = JSON.stringify({ categories, showSolved });

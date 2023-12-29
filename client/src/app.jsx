@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from "preact/hooks";
 import Router, { route } from "preact-router";
+import { Toaster } from "react-hot-toast";
 
 import "cirrus-ui";
 import "./styles/reset-cirrus.css";
@@ -18,7 +19,7 @@ import GithubCallback from "./routes/github-callback";
 
 import AdminChallenges from "./routes/admin/challs";
 
-import { ToastProvider } from "./components/toast";
+// import { ToastProvider } from "./components/toast";
 
 function useTriggerRerender() {
   const setToggle = useState(false)[1];
@@ -82,13 +83,14 @@ export function App() {
 
   return (
     <div class="h-100p u-flex u-flex-column  u-justify-space-between u-items-center">
-      <ToastProvider>
-        <div class="w-100p">
-          <Header paths={headerPaths} />
-          <Router onChange={triggerRerender}>{currentPaths}</Router>
-        </div>
-        <Footer />
-      </ToastProvider>
+      {/* <ToastProvider> */}
+      <div class="w-100p">
+        <Header paths={headerPaths} />
+        <Router onChange={triggerRerender}>{currentPaths}</Router>
+      </div>
+      <Footer />
+      {/* </ToastProvider> */}
+      <Toaster />
     </div>
   );
 }

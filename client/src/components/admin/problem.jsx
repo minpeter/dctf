@@ -1,12 +1,13 @@
 import { useState, useCallback } from "preact/hooks";
 import Modal from "../../components/modal";
 
+import toast from "react-hot-toast";
+
 import {
   updateChallenge,
   deleteChallenge,
   uploadFiles,
 } from "../../api/admin/challs";
-import { useToast } from "../../components/toast";
 import { encodeFile } from "../../util";
 
 const DeleteModal = ({ open, onClose, onDelete }) => {
@@ -55,8 +56,6 @@ const DeleteModal = ({ open, onClose, onDelete }) => {
 };
 
 const Problem = ({ problem, update: updateClient }) => {
-  const { toast } = useToast();
-
   const [flag, setFlag] = useState(problem.flag);
   const handleFlagChange = useCallback((e) => setFlag(e.target.value), []);
 
@@ -118,7 +117,7 @@ const Problem = ({ problem, update: updateClient }) => {
       });
 
       if (fileUpload.error) {
-        toast({ body: fileUpload.error, type: "error" });
+        toast.error(fileUpload.error);
         return;
       }
 
@@ -135,9 +134,9 @@ const Problem = ({ problem, update: updateClient }) => {
         problem: data,
       });
 
-      toast({ body: "Problem successfully updated" });
+      toast.success("Problem successfully updated");
     },
-    [problem.id, problem.files, updateClient, toast]
+    [problem.id, problem.files, updateClient]
   );
 
   const handleRemoveFile = (file) => async () => {
@@ -154,7 +153,7 @@ const Problem = ({ problem, update: updateClient }) => {
       problem: data,
     });
 
-    toast({ body: "Problem successfully updated" });
+    toast.success("Problem successfully updated");
   };
 
   const handleUpdate = async (e) => {
@@ -180,7 +179,7 @@ const Problem = ({ problem, update: updateClient }) => {
       problem: data,
     });
 
-    toast({ body: "Problem successfully updated" });
+    toast.success("Problem successfully updated");
   };
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -196,14 +195,12 @@ const Problem = ({ problem, update: updateClient }) => {
       await deleteChallenge({
         id: problem.id,
       });
-      toast({
-        body: `${problem.name} successfully deleted`,
-        type: "success",
-      });
+
+      toast.success(`${problem.name} successfully deleted`);
       closeDeleteModal();
     };
     action();
-  }, [problem, toast, closeDeleteModal]);
+  }, [problem, closeDeleteModal]);
 
   return (
     <>
