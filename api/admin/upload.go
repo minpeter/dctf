@@ -79,10 +79,6 @@ func uploadPostHandler(c *gin.Context) {
 	utils.SendResponse(c, "goodFilesUpload", resp)
 }
 
-// func upload(name data string) (name url string, err error) {
-// 	return "", "", nil
-// }
-
 func uploadQueryHandler(c *gin.Context) {
 	c.Status(http.StatusNoContent)
 }

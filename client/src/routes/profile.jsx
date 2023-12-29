@@ -11,8 +11,8 @@ import {
 } from "../api/profile";
 import { useToast } from "../components/toast";
 import Form from "../components/form";
-import MembersCard from "../components/profile/members-card";
-import GithubCard from "../components/profile/github-card";
+// import MembersCard from "../components/profile/members-card";
+// import GithubCard from "../components/profile/github-card";
 import {
   PublicSolvesCard,
   PrivateSolvesCard,
@@ -381,11 +381,10 @@ const Profile = ({ uuid }) => {
   }
 
   return (
-    // width 782px 부터 flex 한줄로 정렬
     <div class="u-flex u-gap-2 u-justify-center ml-2 mr-2 u-flex-row-md u-flex-column">
       {isPrivate && (
         <div>
-          <TeamCodeCard {...{ teamToken }} />
+          {/* <TeamCodeCard {...{ teamToken }} /> */}
           <UpdateCard
             {...{
               name,
@@ -395,7 +394,7 @@ const Profile = ({ uuid }) => {
               onUpdate: onProfileUpdate,
             }}
           />
-          <GithubCard {...{ githubId, onUpdate: onProfileUpdate }} />
+          {/* <GithubCard {...{ githubId, onUpdate: onProfileUpdate }} /> */}
         </div>
       )}
       <div>
@@ -410,7 +409,7 @@ const Profile = ({ uuid }) => {
             isPrivate,
           }}
         />
-        {isPrivate && config.userMembers && <MembersCard />}
+        {/* {isPrivate && config.userMembers && <MembersCard />} */}
         {isPrivate ? (
           <PrivateSolvesCard solves={solves} />
         ) : (

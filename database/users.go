@@ -30,12 +30,6 @@ func MakeUser(id string, name string, email string, division string, githubId st
 	return err
 }
 
-func GetUserByNameOrEmail(name string, email string) (User, error) {
-	var user User
-	_, err := DB.Where("name = ? OR email = ?", name, email).Get(&user)
-	return user, err
-}
-
 func GetAllUsers() ([]User, error) {
 	var users []User
 	err := DB.Find(&users)

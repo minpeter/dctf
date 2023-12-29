@@ -20,18 +20,10 @@ func Routes(userRoutes *gin.RouterGroup) {
 
 		auth := me.Group("/auth")
 		{
-			auth.DELETE("/github", deleteGithubAuthHandler)
-			auth.PUT("/github", putGithubAuthHandler)
 			auth.DELETE("/email", deleteEmailAuthHandler)
 			auth.PUT("/email", putEmailAuthHandler)
 		}
 
-		members := me.Group("/members")
-		{
-			members.DELETE("/:id", deleteMemberHandler)
-			members.GET("", listMembersHandler)
-			members.POST("", newMemberHandler)
-		}
 	}
 }
 
@@ -41,20 +33,31 @@ func getUserHandler(c *gin.Context) {
 
 func getMeHandler(c *gin.Context) {
 
-	// c.Set("user", user)
 	user := c.MustGet("user").(database.User)
 
 	fmt.Println("user:", user)
 
+	solves, err := database.GetSolvesByUserId(user.Id)
+	if err != nil {
+		utils.SendResponse(c, "internalServerError", nil)
+		return
+	}
+
+	solvesIds := []string{}
+
+	for _, solve := range solves {
+		solvesIds = append(solvesIds, solve.ChallengeId)
+	}
+
 	utils.SendResponse(c, "goodUserData", gin.H{
-		"name":             user.Name,
-		"githubId":         nil,
-		"division":         "open",
-		"score":            20000,
-		"globalPlace":      nil,
-		"divisionPlace":    nil,
-		"solves":           []string{},
-		"teamToken":        "testToken",
+		"name":          user.Name,
+		"githubId":      nil,
+		"division":      "open",
+		"score":         20000,
+		"globalPlace":   nil,
+		"divisionPlace": nil,
+		"solves":        solvesIds,
+		// "teamToken":        "testToken",
 		"allowedDivisions": []string{"open"},
 		"id":               user.Id,
 		"email":            user.Email,

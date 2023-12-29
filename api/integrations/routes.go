@@ -27,16 +27,13 @@ func Routes(integrationRoutes *gin.RouterGroup) {
 	github := integrationRoutes.Group("/github")
 	{
 		github.POST("/callback", githubCallbackHandler)
-		github.GET("/leaderboard", utils.TokenAuthMiddleware(), githubLeaderboardHandler)
 	}
 
 }
 
 func clientConfigHandler(c *gin.Context) {
-	c.Status(http.StatusNoContent)
+	utils.SendResponse(c, "goodClientConfig", gin.H{})
 }
-
-var userEndpoint = "https://api.github.com/user"
 
 func githubCallbackHandler(c *gin.Context) {
 
@@ -113,10 +110,6 @@ func githubCallbackHandler(c *gin.Context) {
 		"githubToken": GithubToken,
 		"githubId":    result.ID,
 	})
-}
-
-func githubLeaderboardHandler(c *gin.Context) {
-	c.Status(http.StatusNoContent)
 }
 
 type GithubUserResponse struct {

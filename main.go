@@ -14,7 +14,7 @@ import (
 	"github.com/minpeter/dctf-backend/database"
 )
 
-type ClientConfig struct {
+type clientConfig struct {
 	Meta            Meta              `json:"meta"`
 	HomeContent     string            `json:"homeContent"`
 	Sponsors        []interface{}     `json:"sponsors"`
@@ -38,21 +38,21 @@ type Meta struct {
 	ImageURL    string `json:"imageUrl"`
 }
 
-var clientConfig ClientConfig
+var ClientConfig clientConfig
 
 func serveIndex(c *gin.Context) {
 
-	jsonData, err := json.Marshal(clientConfig)
+	jsonData, err := json.Marshal(ClientConfig)
 	if err != nil {
 		log.Fatalf("Error marshalling clientConfig: %v", err)
 	}
 
 	rendered := struct {
 		JSONConfig string
-		Config     ClientConfig
+		Config     clientConfig
 	}{
 		JSONConfig: string(jsonData),
-		Config:     clientConfig,
+		Config:     ClientConfig,
 	}
 
 	// Use mustache to render the index.html template
@@ -69,9 +69,9 @@ func loadClientConfig() {
 	defer configFile.Close()
 
 	decoder := json.NewDecoder(configFile)
-	err = decoder.Decode(&clientConfig)
+	err = decoder.Decode(&ClientConfig)
 
-	clientConfig.Github.ClientId = os.Getenv("GITHUB_CLIENT_ID")
+	ClientConfig.Github.ClientId = os.Getenv("GITHUB_CLIENT_ID")
 
 	if err != nil {
 		fmt.Printf("Error decoding client-config.json: %v\n", err)
