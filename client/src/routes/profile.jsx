@@ -53,39 +53,30 @@ const SummaryCard = memo(
         </div>
         <div class="action-bar">
           <p>
-            <span class={`icon  `}>
-              <i class="fa fa-wrapper fa-trophy" style={{ fontSize: "28px" }} />
-            </span>
+            <i class="fa fa-wrapper fa-trophy" style={{ fontSize: "28px" }} />
             {score === 0 ? "No points earned" : `${score} total points`}
           </p>
           <p>
-            <span class={`icon  `}>
-              <i
-                class="fa fa-wrapper fa-ranking-star"
-                style={{ fontSize: "28px" }}
-              />
-            </span>
+            <i
+              class="fa fa-wrapper fa-ranking-star"
+              style={{ fontSize: "28px" }}
+            />
             {score === 0
               ? "Unranked"
               : `${divisionPlace} in the ${division} division`}
           </p>
           <p>
-            <span class={`icon  `}>
-              {" "}
-              <i
-                class="fa fa-wrapper fa-ranking-star"
-                style={{ fontSize: "28px" }}
-              />
-            </span>
+            <i
+              class="fa fa-wrapper fa-ranking-star"
+              style={{ fontSize: "28px" }}
+            />
             {score === 0 ? "Unranked" : `${globalPlace} across all teams`}
           </p>
           <p>
-            <span class={`icon  `}>
-              <i
-                class="fa fa-wrapper fa-address-book"
-                style={{ fontSize: "28px" }}
-              />
-            </span>
+            <i
+              class="fa fa-wrapper fa-address-book"
+              style={{ fontSize: "28px" }}
+            />
             {division} division
           </p>
         </div>
