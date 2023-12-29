@@ -7,7 +7,7 @@ import (
 
 type Solve struct {
 	Id          int64     `xorm:"pk autoincr"`
-	ChallengeId string    `json:"challengeid"`
+	Challengeid string    `json:"challengeid"`
 	Userid      string    `json:"userid"`
 	CreatedAt   time.Time `json:"-" xorm:"created"`
 }
@@ -34,7 +34,7 @@ func GetSolvesByUserId(userid string) ([]Solve, error) {
 
 func GetSolvesByChallengeId(challengeid string) ([]Solve, error) {
 	var solves []Solve
-	err := DB.Where("challengeid = ?", challengeid).Find(&solves)
+	err := DB.Where("challenge_id = ?", challengeid).Find(&solves)
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +44,7 @@ func GetSolvesByChallengeId(challengeid string) ([]Solve, error) {
 
 func GetSolvableChallengesByUserId(userid string) ([]Challenge, error) {
 	var challenges []Challenge
-	err := DB.Where("id NOT IN (SELECT challengeid FROM solves WHERE userid = ?)", userid).Find(&challenges)
+	err := DB.Where("id NOT IN (SELECT challenge_id FROM solves WHERE userid = ?)", userid).Find(&challenges)
 	if err != nil {
 		return nil, err
 	}
@@ -53,9 +53,19 @@ func GetSolvableChallengesByUserId(userid string) ([]Challenge, error) {
 }
 
 func NewSolve(solve Solve) error {
-	_, err := DB.Insert(&solve)
 
-	fmt.Println(err)
+	// 이미 해당 유저가 문제를 풀었는지 확인
+	has, err := DB.Where("challengeid = ? AND userid = ?", solve.Challengeid, solve.Userid).Get(&Solve{})
+	if err != nil {
+		fmt.Println("err:", err)
+		return err
+	}
+
+	if has {
+		return nil
+	}
+
+	_, err = DB.Insert(&solve)
 	if err != nil {
 		return err
 	}

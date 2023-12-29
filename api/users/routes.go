@@ -43,10 +43,44 @@ func getMeHandler(c *gin.Context) {
 		return
 	}
 
-	solvesIds := []string{}
+	// solves.push({
+	// 	category: chall.category,
+	// 	name: chall.name,
+	// 	points: challengeInfo[i].score,
+	// 	solves: challengeInfo[i].solves,
+	// 	id: chall.id,
+	// 	createdAt: solve.createdat.valueOf()
+	// })
+
+	solvesResp := []struct {
+		Category  string `json:"category"`
+		Name      string `json:"name"`
+		Points    int    `json:"points"`
+		Solves    int    `json:"solves"`
+		Id        string `json:"id"`
+		CreatedAt int64  `json:"createdAt"`
+	}{}
 
 	for _, solve := range solves {
-		solvesIds = append(solvesIds, solve.ChallengeId)
+		solvesResp = append(solvesResp, struct {
+			Category  string `json:"category"`
+			Name      string `json:"name"`
+			Points    int    `json:"points"`
+			Solves    int    `json:"solves"`
+			Id        string `json:"id"`
+			CreatedAt int64  `json:"createdAt"`
+		}{
+			// Category:  solve.Category,
+			// Name:      solve.Name,
+			// Points:    solve.Points,
+			// Solves:    solve.Solves,
+			Category:  "a",
+			Name:      "a",
+			Points:    0,
+			Solves:    1,
+			Id:        solve.Challengeid,
+			CreatedAt: solve.CreatedAt.Unix(),
+		})
 	}
 
 	utils.SendResponse(c, "goodUserData", gin.H{
@@ -56,7 +90,7 @@ func getMeHandler(c *gin.Context) {
 		"score":         20000,
 		"globalPlace":   nil,
 		"divisionPlace": nil,
-		"solves":        solvesIds,
+		"solves":        solvesResp,
 		// "teamToken":        "testToken",
 		"allowedDivisions": []string{"open"},
 		"id":               user.Id,

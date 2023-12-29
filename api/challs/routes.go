@@ -58,7 +58,7 @@ func submitChallHandler(c *gin.Context) {
 	if req.Flag == challenge.Flag {
 
 		solver := database.Solve{
-			ChallengeId: ChallengeId,
+			Challengeid: ChallengeId,
 			Userid:      c.MustGet("userid").(string),
 		}
 
