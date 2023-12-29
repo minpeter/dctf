@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -31,9 +32,6 @@ func listChallengesHandler(c *gin.Context) {
 }
 
 func putChallengeHandler(c *gin.Context) {
-	// body에서 database.Challeng를 읽음
-	// database.CreateChallenge를 호출
-
 	var req struct {
 		Data database.Challenge `json:"data"`
 	}
@@ -45,9 +43,11 @@ func putChallengeHandler(c *gin.Context) {
 		return
 	}
 
+	fmt.Println(req.Data)
+
 	req.Data.Id = id
 
-	if err := database.CreateChallenge(req.Data); err != nil {
+	if err := database.PutChallenge(req.Data); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

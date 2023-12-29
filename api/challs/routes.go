@@ -1,6 +1,7 @@
 package challs
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -18,26 +19,13 @@ func Routes(challRoutes *gin.RouterGroup) {
 
 func getChallsHandler(c *gin.Context) {
 
-	challs, err := database.GetAllChallenges()
+	challs, err := database.GetCleanedChallenges()
 	if err != nil {
 		utils.SendResponse(c, "internalError", gin.H{})
 		return
 	}
 
 	utils.SendResponse(c, "goodChallenges", challs)
-
-	// utils.SendResponse(c, "goodChallenges", []gin.H{
-	// 	{
-	// 		"files":       []string{},
-	// 		"description": "This is a good challenge",
-	// 		"author":      "minpeter",
-	// 		"points":      100,
-	// 		"id":          "34344543-3453-345-5344-34534534534534",
-	// 		"name":        "Good Challenge",
-	// 		"category":    "pwn",
-	// 		"solves":      2,
-	// 	},
-	// })
 }
 
 func getChallSolvesHandler(c *gin.Context) {
@@ -47,5 +35,42 @@ func getChallSolvesHandler(c *gin.Context) {
 
 func submitChallHandler(c *gin.Context) {
 
-	utils.SendResponse(c, "badEnded", gin.H{})
+	ChallengeId := c.Param("id")
+
+	var req struct {
+		Flag string `json:"flag" binding:"required"`
+	}
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		utils.SendResponse(c, "badRequest", gin.H{})
+		return
+	}
+
+	challenge, err := database.GetChallengeById(ChallengeId)
+	if err != nil {
+		utils.SendResponse(c, "badChallenge", gin.H{})
+		return
+	}
+
+	fmt.Println(req.Flag)
+	fmt.Println(challenge.Flag)
+
+	if req.Flag == challenge.Flag {
+
+		solver := database.Solve{
+			ChallengeId: ChallengeId,
+			Userid:      c.MustGet("userid").(string),
+		}
+
+		err := database.NewSolve(solver)
+		if err != nil {
+			utils.SendResponse(c, "internalError", gin.H{})
+			return
+		}
+
+		utils.SendResponse(c, "goodFlag", gin.H{})
+		return
+	}
+
+	utils.SendResponse(c, "badFlag", gin.H{})
 }

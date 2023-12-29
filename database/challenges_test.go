@@ -32,15 +32,15 @@ func TestCreateChallenge(t *testing.T) {
 			},
 		},
 		Points: database.Points{
-			Minimum: 200,
-			Maximum: 300,
+			Max: 300,
+			Min: 200,
 		},
 		Flag:             "test",
 		TiebreakEligible: false,
 		SortWeight:       0,
 	}
 
-	if err := database.CreateChallenge(newChall); err != nil {
+	if err := database.PutChallenge(newChall); err != nil {
 		t.Error(err)
 	}
 

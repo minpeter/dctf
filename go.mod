@@ -7,6 +7,7 @@ require (
 	github.com/google/uuid v1.5.0
 	github.com/hoisie/mustache v0.0.0-20160804235033-6375acf62c69
 	github.com/joho/godotenv v1.5.1
+	github.com/vincent-petithory/dataurl v1.0.0
 	golang.org/x/oauth2 v0.15.0
 	modernc.org/sqlite v1.20.4
 	xorm.io/xorm v1.3.4

@@ -124,8 +124,9 @@ func generateRandomKey(size int) ([]byte, error) {
 	return key, nil
 }
 
-// var tokenKey = []byte("your-secret-key")
-var tokenKey, _ = generateRandomKey(32) // 32 bytes for AES-256
+var tokenKey = []byte("aaaaabbbbbaaaaabbbbbaaaaa33aaaaa")
+
+// var tokenKey, _ = generateRandomKey(32) // 32 bytes for AES-256
 
 func encryptToken(content InternalTokenData) (Token, error) {
 	iv := make([]byte, 12)

@@ -1,7 +1,8 @@
 package database
 
+import "fmt"
+
 type Challenge struct {
-	// Id는 pk 며 auto increment
 	Id               string `json:"id" xorm:"pk"`
 	Name             string `json:"name"`
 	Description      string `json:"description"`
@@ -21,18 +22,37 @@ type File struct {
 }
 
 type Points struct {
-	Id      string `json:"-" xorm:"pk"`
-	Minimum int    `json:"min"`
-	Maximum int    `json:"max"`
+	Id  string `json:"-" xorm:"pk"`
+	Min int    `json:"min"`
+	Max int    `json:"max"`
 }
 
-type ChallengeResponse struct {
-	Challenge
-	Points int `json:"points"`
-	Solves int `json:"solves"`
+type CleanedChallenge struct {
+	Id          string `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Category    string `json:"category"`
+	Author      string `json:"author"`
+	Files       []File `json:"files"`
+	Points      int    `json:"points"`
+	Solves      int    `json:"solves"`
 }
 
-func GetAllChallenges() ([]ChallengeResponse, error) {
+func GetChallengeById(id string) (Challenge, error) {
+	var challenge Challenge
+	has, err := DB.Where("id = ?", id).Get(&challenge)
+	if err != nil {
+		return Challenge{}, err
+	}
+
+	if !has {
+		return Challenge{}, fmt.Errorf("challenge not found")
+	}
+
+	return challenge, nil
+}
+
+func GetAllChallenges() ([]Challenge, error) {
 	var challenges []Challenge
 	err := DB.Find(&challenges)
 	if err != nil {
@@ -45,35 +65,38 @@ func GetAllChallenges() ([]ChallengeResponse, error) {
 		}
 	}
 
-	var challengeResponses []ChallengeResponse
-
-	for _, challenge := range challenges {
-		// solves, err := GetChallengeSolves(challenge.Id)
-		// if err != nil {
-		// 	return nil, err
-		// }
-
-		solves := []string{"minpeter", "rooter"}
-
-		challengeResponses = append(challengeResponses, ChallengeResponse{
-			Challenge: challenge,
-			Points:    challenge.Points.Maximum,
-			Solves:    len(solves),
-		})
-	}
-
-	return challengeResponses, nil
+	return challenges, nil
 
 }
 
-func GetChallengebyId(id string) (Challenge, error) {
-	var challenge Challenge
-	_, err := DB.Where("id = ?", id).Get(&challenge)
+func GetCleanedChallenges() ([]CleanedChallenge, error) {
+	var challenges []Challenge
+	err := DB.Find(&challenges)
 	if err != nil {
-		return Challenge{}, err
+		return nil, err
 	}
 
-	return challenge, nil
+	for i := range challenges {
+		if challenges[i].Files == nil {
+			challenges[i].Files = []File{}
+		}
+	}
+
+	var cleanedChallenges []CleanedChallenge
+	for _, challenge := range challenges {
+		cleanedChallenges = append(cleanedChallenges, CleanedChallenge{
+			Id:          challenge.Id,
+			Name:        challenge.Name,
+			Description: challenge.Description,
+			Category:    challenge.Category,
+			Author:      challenge.Author,
+			Files:       challenge.Files,
+			Points:      challenge.Points.Max,
+			Solves:      0,
+		})
+	}
+
+	return cleanedChallenges, nil
 }
 
 func DeleteChallenge(id string) error {
@@ -85,10 +108,25 @@ func DeleteChallenge(id string) error {
 	return nil
 }
 
-func CreateChallenge(challenge Challenge) error {
-	_, err := DB.Insert(challenge)
+func PutChallenge(challenge Challenge) error {
+	has, err := DB.Where("id = ?", challenge.Id).Exist(&Challenge{})
+
+	fmt.Println("id:", challenge.Id)
 	if err != nil {
 		return err
+	}
+
+	if has {
+		_, err = DB.Where("id = ?", challenge.Id).Update(&challenge)
+		if err != nil {
+			return err
+		}
+
+	} else {
+		_, err = DB.Insert(&challenge)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
