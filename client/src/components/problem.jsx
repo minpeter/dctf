@@ -29,12 +29,10 @@ const Problem = ({ problem, solved, setSolved }) => {
 
       submitFlag(problem.id, value.trim()).then(({ error }) => {
         if (error === undefined) {
-          // toast({ body: "Flag successfully submitted!" });
           toast.success("Flag successfully submitted!");
 
           setSolved(problem.id);
         } else {
-          // toast({ body: error, type: "error" });
           toast.error(error);
           setError(error);
         }
@@ -55,7 +53,6 @@ const Problem = ({ problem, solved, setSolved }) => {
         offset: (newPage - 1) * solvesPageSize,
       });
       if (kind !== "goodChallengeSolves") {
-        // toast({ body: message, type: "error" });
         toast.error(message);
         return;
       }
@@ -79,7 +76,6 @@ const Problem = ({ problem, solved, setSolved }) => {
       });
       setSolvesPending(false);
       if (kind !== "goodChallengeSolves") {
-        // toast({ body: message, type: "error" });
         toast.error(message);
         return;
       }

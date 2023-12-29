@@ -8,10 +8,11 @@ import {
 import config from "../config";
 import Pagination from "../components/pagination";
 import NotStarted from "../components/not-started";
-import { useToast } from "../components/toast";
 
 import { getScoreboard } from "../api/scoreboard";
 import { privateProfile } from "../api/profile";
+
+import toast from "react-hot-toast";
 
 const PAGESIZE_OPTIONS = [25, 50, 100];
 
@@ -61,7 +62,6 @@ export default function Scoreboard() {
     const [totalItems, setTotalItems] = useState(0);
     const [scoreLoadState, setScoreLoadState] = useState(loadStates.pending);
     const selfRow = useRef();
-    const { toast } = useToast();
 
     const setDivision = useCallback(
       (newDivision) => {
@@ -114,12 +114,12 @@ export default function Scoreboard() {
       if (loggedIn) {
         privateProfile().then(({ data, error }) => {
           if (error) {
-            toast({ body: error, type: "error" });
+            toast.error(error);
           }
           setProfile(data);
         });
       }
-    }, [loggedIn, toast]);
+    }, [loggedIn]);
 
     useEffect(() => {
       (async () => {

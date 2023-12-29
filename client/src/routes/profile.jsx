@@ -2,6 +2,8 @@ import { useState, useCallback, useEffect } from "preact/hooks";
 import { memo } from "preact/compat";
 import config from "../config";
 
+import toast from "react-hot-toast";
+
 import {
   privateProfile,
   publicProfile,
@@ -9,22 +11,12 @@ import {
   updateEmail,
   deleteEmail,
 } from "../api/profile";
-import { useToast } from "../components/toast";
 import Form from "../components/form";
-// import MembersCard from "../components/profile/members-card";
-// import GithubCard from "../components/profile/github-card";
 import {
   PublicSolvesCard,
   PrivateSolvesCard,
 } from "../components/profile/solves-card";
-import TokenPreview from "../components/token-preview";
 import * as util from "../util";
-import Trophy from "../icons/trophy.svg";
-import AddressBook from "../icons/address-book.svg";
-import UserCircle from "../icons/user-circle.svg";
-import EnvelopeOpen from "../icons/envelope-open.svg";
-import Rank from "../icons/rank.svg";
-import Github from "../icons/github.svg";
 import useRecaptcha, { RecaptchaLegalNotice } from "../components/recaptcha";
 
 const SummaryCard = memo(
@@ -52,20 +44,26 @@ const SummaryCard = memo(
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Github style="height: 20px;" />
+              <i
+                class="fab fa-wrapper fa-github"
+                style={{ fontSize: "28px" }}
+              />
             </a>
           )}
         </div>
         <div class="action-bar">
           <p>
             <span class={`icon  `}>
-              <img src={Trophy} style={{ filter: "invert(1)" }} />
+              <i class="fa fa-wrapper fa-trophy" style={{ fontSize: "28px" }} />
             </span>
             {score === 0 ? "No points earned" : `${score} total points`}
           </p>
           <p>
             <span class={`icon  `}>
-              <img src={Rank} style={{ filter: "invert(1)" }} />
+              <i
+                class="fa fa-wrapper fa-ranking-star"
+                style={{ fontSize: "28px" }}
+              />
             </span>
             {score === 0
               ? "Unranked"
@@ -73,13 +71,20 @@ const SummaryCard = memo(
           </p>
           <p>
             <span class={`icon  `}>
-              <img src={Rank} style={{ filter: "invert(1)" }} />
+              {" "}
+              <i
+                class="fa fa-wrapper fa-ranking-star"
+                style={{ fontSize: "28px" }}
+              />
             </span>
             {score === 0 ? "Unranked" : `${globalPlace} across all teams`}
           </p>
           <p>
             <span class={`icon  `}>
-              <img src={AddressBook} style={{ filter: "invert(1)" }} />
+              <i
+                class="fa fa-wrapper fa-address-book"
+                style={{ fontSize: "28px" }}
+              />
             </span>
             {division} division
           </p>
@@ -89,60 +94,6 @@ const SummaryCard = memo(
   )
 );
 
-const TeamCodeCard = ({ teamToken }) => {
-  const { toast } = useToast();
-
-  const tokenUrl = `${location.origin}/login?token=${encodeURIComponent(
-    teamToken
-  )}`;
-
-  const [reveal, setReveal] = useState(false);
-  const toggleReveal = useCallback(() => setReveal(!reveal), [reveal]);
-
-  const onCopyClick = useCallback(() => {
-    if (navigator.clipboard) {
-      try {
-        navigator.clipboard.writeText(tokenUrl).then(() => {
-          toast({ body: "Copied team invite URL to clipboard" });
-        });
-      } catch {}
-    }
-  }, [toast, tokenUrl]);
-
-  return (
-    <div class="card">
-      <div class="content p-4 w-80">
-        <p>Team Invite</p>
-        <p class="font-thin">
-          Send this team invite URL to your teammates so they can login.
-        </p>
-
-        <button
-          onClick={onCopyClick}
-          class={` btn--sm btn-info`}
-          name="btn"
-          value="submit"
-          type="submit"
-        >
-          Copy
-        </button>
-
-        <button
-          onClick={toggleReveal}
-          class="btn-info btn--sm ml-1"
-          name="btn"
-          value="submit"
-          type="submit"
-        >
-          {reveal ? "Hide" : "Reveal"}
-        </button>
-
-        {reveal && <TokenPreview token={tokenUrl} />}
-      </div>
-    </div>
-  );
-};
-
 const UpdateCard = ({
   name: oldName,
   email: oldEmail,
@@ -150,7 +101,6 @@ const UpdateCard = ({
   allowedDivisions,
   onUpdate,
 }) => {
-  const { toast } = useToast();
   const requestRecaptchaCode = useRecaptcha("setEmail");
 
   const [name, setName] = useState(oldName);
@@ -181,11 +131,11 @@ const UpdateCard = ({
         setIsButtonDisabled(false);
 
         if (error !== undefined) {
-          toast({ body: error, type: "error" });
+          toast.error(error);
           return;
         }
 
-        toast({ body: "Profile updated" });
+        toast.success("Profile updated");
 
         onUpdate({
           name: data.user.name,
@@ -212,16 +162,16 @@ const UpdateCard = ({
         setIsButtonDisabled(false);
 
         if (error !== undefined) {
-          toast({ body: error, type: "error" });
+          toast.error(error);
           return;
         }
 
-        toast({ body: data });
+        toast.success(data);
         onUpdate({ email });
       }
 
       if (!updated) {
-        toast({ body: "Nothing to update!" });
+        toast.success("Nothing to update!");
       }
     },
     [
@@ -232,7 +182,6 @@ const UpdateCard = ({
       oldEmail,
       oldDivision,
       onUpdate,
-      toast,
       requestRecaptchaCode,
     ]
   );
@@ -240,7 +189,7 @@ const UpdateCard = ({
   return (
     <div class="card">
       <div class="content p-4 w-80">
-        <p>Update Information</p>
+        <p class="title">Update Information</p>
         <p class="font-thin m-0">
           This will change how your team appears on the scoreboard. You may only
           change your team's name once every 10 minutes.
@@ -258,7 +207,12 @@ const UpdateCard = ({
               autocorrect="off"
               maxLength="64"
               minLength="2"
-              icon={<img src={UserCircle} style={{ filter: "invert(1)" }} />}
+              icon={
+                <i
+                  class="fa fa-wrapper fa-circle-user"
+                  style={{ fontSize: "28px" }}
+                />
+              }
               name="name"
               placeholder="Team Name"
               type="text"
@@ -268,7 +222,12 @@ const UpdateCard = ({
             <input
               autocomplete="email"
               autocorrect="off"
-              icon={<img src={EnvelopeOpen} style={{ filter: "invert(1)" }} />}
+              icon={
+                <i
+                  class="fa fa-wrapper fa-envelope"
+                  style={{ fontSize: "28px" }}
+                />
+              }
               name="email"
               placeholder="Email"
               type="email"
@@ -276,7 +235,12 @@ const UpdateCard = ({
               onChange={handleSetEmail}
             />
             <select
-              icon={<img src={AddressBook} style={{ filter: "invert(1)" }} />}
+              icon={
+                <i
+                  class="fa fa-wrapper fa-address-book"
+                  style={{ fontSize: "28px" }}
+                />
+              }
               class={`select  `}
               name="division"
               value={division}
@@ -305,7 +269,6 @@ const Profile = ({ uuid }) => {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(null);
   const [data, setData] = useState({});
-  const { toast } = useToast();
 
   const {
     name,
@@ -328,7 +291,7 @@ const Profile = ({ uuid }) => {
     if (isPrivate) {
       privateProfile().then(({ data, error }) => {
         if (error) {
-          toast({ body: error, type: "error" });
+          toast.error(error);
         } else {
           setData(data);
         }
@@ -344,7 +307,7 @@ const Profile = ({ uuid }) => {
         setLoaded(true);
       });
     }
-  }, [uuid, isPrivate, toast]);
+  }, [uuid, isPrivate]);
 
   const onProfileUpdate = useCallback(
     ({ name, email, divisionId, githubId }) => {
@@ -381,10 +344,9 @@ const Profile = ({ uuid }) => {
   }
 
   return (
-    <div class="u-flex u-gap-2 u-justify-center ml-2 mr-2 u-flex-row-md u-flex-column">
+    <div class="u-flex u-gap-2 u-justify-center ml-2 mr-2 u-flex-column">
       {isPrivate && (
         <div>
-          {/* <TeamCodeCard {...{ teamToken }} /> */}
           <UpdateCard
             {...{
               name,
@@ -394,7 +356,6 @@ const Profile = ({ uuid }) => {
               onUpdate: onProfileUpdate,
             }}
           />
-          {/* <GithubCard {...{ githubId, onUpdate: onProfileUpdate }} /> */}
         </div>
       )}
       <div>
@@ -409,7 +370,6 @@ const Profile = ({ uuid }) => {
             isPrivate,
           }}
         />
-        {/* {isPrivate && config.userMembers && <MembersCard />} */}
         {isPrivate ? (
           <PrivateSolvesCard solves={solves} />
         ) : (

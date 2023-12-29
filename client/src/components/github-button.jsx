@@ -1,5 +1,4 @@
 import { Component } from "preact";
-import GithubLogo from "../icons/github.svg";
 import openPopup from "../util/github";
 import { githubCallback } from "../api/auth";
 import toast from "react-hot-toast";
@@ -46,8 +45,8 @@ class GithubButton extends Component {
         {...props}
         class="u-flex u-gap-1 u-items-end p-1"
       >
-        <img src={GithubLogo} alt="GitHub Logo" height={24} width={24} />
-        <span>Sign in with GitHub</span>
+        <i class="fab fa-wrapper fa-github" style={{ fontSize: "28px" }} />
+        Sign in with GitHub
       </button>
     );
   }

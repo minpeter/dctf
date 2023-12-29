@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from "preact/hooks";
 import Router, { route } from "preact-router";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster, useToasterStore } from "react-hot-toast";
+const TOAST_LIMIT = 2;
 
 import "cirrus-ui";
 import "./styles/reset-cirrus.css";
@@ -18,8 +19,6 @@ import Scoreboard from "./routes/scoreboard";
 import GithubCallback from "./routes/github-callback";
 
 import AdminChallenges from "./routes/admin/challs";
-
-// import { ToastProvider } from "./components/toast";
 
 function useTriggerRerender() {
   const setToggle = useState(false)[1];
@@ -81,16 +80,24 @@ export function App() {
     (route) => route.props.name !== undefined
   );
 
+  const { toasts } = useToasterStore();
+
+  // Enforce Limit
+  useEffect(() => {
+    toasts
+      .filter((t) => t.visible) // Only consider visible toasts
+      .filter((_, i) => i >= TOAST_LIMIT) // Is toast index over limit
+      .forEach((t) => toast.dismiss(t.id)); // Dismiss – Use toast.remove(t.id) removal without animation
+  }, [toasts]);
+
   return (
     <div class="h-100p u-flex u-flex-column  u-justify-space-between u-items-center">
-      {/* <ToastProvider> */}
       <div class="w-100p">
         <Header paths={headerPaths} />
         <Router onChange={triggerRerender}>{currentPaths}</Router>
       </div>
       <Footer />
-      {/* </ToastProvider> */}
-      <Toaster />
+      <Toaster position="bottom-center" reverseOrder={false} />
     </div>
   );
 }

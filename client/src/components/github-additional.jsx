@@ -2,7 +2,6 @@ import Form from "../components/form";
 import useRecaptcha from "../components/recaptcha";
 import config from "../config";
 import { register } from "../api/auth";
-import UserCircle from "../icons/user-circle.svg";
 import { useEffect, useState, useCallback } from "preact/hooks";
 
 export default ({ githubToken, githubName }) => {
@@ -64,7 +63,12 @@ export default ({ githubToken, githubName }) => {
             required
             autocomplete="username"
             autocorrect="off"
-            icon={<img src={UserCircle} style={{ filter: "invert(1)" }} />}
+            icon={
+              <i
+                class="fa fa-wrapper fa-circle-user"
+                style={{ fontSize: "28px" }}
+              />
+            }
             name="name"
             maxLength="64"
             minLength="2"

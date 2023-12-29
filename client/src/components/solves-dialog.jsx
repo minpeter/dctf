@@ -2,7 +2,6 @@ import { useCallback } from "preact/hooks";
 import Modal from "./modal";
 import Pagination from "./pagination";
 import { formatRelativeTime } from "../util/time";
-import Clock from "../icons/clock.svg";
 
 const SolvesDialog = ({
   onClose,
@@ -29,7 +28,7 @@ const SolvesDialog = ({
         <>
           {solves.length === 0 ? (
             <div>
-              <img src={Clock} style={{ filter: "invert(1)" }} />
+              <i class="fa fa-wrapper fa-clock" style={{ fontSize: "28px" }} />
               <h5>{challName} has no solves.</h5>
             </div>
           ) : (

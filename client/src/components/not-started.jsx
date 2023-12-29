@@ -1,10 +1,9 @@
-import Clock from "../icons/clock.svg";
 import config from "../config";
 
 const NotStarted = () => (
   <div class="row">
     <div>
-      <img src={Clock} style={{ filter: "invert(1)" }} />
+      <i class="fa fa-wrapper fa-clock" style={{ fontSize: "28px" }} />
       <h4>{config.ctfName} has not started yet.</h4>
     </div>
   </div>
