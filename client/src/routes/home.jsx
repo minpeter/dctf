@@ -10,10 +10,8 @@ export default class Home extends Component {
 
   render() {
     return (
-      <div class="row u-center">
-        <div class="col-6">
-          <Markdown content={config.homeContent} />
-        </div>
+      <div class="u-center">
+        <Markdown content={config.homeContent} />
       </div>
     );
   }

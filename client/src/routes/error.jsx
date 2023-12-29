@@ -9,7 +9,7 @@ export default class Error extends Component {
   render({ error, message }) {
     return (
       <div class="row u-text-center u-center">
-        <div class="col-4">
+        <div>
           <h1>{error}</h1>
           <p class="font-thin">{message || "There was an error"}</p>
         </div>
