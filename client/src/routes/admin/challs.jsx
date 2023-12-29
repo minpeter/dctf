@@ -41,6 +41,13 @@ const Challenges = () => {
     action();
   }, []);
 
+  const deleteProblem = useCallback(
+    ({ problem }) => {
+      setProblems(problems.filter((p) => p.id !== problem.id));
+    },
+    [completeProblems]
+  );
+
   const updateProblem = useCallback(
     ({ problem }) => {
       let nextProblems = completeProblems;
@@ -69,7 +76,12 @@ const Challenges = () => {
     <div class="u-flex u-gap-1 u-flex-column ml-1 mr-1">
       {completeProblems.map((problem) => {
         return (
-          <Problem update={updateProblem} key={problem.id} problem={problem} />
+          <Problem
+            update={updateProblem}
+            delete={deleteProblem}
+            key={problem.id}
+            problem={problem}
+          />
         );
       })}
     </div>

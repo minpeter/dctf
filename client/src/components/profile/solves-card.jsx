@@ -7,7 +7,7 @@ const makeSolvesCard =
       <div class="card">
         {solves.length === 0 ? (
           <div class="content p-4 w-80 u-flex u-flex-column u-center">
-            <i class="fab fa-wrapper fa-clock" style={{ fontSize: "50px" }} />
+            <i class="fa fa-wrapper fa-clock" style={{ fontSize: "50px" }} />
             <h5>No solves yet</h5>
           </div>
         ) : (

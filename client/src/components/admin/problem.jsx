@@ -55,7 +55,7 @@ const DeleteModal = ({ open, onClose, onDelete }) => {
   );
 };
 
-const Problem = ({ problem, update: updateClient }) => {
+const Problem = ({ problem, update: updateClient, delete: deleteClient }) => {
   const [flag, setFlag] = useState(problem.flag);
   const handleFlagChange = useCallback((e) => setFlag(e.target.value), []);
 
@@ -189,6 +189,10 @@ const Problem = ({ problem, update: updateClient }) => {
   }, []);
   const closeDeleteModal = useCallback(() => {
     setIsDeleteModalOpen(false);
+
+    deleteClient({
+      problem,
+    });
   }, []);
   const handleDelete = useCallback(() => {
     const action = async () => {
@@ -197,6 +201,7 @@ const Problem = ({ problem, update: updateClient }) => {
       });
 
       toast.success(`${problem.name} successfully deleted`);
+
       closeDeleteModal();
     };
     action();
