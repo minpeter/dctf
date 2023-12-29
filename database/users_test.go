@@ -27,14 +27,14 @@ func TestMakeUser(t *testing.T) {
 		}
 	}
 
-	// 첫번째 유저만 perms가 1인지 확인
+	// 첫번째 유저만 perms가 3인지 확인
 	users, err := database.GetAllUsers()
 	if err != nil {
 		t.Error(err)
 	}
 
-	if users[0].Perms != 1 {
-		t.Error("perms is not 1")
+	if users[0].Perms != 3 {
+		t.Error("perms is not 3")
 	}
 
 	// 두번째 유저의 perms를 1로 변경

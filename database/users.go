@@ -11,12 +11,12 @@ type User struct {
 
 func MakeUser(id string, name string, email string, division string, githubId string, perms int) error {
 
-	has, err := DB.IsTableEmpty(&User{})
+	empty, err := DB.IsTableEmpty(&User{})
 	if err != nil {
 		return err
 	}
-	if has {
-		perms = 1
+	if empty {
+		perms = 3
 	}
 
 	_, err = DB.Insert(&User{

@@ -27,6 +27,8 @@ export default function Challenges() {
   const [loadState, setLoadState] = useState(loadStates.pending);
   const { toast } = useToast();
 
+  const [isNull, setIsNull] = useState(false);
+
   const setSolved = useCallback((id) => {
     setSolveIDs((solveIDs) => {
       if (!solveIDs.includes(id)) {
@@ -68,6 +70,16 @@ export default function Challenges() {
       }
 
       const newCategories = { ...categories };
+
+      // 만약 data가 null 이라면 setIsNull(true)를 해주고 return
+      // data가 null이 아니라면, data의 category를 순회하면서
+      // newCategories에 category가 없다면, newCategories에 추가해준다.
+
+      if (data === null) {
+        setIsNull(true);
+        return;
+      }
+
       data.forEach((problem) => {
         if (newCategories[problem.category] === undefined) {
           newCategories[problem.category] = false;
@@ -169,6 +181,14 @@ export default function Challenges() {
 
   if (loadState === loadStates.notStarted) {
     return <NotStarted />;
+  }
+
+  if (isNull) {
+    return (
+      <div class={"u-center mt-4"}>
+        <h3>Challenge is empty</h3>
+      </div>
+    );
   }
 
   return (
