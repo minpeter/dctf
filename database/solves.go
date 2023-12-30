@@ -12,6 +12,16 @@ type Solve struct {
 	CreatedAt   time.Time `json:"-" xorm:"created"`
 }
 
+// callenge별 문제 풀이 자 수 반환
+func GetSolvesCountByChallengeId(challengeid string) (int64, error) {
+	count, err := DB.Where("challengeid = ?", challengeid).Count(&Solve{})
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}
+
 func GetAllSolves() ([]Solve, error) {
 	var solves []Solve
 	err := DB.Find(&solves)
@@ -34,7 +44,7 @@ func GetSolvesByUserId(userid string) ([]Solve, error) {
 
 func GetSolvesByChallengeId(challengeid string) ([]Solve, error) {
 	var solves []Solve
-	err := DB.Where("challenge_id = ?", challengeid).Find(&solves)
+	err := DB.Where("challengeid = ?", challengeid).Find(&solves)
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +54,7 @@ func GetSolvesByChallengeId(challengeid string) ([]Solve, error) {
 
 func GetSolvableChallengesByUserId(userid string) ([]Challenge, error) {
 	var challenges []Challenge
-	err := DB.Where("id NOT IN (SELECT challenge_id FROM solves WHERE userid = ?)", userid).Find(&challenges)
+	err := DB.Where("id NOT IN (SELECT challengeid FROM solves WHERE userid = ?)", userid).Find(&challenges)
 	if err != nil {
 		return nil, err
 	}

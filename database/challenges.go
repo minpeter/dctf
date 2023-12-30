@@ -80,10 +80,17 @@ func GetCleanedChallenges() ([]CleanedChallenge, error) {
 		if challenges[i].Files == nil {
 			challenges[i].Files = []File{}
 		}
+
 	}
 
 	var cleanedChallenges []CleanedChallenge
 	for _, challenge := range challenges {
+
+		count, err := GetSolvesCountByChallengeId(challenge.Id)
+		if err != nil {
+			return nil, err
+		}
+
 		cleanedChallenges = append(cleanedChallenges, CleanedChallenge{
 			Id:          challenge.Id,
 			Name:        challenge.Name,
@@ -92,8 +99,9 @@ func GetCleanedChallenges() ([]CleanedChallenge, error) {
 			Author:      challenge.Author,
 			Files:       challenge.Files,
 			Points:      challenge.Points.Max,
-			Solves:      0,
+			Solves:      int(count),
 		})
+
 	}
 
 	return cleanedChallenges, nil
