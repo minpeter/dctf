@@ -234,16 +234,20 @@ export default function Challenges() {
         </div>
       </div>
       <div class="col-6">
-        {problemsToDisplay.map((problem) => {
-          return (
-            <Problem
-              key={problem.id}
-              problem={problem}
-              solved={solveIDs.includes(problem.id)}
-              setSolved={setSolved}
-            />
-          );
-        })}
+        {solvedCount == problems.length && !showSolved ? (
+          <div>I solved all the problems.</div>
+        ) : (
+          problemsToDisplay.map((problem) => {
+            return (
+              <Problem
+                key={problem.id}
+                problem={problem}
+                solved={solveIDs.includes(problem.id)}
+                setSolved={setSolved}
+              />
+            );
+          })
+        )}
       </div>
     </div>
   );
