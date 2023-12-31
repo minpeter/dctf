@@ -98,10 +98,10 @@ const Problem = ({ problem, update: updateClient, delete: deleteClient }) => {
     []
   );
 
-  const [image, setImage] = useState(problem.dklodd.image);
+  const [image, setImage] = useState(problem.utils.image);
   const handleImageChange = useCallback((e) => setImage(e.target.value), []);
 
-  const [type, setType] = useState(problem.dklodd.type);
+  const [type, setType] = useState(problem.utils.type);
   const handleTypeChange = useCallback((e) => setType(e.target.value), []);
 
   const handleFileUpload = useCallback(

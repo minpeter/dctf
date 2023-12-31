@@ -12,7 +12,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/minpeter/dctf-backend/database"
-	"github.com/minpeter/dctf-backend/dklodd"
 	"github.com/minpeter/dctf-backend/utils"
 )
 
@@ -72,9 +71,9 @@ func createChallHandler(c *gin.Context) {
 
 	imageName := challengeData.Dklodd.Image
 
-	hashId := dklodd.GenerateId(c)
+	hashId := utils.GenerateId(c)
 
-	dklodd.PullImage(imageName)
+	utils.PullImage(imageName)
 
 	config := &container.Config{
 		Image: imageName,
@@ -128,7 +127,7 @@ func createChallHandler(c *gin.Context) {
 
 	fmt.Println("create sandbox: " + sandboxID[0:12])
 
-	dklodd.OnlineSandboxIds = append(dklodd.OnlineSandboxIds, sandboxID[0:12])
+	utils.OnlineSandboxIds = append(utils.OnlineSandboxIds, sandboxID[0:12])
 
 	// tq.enqueue(sandboxID[0:12])
 
@@ -189,7 +188,7 @@ func deleteChallHandler(c *gin.Context) {
 
 	sandboxId := c.Param("id")
 
-	message := dklodd.RemoveSandbox(sandboxId)
+	message := utils.RemoveSandbox(sandboxId)
 
 	fmt.Println(message)
 

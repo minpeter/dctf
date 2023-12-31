@@ -1,4 +1,4 @@
-package dklodd
+package utils
 
 import (
 	"bytes"
@@ -20,7 +20,6 @@ import (
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/client"
 	"github.com/gin-gonic/gin"
-	"github.com/minpeter/dctf-backend/utils"
 )
 
 type Challenge struct {
@@ -32,7 +31,7 @@ type Challenge struct {
 	Env     []string
 }
 
-var Tq *utils.TimedQueue
+var Tq *TimedQueue
 var OnlineSandboxIds []string
 
 func GetOnlineSandbox() []Challenge {
@@ -56,11 +55,8 @@ func GetOnlineSandbox() []Challenge {
 			Name:    data.Config.Image,
 			Message: data.State.Status,
 		})
-
 	}
-
 	return resp
-
 }
 
 func ResetSandbox() {

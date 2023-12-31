@@ -13,7 +13,6 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/minpeter/dctf-backend/api"
 	"github.com/minpeter/dctf-backend/database"
-	"github.com/minpeter/dctf-backend/dklodd"
 	"github.com/minpeter/dctf-backend/utils"
 )
 
@@ -84,11 +83,11 @@ func loadClientConfig() {
 
 func main() {
 
-	dklodd.Tq = utils.NewTimedQueue(int(1 * time.Minute))
+	utils.Tq = utils.NewTimedQueue(int(1 * time.Minute))
 
-	dklodd.LoadOnlineSandbox()
+	utils.LoadOnlineSandbox()
 
-	if _, err := dklodd.CRLogin(); err != nil {
+	if _, err := utils.CRLogin(); err != nil {
 		fmt.Println("CR Login Error: ", err)
 
 		fmt.Println("plz provide your own credentials CR_USERNAME and CR_PASSWORD")
