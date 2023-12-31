@@ -65,7 +65,7 @@ func createChallHandler(c *gin.Context) {
 	// chall := GetChallbyId(challengeID)
 	// imageName := chall.Image
 
-	imageName := "minpeter/mathematician-in-wonderland"
+	imageName := "minpeter/hijackjwtadmin"
 
 	hashId := dklodd.GenerateId(c)
 
@@ -86,10 +86,14 @@ func createChallHandler(c *gin.Context) {
 	config.Labels = map[string]string{
 		"traefik.enable": "true",
 		"traefik.http.routers." + hashId + ".rule": "Host(`" + hashId + "." + host[0] + "`)",
-		"traefik.http.routers." + hashId + ".tls":  "true",
+		// "traefik.http.routers." + hashId + ".tls":  "true",
 		"dklodd": "true",
 	}
 	// }
+
+	if host[1] == "443" {
+		config.Labels["traefik.http.routers."+hashId+".tls"] = "true"
+	}
 
 	hostConfig := &container.HostConfig{
 		NetworkMode: "traefik",
@@ -122,10 +126,13 @@ func createChallHandler(c *gin.Context) {
 
 	// if chall.Type == "web" {
 
-	connection := "https://" + hashId + "." + host[0]
+	connection := hashId + "." + host[0]
 
 	if host[1] != "443" {
 		connection += ":" + host[1]
+		connection = "http://" + connection
+	} else {
+		connection = "https://" + connection
 	}
 
 	utils.SendResponse(c, "goodStartInstance", gin.H{

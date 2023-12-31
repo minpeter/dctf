@@ -1,7 +1,0 @@
-[http.routers]
-  [http.routers.dklodd]
-    entryPoints = ["web"]
-    rule = "Host(`dklodd.traefik.me`)"
-    service = "dklodd-ext-srv"
-[[http.services.dklodd-ext-srv.loadBalancer.servers]]
-  url = "http://host.docker.internal:4000"
