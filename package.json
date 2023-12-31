@@ -13,7 +13,8 @@
     "build": "yarn build:client && yarn build:server",
     "dep:client": "cd client && yarn",
     "dep:server": "go mod tidy",
-    "dep": "yarn && yarn dep:client && yarn dep:server"
+    "dep": "yarn && yarn dep:client && yarn dep:server",
+    "traefik": "podman compose -f infra-config/dev-compose.yml up -d "
   },
   "devDependencies": {
     "concurrently": "^8.2.2",

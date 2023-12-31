@@ -1,0 +1,25 @@
+version: "3.8"
+name: dklodd-dev
+services:
+  traefik:
+    image: traefik
+    container_name: traefik
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik-ext-dklodd.toml:/traefik-ext-dklodd.toml
+    command:
+      - --entrypoints.web.address=:80
+      - --providers.file.filename=/traefik-ext-dklodd.toml
+      - --providers.file.watch=true
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --providers.docker.network=traefik
+    ports:
+      - 8080:80
+    extra_hosts:
+      - host.docker.internal:host-gateway
+
+networks:
+  default:
+    name: traefik

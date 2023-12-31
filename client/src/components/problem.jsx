@@ -1,6 +1,11 @@
-import { useState, useCallback, useRef } from "preact/hooks";
+import { useState, useCallback, useRef, useEffect } from "preact/hooks";
 
-import { submitFlag, getSolves } from "../api/challenges";
+import {
+  submitFlag,
+  getSolves,
+  startInstance,
+  stopInstance,
+} from "../api/challenges";
 import SolvesDialog from "./solves-dialog";
 import Markdown from "./markdown";
 
@@ -40,6 +45,41 @@ const Problem = ({ problem, solved, setSolved }) => {
     },
     [setSolved, problem, value]
   );
+
+  const [instance, setInstance] = useState(null);
+
+  const handleStartInstance = useCallback(
+    (e) => {
+      e.preventDefault();
+
+      startInstance(problem.id).then(({ data, error }) => {
+        if (error === undefined) {
+          toast.success("Instance successfully started!");
+          setInstance(data);
+        } else {
+          toast.error(error);
+        }
+      });
+    },
+    [problem]
+  );
+
+  useEffect(() => {
+    console.log(instance);
+  }, [instance]);
+
+  const handleStopInstance = useCallback((id) => async (e) => {
+    e.preventDefault();
+
+    stopInstance(id).then(({ error }) => {
+      if (error === undefined) {
+        toast.success("Instance successfully stopped!");
+        setInstance(null);
+      } else {
+        toast.error(error);
+      }
+    });
+  });
 
   const [solves, setSolves] = useState(null);
   const [solvesPending, setSolvesPending] = useState(false);
@@ -108,9 +148,7 @@ const Problem = ({ problem, solved, setSolved }) => {
             </a>
           </div>
         </div>
-
         <div class="divider" />
-
         <div>
           <Markdown
             content={problem.description}
@@ -132,6 +170,29 @@ const Problem = ({ problem, solved, setSolved }) => {
             <button class={`form-group-btn btn-small`}>Submit</button>
           </div>
         </form>
+
+        {/* Start Instance 버튼 추가 (초록색) */}
+        {instance !== null ? (
+          <div class="u-flex u-flex-column u-gap-1 u-items-flex-start">
+            <a href={instance.connection} target="_blank">
+              {instance.connection}
+            </a>
+
+            <button
+              class="btn--sm outline btn-warning"
+              onClick={handleStopInstance(instance.id)}
+            >
+              Stop Instance
+            </button>
+          </div>
+        ) : (
+          <button
+            class="btn--sm outline btn-success"
+            onClick={handleStartInstance}
+          >
+            Start Instance
+          </button>
+        )}
 
         {hasDownloads && (
           <div>

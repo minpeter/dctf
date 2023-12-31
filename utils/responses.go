@@ -25,6 +25,14 @@ func SendResponse(c *gin.Context, kind string, data interface{}) {
 }
 
 var Responses = map[string]Response{
+	"goodStartInstance": {
+		Status:  200,
+		Message: "The instance was started.",
+	},
+	"goodStopInstance": {
+		Status:  200,
+		Message: "The instance was stopped.",
+	},
 	"goodVerify": {
 		Status:  200,
 		Message: "The email was verified.",
