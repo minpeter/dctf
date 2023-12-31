@@ -60,12 +60,17 @@ func createChallHandler(c *gin.Context) {
 		return
 	}
 
+	challengeData, err := database.GetChallengeById(challengeID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "bad challenge id",
+		})
+		return
+	}
+
 	ctx := context.Background()
 
-	// chall := GetChallbyId(challengeID)
-	// imageName := chall.Image
-
-	imageName := "minpeter/hijackjwtadmin"
+	imageName := challengeData.Dklodd.Image
 
 	hashId := dklodd.GenerateId(c)
 
@@ -82,17 +87,20 @@ func createChallHandler(c *gin.Context) {
 		Env: []string{},
 	}
 
-	// if chall.Type == "web" {
-	config.Labels = map[string]string{
-		"traefik.enable": "true",
-		"traefik.http.routers." + hashId + ".rule": "Host(`" + hashId + "." + host[0] + "`)",
-		// "traefik.http.routers." + hashId + ".tls":  "true",
-		"dklodd": "true",
-	}
-	// }
-
 	if host[1] == "443" {
-		config.Labels["traefik.http.routers."+hashId+".tls"] = "true"
+		config.Labels["traefik.tcp.routers."+hashId+".tls"] = "true"
+	}
+
+	if challengeData.Dklodd.Type == "web" {
+		config.Labels = map[string]string{
+			"traefik.enable": "true",
+			"traefik.http.routers." + hashId + ".rule": "Host(`" + hashId + "." + host[0] + "`)",
+			"dklodd": "true",
+		}
+		if host[1] == "443" {
+			config.Labels["traefik.http.routers."+hashId+".tls"] = "true"
+		}
+
 	}
 
 	hostConfig := &container.HostConfig{
@@ -135,41 +143,45 @@ func createChallHandler(c *gin.Context) {
 		connection = "https://" + connection
 	}
 
-	utils.SendResponse(c, "goodStartInstance", gin.H{
-		"connection": connection,
-		"id":         sandboxID[0:12],
-	})
+	if challengeData.Dklodd.Type == "web" {
+		utils.SendResponse(c, "goodStartInstance", gin.H{
+			"connection": connection,
+			"id":         sandboxID[0:12],
+			"type":       "web",
+		})
+		return
 
-	// } else {
-	// 	c.HTML(http.StatusOK, "tcp.tmpl", gin.H{
-	// 		"Connection": []struct {
-	// 			Type    string
-	// 			Command string
-	// 		}{
-	// 			{
-	// 				Type:    "ncat",
-	// 				Command: "ncat --ssl " + hashId + "." + host[0] + " " + host[1],
-	// 			},
-	// 			{
-	// 				Type:    "openssl",
-	// 				Command: "openssl s_client -connect " + hashId + "." + host[0] + ":" + host[1],
-	// 			},
-	// 			{
-	// 				Type:    "socat",
-	// 				Command: "socat openssl:" + hashId + "." + host[0] + ":" + host[1] + ",verify=0 -",
-	// 			},
-	// 			{
-	// 				Type:    "gnutls",
-	// 				Command: "gnutls-cli --insecure " + hashId + "." + host[0] + ":" + host[1],
-	// 			},
-	// 			{
-	// 				Type:    "pwn",
-	// 				Command: "remote('" + hashId + "." + host[0] + "', " + host[1] + ", ssl=True)",
-	// 			},
-	// 		},
-	// 		"Id": sandboxID[0:12],
-	// 	})
-	// }
+	} else {
+		utils.SendResponse(c, "goodStartInstance", gin.H{
+			"connection": []struct {
+				Type    string
+				Command string
+			}{
+				{
+					Type:    "ncat",
+					Command: "ncat --ssl " + hashId + "." + host[0] + " " + host[1],
+				},
+				{
+					Type:    "openssl",
+					Command: "openssl s_client -connect " + hashId + "." + host[0] + ":" + host[1],
+				},
+				{
+					Type:    "socat",
+					Command: "socat openssl:" + hashId + "." + host[0] + ":" + host[1] + ",verify=0 -",
+				},
+				{
+					Type:    "gnutls",
+					Command: "gnutls-cli --insecure " + hashId + "." + host[0] + ":" + host[1],
+				},
+				{
+					Type:    "pwn",
+					Command: "remote('" + hashId + "." + host[0] + "', " + host[1] + ", ssl=True)",
+				},
+			},
+			"id":   sandboxID[0:12],
+			"type": "tcp",
+		})
+	}
 
 }
 

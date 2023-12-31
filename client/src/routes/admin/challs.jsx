@@ -16,6 +16,12 @@ const SAMPLE_PROBLEM = {
     min: 100,
     max: 500,
   },
+  flag: "",
+  dklodd: {
+    env: "",
+    Image: "",
+    type: "web",
+  },
 };
 
 const Challenges = () => {

@@ -56,6 +56,7 @@ const DeleteModal = ({ open, onClose, onDelete }) => {
 };
 
 const Problem = ({ problem, update: updateClient, delete: deleteClient }) => {
+  console.log(problem);
   const [flag, setFlag] = useState(problem.flag);
   const handleFlagChange = useCallback((e) => setFlag(e.target.value), []);
 
@@ -96,6 +97,12 @@ const Problem = ({ problem, update: updateClient, delete: deleteClient }) => {
     (e) => setTiebreakEligible(e.target.checked),
     []
   );
+
+  const [image, setImage] = useState(problem.dklodd.image);
+  const handleImageChange = useCallback((e) => setImage(e.target.value), []);
+
+  const [type, setType] = useState(problem.dklodd.type);
+  const handleTypeChange = useCallback((e) => setType(e.target.value), []);
 
   const handleFileUpload = useCallback(
     async (e) => {
@@ -171,6 +178,10 @@ const Problem = ({ problem, update: updateClient, delete: deleteClient }) => {
         points: {
           min: minPoints,
           max: maxPoints,
+        },
+        dklodd: {
+          image,
+          type,
         },
       },
     });
@@ -321,6 +332,29 @@ const Problem = ({ problem, update: updateClient, delete: deleteClient }) => {
               multiple
               onChange={handleFileUpload}
             />
+          </div>
+
+          <div class="divider" />
+
+          {/* 옵션으로 DKLODD IMAGE 입력 필드와 TYPE (web or tcp) 선택 */}
+          <div class="input-control">
+            <input
+              autocomplete="off"
+              autocorrect="off"
+              class="form-group-input input-small"
+              placeholder="Container IMAGE"
+              value={image}
+              onChange={handleImageChange}
+            />
+            {/* 셀렉트박스로 web or tcp type 선택 */}
+            <select
+              class="form-group-input input-small"
+              value={type}
+              onChange={handleTypeChange}
+            >
+              <option value="web">web</option>
+              <option value="tcp">tcp</option>
+            </select>
           </div>
 
           <button class="btn--sm btn-info mr-1">Update</button>

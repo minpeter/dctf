@@ -46,20 +46,26 @@ const Problem = ({ problem, solved, setSolved }) => {
     [setSolved, problem, value]
   );
 
+  const [openTab, setOpenTab] = useState(0);
   const [instance, setInstance] = useState(null);
 
   const handleStartInstance = useCallback(
     (e) => {
       e.preventDefault();
 
-      startInstance(problem.id).then(({ data, error }) => {
-        if (error === undefined) {
-          toast.success("Instance successfully started!");
-          setInstance(data);
-        } else {
-          toast.error(error);
+      toast.promise(
+        startInstance(problem.id).then(({ data, error }) => {
+          if (error === undefined) {
+            console.log(data);
+            setInstance(data);
+          }
+        }),
+        {
+          loading: "Starting instance...",
+          success: "Instance successfully started!",
+          error: "Failed to start instance",
         }
-      });
+      );
     },
     [problem]
   );
@@ -71,14 +77,18 @@ const Problem = ({ problem, solved, setSolved }) => {
   const handleStopInstance = useCallback((id) => async (e) => {
     e.preventDefault();
 
-    stopInstance(id).then(({ error }) => {
-      if (error === undefined) {
-        toast.success("Instance successfully stopped!");
-        setInstance(null);
-      } else {
-        toast.error(error);
+    toast.promise(
+      stopInstance(id).then(({ error }) => {
+        if (error === undefined) {
+          setInstance(null);
+        }
+      }),
+      {
+        loading: "Stopping instance...",
+        success: "Instance successfully stopped!",
+        error: "Failed to stop instance",
       }
-    });
+    );
   });
 
   const [solves, setSolves] = useState(null);
@@ -174,10 +184,49 @@ const Problem = ({ problem, solved, setSolved }) => {
         {/* Start Instance 버튼 추가 (초록색) */}
         {instance !== null ? (
           <div class="u-flex u-flex-column u-gap-1 u-items-flex-start">
-            <a href={instance.connection} target="_blank">
-              {instance.connection}
-            </a>
+            {instance.type == "web" ? (
+              <div>
+                <a href={instance.connection} target="_blank">
+                  {instance.connection}
+                </a>
+              </div>
+            ) : (
+              <div class="u-flex u-flex-column u-gap-1 u-items-flex-start mb-1">
+                <div class="tab-container tabs-depth tabs--xs">
+                  <ul>
+                    {instance.connection.map((connect, index) => (
+                      <li
+                        key={index}
+                        onClick={() => setOpenTab(index)}
+                        class={openTab === index ? "selected" : ""}
+                      >
+                        <div class="tab-item-content">{connect.Type}</div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
 
+                {instance.connection.map((connect, index) => (
+                  <div
+                    key={index}
+                    style={{ display: openTab === index ? "block" : "none" }}
+                  >
+                    <code class="bg-white text-black py-2 px-3 u-round-sm u-border-1">
+                      {connect.Command}
+                    </code>
+                    {/* <button
+                      class=""
+                      data-clipboard-text={connect.Command}
+                      onClick={() => {
+                        // Your copy logic here
+                      }}
+                    >
+                      COPY
+                    </button> */}
+                  </div>
+                ))}
+              </div>
+            )}
             <button
               class="btn--sm outline btn-warning"
               onClick={handleStopInstance(instance.id)}
