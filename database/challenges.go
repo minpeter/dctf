@@ -8,23 +8,28 @@ type Challenge struct {
 	Description      string `json:"description"`
 	Category         string `json:"category"`
 	Author           string `json:"author"`
-	Files            []File `json:"files"`
-	Points           Points `json:"points"`
+	Files            []File `json:"files" xorm:"jsonb"`
+	Points           Points `json:"points" xorm:"jsonb notnull"`
 	Flag             string `json:"flag"`
 	TiebreakEligible bool   `json:"tiebreakEligible"`
 	SortWeight       int    `json:"sortWeight"`
+	Dklodd           Dklodd `json:"dklodd" xorm:"jsonb"`
+}
+
+type Dklodd struct {
+	Image string `json:"image"`
+	Type  string `json:"type"`
+	Env   string `json:"env"`
 }
 
 type File struct {
-	Id   string `json:"-" xorm:"pk"`
 	Name string `json:"name"`
 	Url  string `json:"url"`
 }
 
 type Points struct {
-	Id  string `json:"-" xorm:"pk"`
-	Min int    `json:"min"`
-	Max int    `json:"max"`
+	Min int `json:"min"`
+	Max int `json:"max"`
 }
 
 type CleanedChallenge struct {
