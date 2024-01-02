@@ -6,7 +6,6 @@ import (
 	"log"
 	"os"
 	"runtime"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/hoisie/mustache"
@@ -83,7 +82,7 @@ func loadClientConfig() {
 
 func main() {
 
-	utils.Tq = utils.NewTimedQueue(int(1 * time.Minute))
+	utils.Tq = utils.NewTimedQueue(10)
 
 	utils.LoadOnlineSandbox()
 

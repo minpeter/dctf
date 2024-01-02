@@ -129,9 +129,7 @@ func createChallHandler(c *gin.Context) {
 
 	utils.OnlineSandboxIds = append(utils.OnlineSandboxIds, sandboxID[0:12])
 
-	// tq.enqueue(sandboxID[0:12])
-
-	// if chall.Type == "web" {
+	utils.Tq.Enqueue(sandboxID[0:12])
 
 	connection := hashId + "." + host[0]
 

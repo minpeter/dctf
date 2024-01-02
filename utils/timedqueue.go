@@ -31,6 +31,8 @@ func (q *TimedQueue) Enqueue(item string) {
 	q.mu.Lock()
 	defer q.mu.Unlock()
 
+	fmt.Println("Enqueue")
+
 	if len(q.items) == 0 {
 		q.items = append(q.items, Item{Value: item, SetTime: 0})
 		q.StartTime = time.Now()
@@ -51,6 +53,8 @@ func (q *TimedQueue) Dequeue() {
 	q.mu.Lock()
 	defer q.mu.Unlock()
 
+	fmt.Println("Dequeue")
+
 	if len(q.items) > 0 {
 
 		// pop item
@@ -59,7 +63,7 @@ func (q *TimedQueue) Dequeue() {
 		q.items = q.items[1:]
 		q.timerSet.Stop()
 
-		// fmt.Println(RemoveSandbox(item.Value))
+		fmt.Println(RemoveSandbox(item.Value))
 		fmt.Println(item.Value)
 		fmt.Println("remove item from queue")
 
