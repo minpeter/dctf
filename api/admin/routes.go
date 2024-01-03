@@ -9,6 +9,8 @@ import (
 func Routes(adminRoutes *gin.RouterGroup) {
 
 	adminRoutes.Use(utils.TokenAuthMiddleware(perms.Admin))
+
+	adminRoutes.GET("/check", checkHandler)
 	challs := adminRoutes.Group("/challs")
 
 	{
@@ -22,4 +24,8 @@ func Routes(adminRoutes *gin.RouterGroup) {
 		upload.POST("", uploadPostHandler)
 		upload.POST("/query", uploadQueryHandler)
 	}
+}
+
+func checkHandler(c *gin.Context) {
+	utils.SendResponse(c, "goodAdminCheck", nil)
 }

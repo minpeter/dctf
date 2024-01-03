@@ -25,6 +25,10 @@ func SendResponse(c *gin.Context, kind string, data interface{}) {
 }
 
 var Responses = map[string]Response{
+	"goodAdminCheck": {
+		Status:  200,
+		Message: "The user is an admin.",
+	},
 	"goodStartInstance": {
 		Status:  200,
 		Message: "The instance was started.",
