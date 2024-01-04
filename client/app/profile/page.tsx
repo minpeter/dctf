@@ -20,7 +20,7 @@ import { Label } from "@/components/ui/label";
 import { DataTableDemo } from "./solveTable";
 export default function Page() {
   return (
-    <>
+    <div className="grid gap-4">
       <Card>
         <CardHeader>
           <CardTitle>minpeter</CardTitle>
@@ -87,6 +87,6 @@ export default function Page() {
           <DataTableDemo />
         </CardContent>
       </Card>
-    </>
+    </div>
   );
 }

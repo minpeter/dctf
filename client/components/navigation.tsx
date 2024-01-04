@@ -137,7 +137,6 @@ export default function Navbar() {
       </NavigationMenu>
 
       {showAdminNav && admin && (
-        // 어드민 Navbar는 검정색 띠 형태로 나타남
         <NavigationMenu className="mt-1">
           <NavigationMenuList>
             <NavigationMenuItem>
