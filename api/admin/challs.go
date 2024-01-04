@@ -28,6 +28,10 @@ func listChallengesHandler(c *gin.Context) {
 		return
 	}
 
+	if challs == nil {
+		challs = []database.Challenge{}
+	}
+
 	utils.SendResponse(c, "goodChallenges", challs)
 }
 

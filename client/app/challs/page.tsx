@@ -214,7 +214,9 @@ export default function Page() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Categories</CardTitle>
+            <CardTitle>
+              {categoryCounts.size == 0 ? "No problems prepared" : "Categories"}
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col space-y-2">

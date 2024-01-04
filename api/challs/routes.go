@@ -201,6 +201,10 @@ func getChallsHandler(c *gin.Context) {
 		return
 	}
 
+	if challs == nil {
+		challs = []database.CleanedChallenge{}
+	}
+
 	utils.SendResponse(c, "goodChallenges", challs)
 }
 

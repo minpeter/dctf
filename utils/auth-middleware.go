@@ -54,6 +54,8 @@ func TokenAuthMiddleware(params ...int) gin.HandlerFunc {
 
 		fmt.Println("user authenticated")
 
+		fmt.Println("user:", user)
+
 		c.Next()
 	}
 }

@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Card,
   CardContent,
@@ -18,12 +20,25 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { DataTableDemo } from "./solveTable";
+
+import { useState, useEffect } from "react";
+
+import { privateProfile } from "@/api/profile";
+
 export default function Page() {
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    privateProfile().then((resp: any) => {
+      setUsername(resp.username);
+    });
+  }, []);
+
   return (
     <div className="grid gap-4">
       <Card>
         <CardHeader>
-          <CardTitle>minpeter</CardTitle>
+          <CardTitle>{username}</CardTitle>
           <CardDescription>
             This will change the way your name appears on the scoreboard. You
             can change it once every 10 minutes.

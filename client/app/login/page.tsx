@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 
 import { useEffect, useState } from "react";
 
-import { githubCallback, login, SetAuthToken } from "@/api/auth";
+import { githubCallback, login, register, SetAuthToken } from "@/api/auth";
 
 function githubPopup(): string {
   const state = Array.from(crypto.getRandomValues(new Uint8Array(16)))
@@ -67,34 +67,45 @@ export default function Page() {
         return;
       }
 
-      const action = async () => {
-        const {
-          kind,
-          message,
-          data,
-        }: {
-          kind: "goodGithubToken";
-          message: string;
-          data: { githubToken: string; githubId: string };
-        } = await githubCallback({ githubCode: event.data.code });
-
-        if (kind !== "goodGithubToken") {
-          console.error(message);
-          return;
-        }
-
-        // 버튼 비활성화 시점
-        const loginRes = await login({ githubToken: data.githubToken });
-        if (loginRes.authToken) {
-          SetAuthToken({ authToken: loginRes.authToken });
-        }
-        if (loginRes && loginRes.badUnknownUser) {
-          console.error("login failed", loginRes.badUnknownUser);
-        }
-      };
-
-      action();
+      action(event.data.code);
     });
+
+    const action = async (code: string) => {
+      const {
+        kind,
+        message,
+        data,
+      }: {
+        kind: "goodGithubToken";
+        message: string;
+        data: { githubToken: string; githubId: string };
+      } = await githubCallback({ githubCode: code });
+
+      if (kind !== "goodGithubToken") {
+        console.error(message);
+        return;
+      }
+
+      // 버튼 비활성화 시점
+      const loginRes = await login({ githubToken: data.githubToken });
+      if (loginRes.authToken) {
+        SetAuthToken({ authToken: loginRes.authToken });
+      }
+      if (loginRes.badUnknownUser) {
+        console.error("login failed", loginRes.badUnknownUser);
+
+        const registerRes: any = await register({
+          githubToken: data.githubToken,
+        });
+
+        if (registerRes.errors) {
+          if (registerRes.errors) {
+            console.error(registerRes.errors);
+            return;
+          }
+        }
+      }
+    };
   }, [oauthState]);
 
   return (
