@@ -1,9 +1,9 @@
 [http.routers]
-  [http.routers.dctf]
+  [http.routers.telos]
     entryPoints = ["web"]
-    rule = "Host(`dctf.traefik.me`)"
-    service = "dctf-ext-srv"
-[[http.services.dctf-ext-srv.loadBalancer.servers]]
+    rule = "Host(`telos.traefik.me`)"
+    service = "telos-ext-srv"
+[[http.services.telos-ext-srv.loadBalancer.servers]]
   url = "http://host.docker.internal:4000"
 
   

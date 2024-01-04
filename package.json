@@ -1,7 +1,7 @@
 {
-  "name": "dctf",
+  "name": "telos",
   "version": "1.0.0",
-  "repository": "https://github.com/minpeter/dctf.git",
+  "repository": "https://github.com/minpeter/telos.git",
   "author": "Woonggi Min <minpeter@friendli.ai>",
   "license": "MIT",
   "scripts": {
@@ -9,7 +9,7 @@
     "dev:server": "air",
     "dev": "concurrently \"yarn dev:client\" \"yarn dev:server\"",
     "build:client": "cd client && yarn build",
-    "build:server": "go build -o dctf",
+    "build:server": "go build -o telos",
     "build": "yarn build:client && yarn build:server",
     "dep:client": "cd client && yarn",
     "dep:server": "go mod tidy",

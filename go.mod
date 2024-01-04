@@ -1,4 +1,4 @@
-module github.com/minpeter/dctf-backend
+module github.com/minpeter/telos-backend
 
 go 1.18
 

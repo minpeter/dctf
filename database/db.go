@@ -9,7 +9,7 @@ var DB *xorm.Engine
 
 func ConnectDatabase() error {
 	var err error
-	DB, err = xorm.NewEngine("sqlite", "dctf.db")
+	DB, err = xorm.NewEngine("sqlite", "telos.db")
 
 	if err != nil {
 		return err

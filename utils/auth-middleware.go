@@ -5,8 +5,8 @@ import (
 	"log"
 
 	"github.com/gin-gonic/gin"
-	"github.com/minpeter/dctf-backend/auth"
-	"github.com/minpeter/dctf-backend/database"
+	"github.com/minpeter/telos-backend/auth"
+	"github.com/minpeter/telos-backend/database"
 )
 
 // options: [0] = perms

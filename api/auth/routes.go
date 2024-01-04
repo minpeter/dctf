@@ -5,9 +5,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/minpeter/dctf-backend/auth"
-	"github.com/minpeter/dctf-backend/database"
-	"github.com/minpeter/dctf-backend/utils"
+	"github.com/minpeter/telos-backend/auth"
+	"github.com/minpeter/telos-backend/database"
+	"github.com/minpeter/telos-backend/utils"
 )
 
 func Routes(authRoutes *gin.RouterGroup) {

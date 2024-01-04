@@ -2,12 +2,12 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/minpeter/dctf-backend/api/admin"
-	"github.com/minpeter/dctf-backend/api/auth"
-	"github.com/minpeter/dctf-backend/api/challs"
-	"github.com/minpeter/dctf-backend/api/integrations"
-	"github.com/minpeter/dctf-backend/api/leaderboard"
-	"github.com/minpeter/dctf-backend/api/users"
+	"github.com/minpeter/telos-backend/api/admin"
+	"github.com/minpeter/telos-backend/api/auth"
+	"github.com/minpeter/telos-backend/api/challs"
+	"github.com/minpeter/telos-backend/api/integrations"
+	"github.com/minpeter/telos-backend/api/leaderboard"
+	"github.com/minpeter/telos-backend/api/users"
 )
 
 func NewRouter() *gin.Engine {

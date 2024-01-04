@@ -5,8 +5,8 @@ data
 
 
 files
-dctf.db
-database/dctf.db
+telos.db
+database/telos.db
 
 /node_modules
 tmp
@@ -38,4 +38,4 @@ $RECYCLE.BIN
 # preact-cli build size plugin
 size-plugin.json
 
-dctf
+telos

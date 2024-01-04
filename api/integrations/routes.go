@@ -11,8 +11,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/minpeter/dctf-backend/auth"
-	"github.com/minpeter/dctf-backend/utils"
+	"github.com/minpeter/telos-backend/auth"
+	"github.com/minpeter/telos-backend/utils"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/github"
 )

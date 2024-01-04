@@ -9,9 +9,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	"github.com/minpeter/dctf-backend/api"
-	"github.com/minpeter/dctf-backend/database"
-	"github.com/minpeter/dctf-backend/utils"
+	"github.com/minpeter/telos-backend/api"
+	"github.com/minpeter/telos-backend/database"
+	"github.com/minpeter/telos-backend/utils"
 )
 
 type clientConfig struct {
