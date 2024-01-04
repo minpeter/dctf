@@ -58,6 +58,11 @@ func staticWeb(c *gin.Context) {
 		}
 	}
 
+	if path == "/" {
+		c.File(FilePath + "/index.html")
+		return
+	}
+
 	c.File(FilePath + "/404.html")
 }
 
