@@ -17,19 +17,30 @@ func TokenAuthMiddleware(params ...int) gin.HandlerFunc {
 	}
 
 	return func(c *gin.Context) {
-		authHeader := c.GetHeader("Authorization")
+		// authHeader := c.GetHeader("Authorization")
 
-		// if (authHeader === undefined || !authHeader.startsWith('Bearer ')) {
-		if authHeader == "" && authHeader[:7] != "Bearer " {
-			// utils.SendResponse
+		// if authHeader == "" && authHeader[:7] != "Bearer " {
+		// 	SendResponse(c, "badToken", nil)
+		// 	return
+		// }
+
+		// log.Printf("authHeader: %s", authHeader)
+
+		// uuid, err := auth.GetData(auth.Auth, auth.Token(authHeader[7:]))
+
+		// 대신 쿠키에서 가져오기
+		cookie, err := c.Cookie("authToken")
+		if err != nil {
+			log.Printf("cookie error: %s", err.Error())
 			SendResponse(c, "badToken", nil)
+			c.Abort()
 			return
 		}
 
-		log.Printf("authHeader: %s", authHeader)
-		uuid, err := auth.GetData(auth.Auth, auth.Token(authHeader[7:]))
+		fmt.Println("cookie:", cookie)
+
+		uuid, err := auth.GetData(auth.Auth, auth.Token(cookie))
 		if err != nil {
-			// utils.SendResponse
 			SendResponse(c, "badToken", nil)
 			c.Abort()
 			return
@@ -37,7 +48,6 @@ func TokenAuthMiddleware(params ...int) gin.HandlerFunc {
 
 		user, has, err := database.GetUserById(string(uuid.Auth))
 		if err != nil || !has {
-			// utils.SendResponse
 			SendResponse(c, "badToken", nil)
 			c.Abort()
 			return

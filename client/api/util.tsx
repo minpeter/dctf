@@ -1,9 +1,6 @@
 "use client";
 
-export function relog() {
-  localStorage.removeItem("token");
-  window.location.href = "/login";
-}
+import { relog } from "@/api/auth";
 
 export const handleResponse = ({
   resp,
@@ -48,9 +45,8 @@ export const request = (
     body = data;
   }
 
-  const headers: { [key: string]: string } = {
-    Authorization: `Bearer ${localStorage.getItem("token")}`,
-  };
+  const headers: { [key: string]: string } = {};
+
   if (body) {
     headers["Content-Type"] = "application/json";
   }

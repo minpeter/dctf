@@ -3,13 +3,24 @@
 import { request } from "@/api/util";
 
 export function SetAuthToken({ authToken }: { authToken: string }) {
-  localStorage.token = authToken;
+  localStorage.login_state = true;
   window.location.href = "/challs";
 }
 
-export function Logout() {
-  localStorage.removeItem("token");
-  window.location.href = "/";
+export function relog() {
+  localStorage.login_state = false;
+  window.location.href = "/login";
+}
+
+export async function Logout() {
+  const resp = await request("POST", "/auth/logout", {});
+
+  if (resp.kind === "goodLogout") {
+    localStorage.login_state = false;
+    window.location.href = "/";
+  }
+
+  return resp;
 }
 
 export async function githubCallback({ githubCode }: { githubCode: string }) {

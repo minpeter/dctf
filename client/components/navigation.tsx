@@ -43,7 +43,7 @@ export default function Navbar() {
   useEffect(() => {
     setIsClient(true);
 
-    if (localStorage.token) {
+    if (localStorage.login_state) {
       checkAdmin().then((resp) => {
         setAdmin(resp);
       });
@@ -53,7 +53,7 @@ export default function Navbar() {
   let loggedOut = false;
 
   if (typeof window !== "undefined") {
-    loggedOut = !localStorage.token;
+    loggedOut = !localStorage.login_state;
   }
 
   return (
