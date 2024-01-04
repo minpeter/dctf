@@ -8,7 +8,6 @@ import (
 	"runtime"
 
 	"github.com/gin-gonic/gin"
-	"github.com/hoisie/mustache"
 	"github.com/joho/godotenv"
 	"github.com/minpeter/dctf-backend/api"
 	"github.com/minpeter/dctf-backend/database"
@@ -41,24 +40,25 @@ type Meta struct {
 
 var ClientConfig clientConfig
 
-func serveIndex(c *gin.Context) {
+func staticWeb(c *gin.Context) {
+	FilePath := "client/dist"
+	path := c.Request.URL.Path
 
-	jsonData, err := json.Marshal(ClientConfig)
-	if err != nil {
-		log.Fatalf("Error marshalling clientConfig: %v", err)
+	filePaths := []string{
+		FilePath + path,
+		FilePath + path + ".html",
+		FilePath + path[:len(path)-1] + ".html",
 	}
 
-	rendered := struct {
-		JSONConfig string
-		Config     clientConfig
-	}{
-		JSONConfig: string(jsonData),
-		Config:     ClientConfig,
+	for _, filePath := range filePaths {
+		if fileInfo, err := os.Stat(filePath); err == nil && !fileInfo.IsDir() {
+			fmt.Println(filePath)
+			c.File(filePath)
+			return
+		}
 	}
 
-	// Use mustache to render the index.html template
-	html := mustache.RenderFile("client/dist/index.html", rendered)
-	c.Writer.WriteString(html)
+	c.File(FilePath + "/404.html")
 }
 
 func loadClientConfig() {
@@ -114,11 +114,7 @@ func main() {
 
 	app := api.NewRouter()
 
-	app.GET("/", serveIndex)
-
-	app.Static("/assets", "client/dist/assets")
-
-	app.NoRoute(serveIndex)
+	app.NoRoute(staticWeb)
 
 	port := os.Getenv("PORT")
 	if port == "" {
