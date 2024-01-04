@@ -1,89 +1,16 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"os"
 	"runtime"
 
-	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/minpeter/telos-backend/api"
 	"github.com/minpeter/telos-backend/database"
 	"github.com/minpeter/telos-backend/utils"
 )
-
-type clientConfig struct {
-	Meta            Meta              `json:"meta"`
-	HomeContent     string            `json:"homeContent"`
-	Sponsors        []interface{}     `json:"sponsors"`
-	GlobalSiteTag   string            `json:"globalSiteTag"`
-	CtfName         string            `json:"ctfName"`
-	Divisions       map[string]string `json:"divisions"`
-	DefaultDivision string            `json:"defaultDivision"`
-	Origin          string            `json:"origin"`
-	StartTime       int64             `json:"startTime"`
-	EndTime         int64             `json:"endTime"`
-	EmailEnabled    bool              `json:"emailEnabled"`
-	UserMembers     bool              `json:"userMembers"`
-	FaviconUrl      string            `json:"faviconUrl"`
-	Github          struct {
-		ClientId string `json:"clientId"`
-	} `json:"github"`
-}
-
-type Meta struct {
-	Description string `json:"description"`
-	ImageURL    string `json:"imageUrl"`
-}
-
-var ClientConfig clientConfig
-
-func staticWeb(c *gin.Context) {
-	FilePath := "client/dist"
-	path := c.Request.URL.Path
-
-	filePaths := []string{
-		FilePath + path,
-		FilePath + path + ".html",
-		FilePath + path[:len(path)-1] + ".html",
-	}
-
-	for _, filePath := range filePaths {
-		if fileInfo, err := os.Stat(filePath); err == nil && !fileInfo.IsDir() {
-			fmt.Println(filePath)
-			c.File(filePath)
-			return
-		}
-	}
-
-	if path == "/" {
-		c.File(FilePath + "/index.html")
-		return
-	}
-
-	c.File(FilePath + "/404.html")
-}
-
-func loadClientConfig() {
-	configFile, err := os.Open("client-config.json")
-	if err != nil {
-		fmt.Printf("Error opening client-config.json: %v\n", err)
-		return
-	}
-	defer configFile.Close()
-
-	decoder := json.NewDecoder(configFile)
-	err = decoder.Decode(&ClientConfig)
-
-	ClientConfig.Github.ClientId = os.Getenv("GITHUB_CLIENT_ID")
-
-	if err != nil {
-		fmt.Printf("Error decoding client-config.json: %v\n", err)
-		return
-	}
-}
 
 func main() {
 
@@ -95,8 +22,6 @@ func main() {
 		fmt.Println("CR Login Error: ", err)
 
 		fmt.Println("plz provide your own credentials CR_USERNAME and CR_PASSWORD")
-
-		// os.Exit(1)
 	}
 
 	err := godotenv.Load(".env")
@@ -115,11 +40,8 @@ func main() {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
 
-	loadClientConfig()
-
 	app := api.NewRouter()
-
-	app.NoRoute(staticWeb)
+	app.NoRoute(utils.StaticWeb)
 
 	port := os.Getenv("PORT")
 	if port == "" {

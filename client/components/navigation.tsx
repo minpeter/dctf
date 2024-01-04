@@ -57,7 +57,7 @@ export default function Navbar() {
   }
 
   return (
-    <div className="mb-10 w-full items-center justify-center flex flex-col">
+    <div className="mt-10 w-full items-center justify-center flex flex-col">
       <NavigationMenu>
         <NavigationMenuList>
           {admin && !loggedOut && (
@@ -137,6 +137,7 @@ export default function Navbar() {
       </NavigationMenu>
 
       {showAdminNav && admin && (
+        // 어드민 Navbar는 검정색 띠 형태로 나타남
         <NavigationMenu className="mt-1">
           <NavigationMenuList>
             <NavigationMenuItem>

@@ -26,9 +26,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
           fontSans.variable
         )}
       >
+        <Navbar />
         <div className="flex flex-col items-center justify-center p-10 mb-24">
-          <Navbar />
-
           {children}
         </div>
         <Toaster />
