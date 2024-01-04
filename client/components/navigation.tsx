@@ -60,7 +60,7 @@ export default function Navbar() {
     <div className="mb-10 w-full items-center justify-center flex flex-col">
       <NavigationMenu>
         <NavigationMenuList>
-          {admin && !showAdminNav && !loggedOut && (
+          {admin && !loggedOut && (
             <NavigationMenuItem>
               <Link href="/admin" legacyBehavior passHref>
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
@@ -139,13 +139,6 @@ export default function Navbar() {
       {showAdminNav && admin && (
         <NavigationMenu className="mt-1">
           <NavigationMenuList>
-            <NavigationMenuItem>
-              <Link href="/admin" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Admin
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
             <NavigationMenuItem>
               <Link href="/admin/challs" legacyBehavior passHref>
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
