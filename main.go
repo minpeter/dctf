@@ -7,9 +7,9 @@ import (
 	"runtime"
 
 	"github.com/joho/godotenv"
-	"github.com/minpeter/telos-backend/api"
-	"github.com/minpeter/telos-backend/database"
-	"github.com/minpeter/telos-backend/utils"
+	"github.com/minpeter/telos/api"
+	"github.com/minpeter/telos/database"
+	"github.com/minpeter/telos/utils"
 )
 
 func main() {

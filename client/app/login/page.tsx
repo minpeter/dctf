@@ -20,7 +20,7 @@ function githubPopup(): string {
     "https://github.com/login/oauth/authorize" +
     `?scope=user` +
     `&client_id=036b617a016c7d29c5bb` +
-    `&redirect_uri=${location.origin}/integrations/github/callback` +
+    `&redirect_uri=${location.origin}/login/callback/github` +
     `&state=${state}`;
   const title = "GitHub Login";
   const w = 600;

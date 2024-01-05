@@ -2,7 +2,7 @@ package leaderboard
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/minpeter/telos-backend/utils"
+	"github.com/minpeter/telos/utils"
 )
 
 func Routes(leaderboardRoutes *gin.RouterGroup) {

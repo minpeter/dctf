@@ -5,8 +5,8 @@ import (
 	"log"
 
 	"github.com/gin-gonic/gin"
-	"github.com/minpeter/telos-backend/database"
-	"github.com/minpeter/telos-backend/utils"
+	"github.com/minpeter/telos/database"
+	"github.com/minpeter/telos/utils"
 )
 
 func AuthTokenMiddleware(params ...int) gin.HandlerFunc {

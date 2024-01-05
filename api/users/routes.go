@@ -4,9 +4,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/minpeter/telos-backend/auth"
-	"github.com/minpeter/telos-backend/database"
-	"github.com/minpeter/telos-backend/utils"
+	"github.com/minpeter/telos/auth"
+	"github.com/minpeter/telos/database"
+	"github.com/minpeter/telos/utils"
 )
 
 func Routes(userRoutes *gin.RouterGroup) {

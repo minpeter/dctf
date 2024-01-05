@@ -2,9 +2,9 @@ package admin
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/minpeter/telos-backend/auth"
-	"github.com/minpeter/telos-backend/auth/perms"
-	"github.com/minpeter/telos-backend/utils"
+	"github.com/minpeter/telos/auth"
+	"github.com/minpeter/telos/auth/perms"
+	"github.com/minpeter/telos/utils"
 )
 
 func Routes(adminRoutes *gin.RouterGroup) {
