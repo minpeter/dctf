@@ -2,7 +2,6 @@
 
 const nextConfig = {
   reactStrictMode: true,
-  distDir: "dist",
 };
 
 const rewrites = () => {

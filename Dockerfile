@@ -18,7 +18,7 @@ FROM alpine
 
 WORKDIR /app
 COPY client-config.json /app/client-config.json
-COPY --from=front-build /app/dist /app/client/dist
+COPY --from=front-build /app/out /app/client/out
 COPY --from=back-build /app/server /app/server
 EXPOSE 4000
 CMD ./server

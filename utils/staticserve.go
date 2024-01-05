@@ -8,7 +8,7 @@ import (
 )
 
 func StaticWeb(c *gin.Context) {
-	FilePath := "client/dist"
+	FilePath := "client/out"
 	path := c.Request.URL.Path
 
 	filePaths := []string{
