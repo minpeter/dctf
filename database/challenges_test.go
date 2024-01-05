@@ -5,14 +5,14 @@ import (
 	"os"
 	"testing"
 
-	"github.com/minpeter/dctf-backend/database"
+	"github.com/minpeter/telos-backend/database"
 )
 
 func TestCreateChallenge(t *testing.T) {
 
-	// dctf.db 삭제
+	// telos.db 삭제
 
-	if err := os.Remove("dctf.db"); err != nil {
+	if err := os.Remove("telos.db"); err != nil {
 		t.Error(err)
 	}
 

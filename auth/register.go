@@ -2,7 +2,7 @@ package auth
 
 import (
 	"github.com/google/uuid"
-	"github.com/minpeter/dctf-backend/database"
+	"github.com/minpeter/telos-backend/database"
 )
 
 func UserRegister(division, email, name, githubId string) (Token, error) {

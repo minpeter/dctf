@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/minpeter/dctf-backend/auth"
+	"github.com/minpeter/telos-backend/auth"
 )
 
 func TestAuthToken(t *testing.T) {

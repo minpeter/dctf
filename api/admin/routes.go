@@ -2,13 +2,15 @@ package admin
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/minpeter/dctf-backend/utils"
-	"github.com/minpeter/dctf-backend/utils/perms"
+	"github.com/minpeter/telos-backend/utils"
+	"github.com/minpeter/telos-backend/utils/perms"
 )
 
 func Routes(adminRoutes *gin.RouterGroup) {
 
 	adminRoutes.Use(utils.TokenAuthMiddleware(perms.Admin))
+
+	adminRoutes.GET("/check", checkHandler)
 	challs := adminRoutes.Group("/challs")
 
 	{
@@ -22,4 +24,8 @@ func Routes(adminRoutes *gin.RouterGroup) {
 		upload.POST("", uploadPostHandler)
 		upload.POST("/query", uploadQueryHandler)
 	}
+}
+
+func checkHandler(c *gin.Context) {
+	utils.SendResponse(c, "goodAdminCheck", nil)
 }

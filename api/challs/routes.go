@@ -11,8 +11,8 @@ import (
 	"github.com/docker/docker/client"
 
 	"github.com/gin-gonic/gin"
-	"github.com/minpeter/dctf-backend/database"
-	"github.com/minpeter/dctf-backend/utils"
+	"github.com/minpeter/telos-backend/database"
+	"github.com/minpeter/telos-backend/utils"
 )
 
 func Routes(challRoutes *gin.RouterGroup) {
@@ -199,6 +199,10 @@ func getChallsHandler(c *gin.Context) {
 	if err != nil {
 		utils.SendResponse(c, "internalError", gin.H{})
 		return
+	}
+
+	if challs == nil {
+		challs = []database.CleanedChallenge{}
 	}
 
 	utils.SendResponse(c, "goodChallenges", challs)

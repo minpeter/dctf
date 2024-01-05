@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/minpeter/dctf-backend/database"
-	"github.com/minpeter/dctf-backend/utils"
+	"github.com/minpeter/telos-backend/database"
+	"github.com/minpeter/telos-backend/utils"
 )
 
 func deleteChallengeHandler(c *gin.Context) {
@@ -26,6 +26,10 @@ func listChallengesHandler(c *gin.Context) {
 	if err != nil {
 		utils.SendResponse(c, "internalError", gin.H{})
 		return
+	}
+
+	if challs == nil {
+		challs = []database.Challenge{}
 	}
 
 	utils.SendResponse(c, "goodChallenges", challs)

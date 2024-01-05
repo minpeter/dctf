@@ -1,5 +1,5 @@
 version: "3.8"
-name: dctf-dev
+name: telos-dev
 services:
   traefik:
     image: traefik
@@ -7,10 +7,10 @@ services:
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./traefik-ext-dctf.toml:/traefik-ext-dctf.toml
+      - ./traefik-ext-telos.toml:/traefik-ext-telos.toml
     command:
       - --entrypoints.web.address=:80
-      - --providers.file.filename=/traefik-ext-dctf.toml
+      - --providers.file.filename=/traefik-ext-telos.toml
       - --providers.file.watch=true
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false

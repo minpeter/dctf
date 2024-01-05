@@ -1,4 +1,4 @@
-module github.com/minpeter/dctf-backend
+module github.com/minpeter/telos-backend
 
 go 1.18
 
@@ -6,7 +6,6 @@ require (
 	github.com/docker/docker v24.0.7+incompatible
 	github.com/gin-gonic/gin v1.9.1
 	github.com/google/uuid v1.5.0
-	github.com/hoisie/mustache v0.0.0-20160804235033-6375acf62c69
 	github.com/joho/godotenv v1.5.1
 	github.com/vincent-petithory/dataurl v1.0.0
 	golang.org/x/oauth2 v0.15.0
@@ -47,7 +46,6 @@ require (
 	github.com/pelletier/go-toml/v2 v2.1.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
-	github.com/sirupsen/logrus v1.9.3 // indirect
 	github.com/syndtr/goleveldb v1.0.0 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect

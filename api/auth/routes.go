@@ -5,15 +5,16 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/minpeter/dctf-backend/auth"
-	"github.com/minpeter/dctf-backend/database"
-	"github.com/minpeter/dctf-backend/utils"
+	"github.com/minpeter/telos-backend/auth"
+	"github.com/minpeter/telos-backend/database"
+	"github.com/minpeter/telos-backend/utils"
 )
 
 func Routes(authRoutes *gin.RouterGroup) {
 
 	authRoutes.POST("/login", loginHandler)
 	authRoutes.POST("/register", registerHandler)
+	authRoutes.POST("/logout", logoutHandler)
 	authRoutes.GET("/test", testHandler)
 
 }
@@ -69,10 +70,25 @@ func loginHandler(c *gin.Context) {
 		return
 	}
 
+	SetAuthCookie(c, token)
+
 	utils.SendResponse(c, "goodLogin", gin.H{
 		"authToken": token,
 	})
 
+}
+
+func SetAuthCookie(c *gin.Context, token auth.Token) {
+	c.SetCookie("authToken", string(token), 60*60*24*30, "/", "", false, true)
+}
+
+func RemoveAuthCookie(c *gin.Context) {
+	c.SetCookie("authToken", "", -1, "/", "", false, true)
+}
+
+func logoutHandler(c *gin.Context) {
+	RemoveAuthCookie(c)
+	utils.SendResponse(c, "goodLogout", gin.H{})
 }
 
 func registerHandler(c *gin.Context) {
@@ -120,6 +136,9 @@ func registerHandler(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+
+	SetAuthCookie(c, authToken)
+
 	utils.SendResponse(c, "goodRegister", gin.H{
 		"authToken": authToken,
 	})

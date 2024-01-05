@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/vincent-petithory/dataurl"
 
-	"github.com/minpeter/dctf-backend/utils"
+	"github.com/minpeter/telos-backend/utils"
 )
 
 func uploadPostHandler(c *gin.Context) {
