@@ -5,6 +5,7 @@ data
 
 rctf.db
 files
+telos
 telos.db
 database/telos.db
 
@@ -37,5 +38,3 @@ $RECYCLE.BIN
 
 # preact-cli build size plugin
 size-plugin.json
-
-telos
