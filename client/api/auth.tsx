@@ -8,7 +8,7 @@ export function SetAuthToken({ authToken }: { authToken: string }) {
 }
 
 export function relog() {
-  localStorage.login_state = false;
+  localStorage.removeItem("login_state");
   window.location.href = "/login";
 }
 
@@ -16,7 +16,7 @@ export async function Logout() {
   const resp = await request("POST", "/auth/logout", {});
 
   if (resp.kind === "goodLogout") {
-    localStorage.login_state = false;
+    localStorage.removeItem("login_state");
     window.location.href = "/";
   }
 
