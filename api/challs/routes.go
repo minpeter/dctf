@@ -11,19 +11,20 @@ import (
 	"github.com/docker/docker/client"
 
 	"github.com/gin-gonic/gin"
+	"github.com/minpeter/telos-backend/auth"
 	"github.com/minpeter/telos-backend/database"
 	"github.com/minpeter/telos-backend/utils"
 )
 
 func Routes(challRoutes *gin.RouterGroup) {
 
-	challRoutes.GET("", utils.TokenAuthMiddleware(), getChallsHandler)
+	challRoutes.GET("", auth.AuthTokenMiddleware(), getChallsHandler)
 	challRoutes.GET("/:id/solves", getChallSolvesHandler)
-	challRoutes.POST("/:id/submit", utils.TokenAuthMiddleware(), submitChallHandler)
+	challRoutes.POST("/:id/submit", auth.AuthTokenMiddleware(), submitChallHandler)
 
 	// dklodd router
-	challRoutes.GET("/:id/start", utils.TokenAuthMiddleware(), createChallHandler)
-	challRoutes.GET("/:id/stop", utils.TokenAuthMiddleware(), deleteChallHandler)
+	challRoutes.GET("/:id/start", auth.AuthTokenMiddleware(), createChallHandler)
+	challRoutes.GET("/:id/stop", auth.AuthTokenMiddleware(), deleteChallHandler)
 }
 
 func createChallHandler(c *gin.Context) {
@@ -232,8 +233,7 @@ func submitChallHandler(c *gin.Context) {
 		return
 	}
 
-	fmt.Println(req.Flag)
-	fmt.Println(challenge.Flag)
+	fmt.Printf("user submitted flag: %s | correct flag: %s\n", req.Flag, challenge.Flag)
 
 	if req.Flag == challenge.Flag {
 

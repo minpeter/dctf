@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -12,138 +11,93 @@ import (
 
 func Routes(authRoutes *gin.RouterGroup) {
 
-	authRoutes.POST("/login", loginHandler)
-	authRoutes.POST("/register", registerHandler)
 	authRoutes.POST("/logout", logoutHandler)
-	authRoutes.GET("/test", testHandler)
+	authRoutes.POST("/callback/github", GithubCallbackHandler)
+	authRoutes.POST("/login", auth.GithubTokenMiddleware(), loginHandler)
+	authRoutes.POST("/register", auth.GithubTokenMiddleware(), registerHandler)
 
 }
 
+func logoutHandler(c *gin.Context) {
+	utils.RemoveCookie(c, "authToken")
+	utils.SendResponse(c, "goodLogout", gin.H{})
+}
+
 func loginHandler(c *gin.Context) {
-	// githubToken body에서 읽어오기
-	var req struct {
-		GithubToken string `json:"githubToken"`
-	}
-	if err := c.BindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
 
-	// githubToken이 없으면 에러
-	if req.GithubToken == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing githubToken"})
-		return
-	}
-
-	githubTokenData, err := auth.GetData(auth.GithubAuth, auth.Token(req.GithubToken))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	fmt.Println("github ID:", githubTokenData.GithubAuth.GithubID)
-	fmt.Println("github email:", githubTokenData.GithubAuth.GithubPrimaryEmail)
-
-	user, has, err := database.GetuserByGithubId(githubTokenData.GithubAuth.GithubID)
-
-	fmt.Println("user:", user)
-	fmt.Println("has:", has)
-	fmt.Println("err:", err)
-
-	if err != nil {
-		// utils.SendResponse
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
+	githubUserHas, has := c.Get("githubUserHas")
 	if !has {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "githubUserHas not found"})
+		return
+	}
+
+	if !githubUserHas.(bool) {
 		utils.SendResponse(c, "badUnknownUser", gin.H{})
 		return
 	}
 
-	token, err := auth.GetToken(auth.Auth, auth.TokenDataTypes{
+	githubData, has := c.Get("githubData")
+	if !has {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "githubData not found"})
+		return
+	}
+
+	githubTokenData := githubData.(auth.GithubTokenData)
+
+	user, has, err := database.GetuserByGithubId(githubTokenData.GithubID)
+
+	if err != nil || !has {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	authToken, err := auth.GetToken(auth.Auth, auth.TokenDataTypes{
 		Auth: auth.AuthTokenData(user.Id),
 	},
 	)
+
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	SetAuthCookie(c, token)
-
+	utils.SetCookie(c, "authToken", string(authToken))
 	utils.SendResponse(c, "goodLogin", gin.H{
-		"authToken": token,
+		"authToken": authToken,
 	})
 
-}
-
-func SetAuthCookie(c *gin.Context, token auth.Token) {
-	c.SetCookie("authToken", string(token), 60*60*24*30, "/", "", false, true)
-}
-
-func RemoveAuthCookie(c *gin.Context) {
-	c.SetCookie("authToken", "", -1, "/", "", false, true)
-}
-
-func logoutHandler(c *gin.Context) {
-	RemoveAuthCookie(c)
-	utils.SendResponse(c, "goodLogout", gin.H{})
 }
 
 func registerHandler(c *gin.Context) {
 
-	var req struct {
-		GithubToken string `json:"githubToken"`
-	}
-	if err := c.BindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	githubUserHas, has := c.Get("githubUserHas")
+	if !has {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "githubUserHas not found"})
 		return
 	}
 
-	// githubToken이 없으면 에러
-	if req.GithubToken == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing githubToken"})
+	if githubUserHas.(bool) {
+		utils.SendResponse(c, "badAlreadyRegistered", gin.H{})
 		return
 	}
 
-	githubTokenData, err := auth.GetData(auth.GithubAuth, auth.Token(req.GithubToken))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	githubData, has := c.Get("githubData")
+	if !has {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "githubData not found"})
 		return
 	}
 
-	user, has, err := database.GetuserByGithubId(githubTokenData.GithubAuth.GithubID)
+	githubTokenData := githubData.(auth.GithubTokenData)
 
-	fmt.Println("user:", user)
-	fmt.Println("has:", has)
-	fmt.Println("err:", err)
-
-	if err != nil {
-		// utils.SendResponse
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	if has {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "user already exists"})
-		return
-	}
-
-	authToken, err := auth.UserRegister("open", githubTokenData.GithubAuth.GithubPrimaryEmail, "민웅기", githubTokenData.GithubAuth.GithubID)
-
+	authToken, err := auth.UserRegister("open", githubTokenData.GithubEmail, githubTokenData.GithubName, githubTokenData.GithubID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	SetAuthCookie(c, authToken)
+	utils.SetCookie(c, "authToken", string(authToken))
 
 	utils.SendResponse(c, "goodRegister", gin.H{
 		"authToken": authToken,
 	})
-}
-
-func testHandler(c *gin.Context) {
-	utils.SendResponse(c, "goodTest", gin.H{})
 }

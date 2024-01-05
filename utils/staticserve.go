@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -19,7 +18,6 @@ func StaticWeb(c *gin.Context) {
 
 	for _, filePath := range filePaths {
 		if fileInfo, err := os.Stat(filePath); err == nil && !fileInfo.IsDir() {
-			fmt.Println(filePath)
 			c.File(filePath)
 			return
 		}

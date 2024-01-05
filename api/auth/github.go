@@ -1,11 +1,10 @@
-package integrations
+package auth
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 	"time"
@@ -17,25 +16,7 @@ import (
 	"golang.org/x/oauth2/github"
 )
 
-func Routes(integrationRoutes *gin.RouterGroup) {
-
-	client := integrationRoutes.Group("/client")
-	{
-		client.GET("/config", clientConfigHandler)
-	}
-
-	github := integrationRoutes.Group("/github")
-	{
-		github.POST("/callback", githubCallbackHandler)
-	}
-
-}
-
-func clientConfigHandler(c *gin.Context) {
-	utils.SendResponse(c, "goodClientConfig", gin.H{})
-}
-
-func githubCallbackHandler(c *gin.Context) {
+func GithubCallbackHandler(c *gin.Context) {
 
 	var reqCode struct {
 		Code string `json:"githubCode"`
@@ -45,8 +26,6 @@ func githubCallbackHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
-	log.Println("code:", reqCode.Code)
 
 	githubcon := oauth2.Config{
 		ClientID:     os.Getenv("GITHUB_CLIENT_ID"),
@@ -61,44 +40,33 @@ func githubCallbackHandler(c *gin.Context) {
 		return
 	}
 
-	// Create an HTTP client
 	client := &http.Client{}
-
-	// Create a request
-	url := "https://api.github.com/user"
-	req, err := http.NewRequest("GET", url, nil)
+	req, err := http.NewRequest("GET", "https://api.github.com/user", nil)
 	if err != nil {
-		fmt.Println("Error creating request:", err)
-		os.Exit(1)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
-
-	// Set the Authorization header with the access token
 	req.Header.Set("Authorization", "token "+token.AccessToken)
-
-	// Make the request
 	resp, err := client.Do(req)
 	if err != nil {
-		fmt.Println("Error making request:", err)
-		os.Exit(1)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
+
 	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body) // response body is []byte
+	body, err := ioutil.ReadAll(resp.Body)
 
 	var result GithubUserResponse
 	if err := json.Unmarshal(body, &result); err != nil { // Parse []byte to go struct pointer
-		fmt.Println("Can not unmarshal JSON")
+		fmt.Println("Error parsing response:", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	}
 
-	fmt.Printf("name: %s\n", result.Name)
-	fmt.Printf("email: %s\n", result.Email)
-	fmt.Printf("githubId: %d\n", result.ID)
-	fmt.Printf("githubUsername: %s\n", result.Login)
-
-	GithubToken, err := auth.GetToken(auth.GithubAuth, auth.TokenDataTypes{
-		GithubAuth: auth.GithubAuthTokenData{
-			GithubID:           result.Login,
-			GithubPrimaryEmail: result.Email,
-			GithubName:         result.Name,
+	GithubToken, err := auth.GetToken(auth.Github, auth.TokenDataTypes{
+		Github: auth.GithubTokenData{
+			GithubID:    result.Login,
+			GithubEmail: result.Email,
+			GithubName:  result.Name,
 		},
 	})
 	if err != nil {
@@ -108,8 +76,10 @@ func githubCallbackHandler(c *gin.Context) {
 
 	utils.SendResponse(c, "goodGithubToken", gin.H{
 		"githubToken": GithubToken,
-		"githubId":    result.ID,
 	})
+
+	utils.SetCookie(c, "githubToken", string(GithubToken))
+
 }
 
 type GithubUserResponse struct {

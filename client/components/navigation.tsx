@@ -36,6 +36,12 @@ export default function Navbar() {
 
   const [showAdminNav, setAdminPath] = useState(false);
 
+  let loggedIn = false;
+
+  if (typeof window !== "undefined") {
+    loggedIn = localStorage.login_state;
+  }
+
   useEffect(() => {
     setAdminPath(pathname.includes("/admin"));
   }, [pathname]);
@@ -45,22 +51,17 @@ export default function Navbar() {
 
     if (localStorage.login_state) {
       checkAdmin().then((resp) => {
+        console.log(resp);
         setAdmin(resp);
       });
     }
-  }, []);
-
-  let loggedOut = false;
-
-  if (typeof window !== "undefined") {
-    loggedOut = !localStorage.login_state;
-  }
+  }, [loggedIn]);
 
   return (
     <div className="mt-10 w-full items-center justify-center flex flex-col">
       <NavigationMenu>
         <NavigationMenuList>
-          {admin && !loggedOut && (
+          {admin && (
             <NavigationMenuItem>
               <Link href="/admin" legacyBehavior passHref>
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
@@ -86,15 +87,7 @@ export default function Navbar() {
             </Link>
           </NavigationMenuItem>
 
-          {isClient && loggedOut ? (
-            <NavigationMenuItem>
-              <Link href="/login" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Login
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
-          ) : (
+          {isClient && loggedIn ? (
             <>
               <NavigationMenuItem>
                 <Link href="/profile" legacyBehavior passHref>
@@ -132,6 +125,14 @@ export default function Navbar() {
                 </AlertDialog>
               </NavigationMenuItem>
             </>
+          ) : (
+            <NavigationMenuItem>
+              <Link href="/login" legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  Login
+                </NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
           )}
         </NavigationMenuList>
       </NavigationMenu>

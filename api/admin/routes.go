@@ -2,13 +2,14 @@ package admin
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/minpeter/telos-backend/auth"
+	"github.com/minpeter/telos-backend/auth/perms"
 	"github.com/minpeter/telos-backend/utils"
-	"github.com/minpeter/telos-backend/utils/perms"
 )
 
 func Routes(adminRoutes *gin.RouterGroup) {
 
-	adminRoutes.Use(utils.TokenAuthMiddleware(perms.Admin))
+	adminRoutes.Use(auth.AuthTokenMiddleware(perms.Admin))
 
 	adminRoutes.GET("/check", checkHandler)
 	challs := adminRoutes.Group("/challs")

@@ -5,7 +5,6 @@ import (
 	"github.com/minpeter/telos-backend/api/admin"
 	"github.com/minpeter/telos-backend/api/auth"
 	"github.com/minpeter/telos-backend/api/challs"
-	"github.com/minpeter/telos-backend/api/integrations"
 	"github.com/minpeter/telos-backend/api/leaderboard"
 	"github.com/minpeter/telos-backend/api/users"
 )
@@ -23,9 +22,6 @@ func NewRouter() *gin.Engine {
 
 	// Challenge-specific routes
 	challs.Routes(router.Group("/challs"))
-
-	// Integrations-related routes
-	integrations.Routes(router.Group("/integrations"))
 
 	// Leaderboard-related routes
 	leaderboard.Routes(router.Group("/leaderboard"))

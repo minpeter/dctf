@@ -7,7 +7,9 @@ import { Button } from "@/components/ui/button";
 
 import { useEffect, useState } from "react";
 
-import { githubCallback, login, register, SetAuthToken } from "@/api/auth";
+import { githubCallback, login, register, SetLoginState } from "@/api/auth";
+
+import { toast } from "sonner";
 
 function githubPopup(): string {
   const state = Array.from(crypto.getRandomValues(new Uint8Array(16)))
@@ -71,40 +73,27 @@ export default function Page() {
     });
 
     const action = async (code: string) => {
-      const {
-        kind,
-        message,
-        data,
-      }: {
-        kind: "goodGithubToken";
-        message: string;
-        data: { githubToken: string; githubId: string };
-      } = await githubCallback({ githubCode: code });
-
-      if (kind !== "goodGithubToken") {
-        console.error(message);
+      let { error: callbackerror } = await githubCallback({ githubCode: code });
+      if (callbackerror !== null) {
+        toast.error(callbackerror || "Unknown error");
         return;
       }
 
       // 버튼 비활성화 시점
-      const loginRes = await login({ githubToken: data.githubToken });
-      if (loginRes.authToken) {
-        SetAuthToken({ authToken: loginRes.authToken });
-      }
-      if (loginRes.badUnknownUser) {
-        console.error("login failed", loginRes.badUnknownUser);
-
-        const registerRes: any = await register({
-          githubToken: data.githubToken,
-        });
-
-        if (registerRes.errors) {
-          if (registerRes.errors) {
-            console.error(registerRes.errors);
-            return;
-          }
+      const { error, registerRequired } = await login();
+      if (error) {
+        toast.error(error);
+        return;
+      } else if (registerRequired) {
+        const { error } = await register();
+        if (error) {
+          toast.error(error);
+          return;
         }
       }
+
+      SetLoginState();
+      toast.success("Logged in!");
     };
   }, [oauthState]);
 

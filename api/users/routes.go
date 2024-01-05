@@ -1,10 +1,10 @@
 package users
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/minpeter/telos-backend/auth"
 	"github.com/minpeter/telos-backend/database"
 	"github.com/minpeter/telos-backend/utils"
 )
@@ -15,8 +15,8 @@ func Routes(userRoutes *gin.RouterGroup) {
 
 	me := userRoutes.Group("/me")
 	{
-		me.GET("", utils.TokenAuthMiddleware(), getMeHandler)
-		me.PATCH("", utils.TokenAuthMiddleware(), updateMeHandler)
+		me.GET("", auth.AuthTokenMiddleware(), getMeHandler)
+		me.PATCH("", auth.AuthTokenMiddleware(), updateMeHandler)
 
 		auth := me.Group("/auth")
 		{
@@ -35,22 +35,11 @@ func getMeHandler(c *gin.Context) {
 
 	user := c.MustGet("user").(database.User)
 
-	fmt.Println("user:", user)
-
 	solves, err := database.GetSolvesByUserId(user.Id)
 	if err != nil {
 		utils.SendResponse(c, "internalServerError", nil)
 		return
 	}
-
-	// solves.push({
-	// 	category: chall.category,
-	// 	name: chall.name,
-	// 	points: challengeInfo[i].score,
-	// 	solves: challengeInfo[i].solves,
-	// 	id: chall.id,
-	// 	createdAt: solve.createdat.valueOf()
-	// })
 
 	solvesResp := []struct {
 		Category  string `json:"category"`

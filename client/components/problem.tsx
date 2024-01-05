@@ -54,8 +54,6 @@ export default function Problem({
   const isTcp = problem.dynamic === "tcp";
   const isFileExists = problem.files.length > 0;
 
-  console.log(problem.name, " is  ", solved ? "solved" : "not solved");
-
   const [value, setValue] = useState("");
   const handleInputChange = useCallback(
     (e: any) => setValue(e.target.value),

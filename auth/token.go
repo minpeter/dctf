@@ -7,126 +7,58 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"math"
 	"time"
 )
 
 type TokenKinds int
+type Token string
 
 const (
 	Auth TokenKinds = iota
-	Team
-	Verify
-	GithubAuth
+	Github
 )
 
-// VerifyTokenKinds represents verification token kinds
-type VerifyTokenKinds string
-
-const (
-	Update   VerifyTokenKinds = "update"
-	Register VerifyTokenKinds = "register"
-	Recover  VerifyTokenKinds = "recover"
-)
-
-// AuthTokenData represents authentication token data
 type AuthTokenData string
 
-// TeamTokenData represents team token data
-type TeamTokenData string
-
-// BaseVerifyTokenData represents base verification token data
-type BaseVerifyTokenData struct {
-	VerifyID string
-	Kind     VerifyTokenKinds
+type GithubTokenData struct {
+	GithubID    string
+	GithubEmail string
+	GithubName  string
 }
 
-// RegisterVerifyTokenData represents register verification token data
-type RegisterVerifyTokenData struct {
-	BaseVerifyTokenData
-	Email    string
-	Name     string
-	Division string
-}
-
-// UpdateVerifyTokenData represents update verification token data
-type UpdateVerifyTokenData struct {
-	BaseVerifyTokenData
-	UserID   string
-	Email    string
-	Division string
-}
-
-// RecoverTokenData represents recover verification token data
-type RecoverTokenData struct {
-	BaseVerifyTokenData
-	UserID string
-	Email  string
-}
-
-// VerifyTokenData represents union type for verification token data
-type VerifyTokenData interface {
-	isVerifyTokenData()
-}
-
-// Implement isVerifyTokenData method for each struct to satisfy the interface
-func (r RegisterVerifyTokenData) isVerifyTokenData() {}
-func (u UpdateVerifyTokenData) isVerifyTokenData()   {}
-func (r RecoverTokenData) isVerifyTokenData()        {}
-
-type GithubAuthTokenData struct {
-	GithubID           string
-	GithubPrimaryEmail string
-	GithubName         string
-}
-
-// TokenDataTypes represents internal map of token types
 type TokenDataTypes struct {
-	Auth       AuthTokenData
-	Team       TeamTokenData
-	Verify     VerifyTokenData
-	GithubAuth GithubAuthTokenData
+	Auth   AuthTokenData
+	Github GithubTokenData
 }
 
-// Token represents a string token
-type Token string
-
-// InternalTokenData represents internal token data structure
 type InternalTokenData struct {
 	K TokenKinds
 	T int64
 	D TokenDataTypes
 }
 
-// TokenExpiries represents token expiration times
 var TokenExpiries = map[TokenKinds]float64{
-	// Inf(1) means infinite
-	Auth: math.Inf(1),
-	Team: math.Inf(1),
-	// 1 hour
-	Verify:     3600,
-	GithubAuth: 3600,
+	Auth:   math.Inf(1),
+	Github: 3600,
 }
 
-// TimeNow returns the current time in seconds since epoch
 func TimeNow() int64 {
 	return time.Now().Unix()
 }
 
-func generateRandomKey(size int) ([]byte, error) {
-	key := make([]byte, size)
-	_, err := rand.Read(key)
-	if err != nil {
-		return nil, err
-	}
-	return key, nil
-}
+// func generateRandomKey(size int) ([]byte, error) {
+// 	key := make([]byte, size)
+// 	_, err := rand.Read(key)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return key, nil
+// }
+// var tokenKey, _ = generateRandomKey(32) // 32 bytes for AES-256
 
 var tokenKey = []byte("aaaaabbbbbaaaaabbbbbaaaaa33aaaaa")
-
-// var tokenKey, _ = generateRandomKey(32) // 32 bytes for AES-256
 
 func encryptToken(content InternalTokenData) (Token, error) {
 	iv := make([]byte, 12)
@@ -134,7 +66,6 @@ func encryptToken(content InternalTokenData) (Token, error) {
 		return "", err
 	}
 
-	fmt.Println("iv:", iv)
 	block, err := aes.NewCipher(tokenKey)
 	if err != nil {
 		return "", err
@@ -158,6 +89,7 @@ func encryptToken(content InternalTokenData) (Token, error) {
 
 	return Token(base64.StdEncoding.EncodeToString(tokenContent)), nil
 }
+
 func decryptToken(token Token) (InternalTokenData, error) {
 	tokenContent, err := base64.StdEncoding.DecodeString(string(token))
 	if err != nil {
@@ -202,10 +134,6 @@ func GetData(expectedTokenKind TokenKinds, token Token) (TokenDataTypes, error) 
 	if content.K != expectedTokenKind {
 		return TokenDataTypes{}, errors.New("unexpected token kind")
 	}
-
-	// fmt.Printf("Token Expiry: %v\n", TokenExpiries[content.K])
-	// fmt.Printf("Token Time: %v\n", content.T)
-	// fmt.Printf("Time Now: %v\n", TimeNow())
 
 	if !math.IsInf(TokenExpiries[content.K], 1) && content.T+int64(TokenExpiries[content.K]) < TimeNow() {
 		return TokenDataTypes{}, errors.New("Token expired")

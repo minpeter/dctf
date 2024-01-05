@@ -56,16 +56,11 @@ func (q *TimedQueue) Dequeue() {
 	fmt.Println("Dequeue")
 
 	if len(q.items) > 0 {
-
-		// pop item
 		item := q.items[0]
-
 		q.items = q.items[1:]
 		q.timerSet.Stop()
 
-		fmt.Println(RemoveSandbox(item.Value))
-		fmt.Println(item.Value)
-		fmt.Println("remove item from queue")
+		RemoveSandbox(item.Value)
 
 		if len(q.items) > 0 {
 			q.StartTime = time.Now()

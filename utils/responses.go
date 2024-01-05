@@ -25,6 +25,14 @@ func SendResponse(c *gin.Context, kind string, data interface{}) {
 }
 
 var Responses = map[string]Response{
+	"badAlreadyRegistered": {
+		Status:  409,
+		Message: "The user is already registered.\nThis doesn't usually happen. Contact sysadmin.",
+	},
+	"badRegister": {
+		Status:  400,
+		Message: "The user could not be created. Please try again.",
+	},
 	"goodLogout": {
 		Status:  200,
 		Message: "The logout was successful.",
@@ -110,7 +118,7 @@ var Responses = map[string]Response{
 		Status:  200,
 		Message: "The Github token was created.",
 	},
-	"goodGithubAuthSet": {
+	"goodGithubSet": {
 		Status:  200,
 		Message: "The Github team was successfully updated.",
 	},

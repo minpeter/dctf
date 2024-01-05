@@ -2,7 +2,7 @@
 
 import { request } from "@/api/util";
 
-export function SetAuthToken({ authToken }: { authToken: string }) {
+export function SetLoginState() {
   localStorage.login_state = true;
   window.location.href = "/challs";
 }
@@ -24,77 +24,37 @@ export async function Logout() {
 }
 
 export async function githubCallback({ githubCode }: { githubCode: string }) {
-  return await request("POST", "/integrations/github/callback", {
+  const resp = await request("POST", "/auth/callback/github", {
     githubCode,
   });
-}
 
-export async function login({ githubToken }: { githubToken: string }) {
-  const resp = await request("POST", "/auth/login", {
-    githubToken: githubToken,
-  });
-
-  switch (resp.kind) {
-    case "goodLogin":
-      return {
-        authToken: resp.data.authToken,
-      };
-    case "badUnknownUser":
-      return {
-        badUnknownUser: true,
-      };
-    default:
-      return {
-        badUnknownUser: resp.error,
-      };
+  if (resp.kind !== "goodGithubToken") {
+    return { error: resp.message };
+  } else {
+    return { error: null };
   }
 }
 
-export const register = async ({
-  // email,
-  // name,
-  githubToken,
-}: // recaptchaCode,
-{
-  // email: string;
-  // name: string;
-  githubToken: string;
-  // recaptchaCode: string;
-}) => {
-  const resp = await request("POST", "/auth/register", {
-    // email,
-    // name,
-    githubToken,
-    // recaptchaCode,
-  });
+export async function login() {
+  const resp = await request("POST", "/auth/login");
+
+  if (resp.kind === "goodLogin") {
+    return { error: null, registerRequired: false };
+  } else if (resp.kind === "badUnknownUser") {
+    return { error: null, registerRequired: true };
+  } else {
+    return { error: "Unknown error", registerRequired: false };
+  }
+}
+
+export const register = async () => {
+  const resp = await request("POST", "/auth/register");
   switch (resp.kind) {
     case "goodRegister":
-      SetAuthToken({ authToken: resp.data.authToken });
-
-    case "goodVerifySent":
-      return {
-        verifySent: true,
-      };
-    case "badEmail":
-    case "badKnownEmail":
-    case "badCompetitionNotAllowed":
-      return {
-        errors: {
-          email: resp.message,
-        },
-      };
-    case "badKnownName":
-      return {
-        errors: {
-          name: resp.message,
-        },
-        data: resp.data,
-      };
-    case "badName":
-      return {
-        errors: {
-          name: resp.message,
-        },
-      };
+      return { error: null };
+    case "badAlreadyRegistered":
+      return { error: resp.message };
+    default:
+      return { error: "Unknown error" };
   }
 };

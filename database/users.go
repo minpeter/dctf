@@ -1,5 +1,7 @@
 package database
 
+import "fmt"
+
 type User struct {
 	Id       string `xorm:"pk"`
 	Name     string
@@ -10,6 +12,8 @@ type User struct {
 }
 
 func MakeUser(id string, name string, email string, division string, githubId string, perms int) error {
+
+	fmt.Println("called database.MakeUser with GithubId: ", githubId)
 
 	empty, err := DB.IsTableEmpty(&User{})
 	if err != nil {
@@ -37,12 +41,18 @@ func GetAllUsers() ([]User, error) {
 }
 
 func GetuserByGithubId(githubId string) (User, bool, error) {
+
+	fmt.Println("called database.GetuserByGithubId with githubId: ", githubId)
+
 	var user User
 	has, err := DB.Where("github_id = ?", githubId).Get(&user)
 	return user, has, err
 }
 
 func GetUserById(id string) (User, bool, error) {
+
+	fmt.Println("called database.GetUserById with id: ", id)
+
 	var user User
 	has, err := DB.Where("id = ?", id).Get(&user)
 	return user, has, err
