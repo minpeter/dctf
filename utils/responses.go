@@ -23,6 +23,10 @@ func SendResponse(c *gin.Context, kind string, data interface{}) {
 }
 
 var Responses = map[string]Response{
+	"goodUserCheck": {
+		Status:  200,
+		Message: "The user is logged in.",
+	},
 	"badAlreadyRegistered": {
 		Status:  409,
 		Message: "The user is already registered.\nThis doesn't usually happen. Contact sysadmin.",

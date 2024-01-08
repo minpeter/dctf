@@ -19,6 +19,12 @@ func Routes(authRoutes *gin.RouterGroup) {
 	authRoutes.POST("/logout", logoutHandler)
 	authRoutes.GET("/callback/github", GithubCallbackHandler)
 	authRoutes.GET("/login/github", GithubLoginHandler)
+	authRoutes.POST("/login/check", auth.AuthTokenMiddleware(), loginCheckHandler)
+
+}
+
+func loginCheckHandler(c *gin.Context) {
+	utils.SendResponse(c, "goodUserCheck", nil)
 
 }
 
@@ -96,7 +102,7 @@ func GithubCallbackHandler(c *gin.Context) {
 
 	login(user, c)
 
-	c.Redirect(http.StatusTemporaryRedirect, "/challs")
+	c.Redirect(http.StatusTemporaryRedirect, "/success")
 
 }
 

@@ -23,6 +23,16 @@ export async function Logout() {
   return resp;
 }
 
+export async function CheckLogin() {
+  const resp = await request("POST", "/auth/check", {});
+
+  if (resp.kind === "goodUserCheck") {
+    return { error: null };
+  } else {
+    return { error: "Unknown error" };
+  }
+}
+
 export async function GithubLogin({ githubCode }: { githubCode: string }) {
   const resp = await request("POST", "/auth/callback/github", {
     githubCode,
