@@ -7,11 +7,11 @@ type User struct {
 	Name     string
 	Email    string
 	Division string
-	GithubId string
+	GithubId int
 	Perms    int
 }
 
-func MakeUser(id string, name string, email string, division string, githubId string, perms int) error {
+func MakeUser(id, name, email, division string, githubId, perms int) error {
 
 	fmt.Println("called database.MakeUser with GithubId: ", githubId)
 
@@ -40,7 +40,7 @@ func GetAllUsers() ([]User, error) {
 	return users, err
 }
 
-func GetuserByGithubId(githubId string) (User, bool, error) {
+func GetuserByGithubId(githubId int) (User, bool, error) {
 
 	fmt.Println("called database.GetuserByGithubId with githubId: ", githubId)
 

@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 
 import { useEffect, useState } from "react";
 
-import { githubCallback, login, register, SetLoginState } from "@/api/auth";
+// import { githubCallback, login, register, SetLoginState } from "@/api/auth";
+import { GithubLogin, SetLoginState } from "@/api/auth";
 
 import { toast } from "sonner";
 
@@ -57,6 +58,22 @@ export default function Page() {
     setOauthState(githubPopup());
   };
 
+  const TesthandleClick = () => {
+    const action = async () => {
+      await fetch("/api/auth/login/github", {
+        method: "GET",
+      }).then(async (r) => {
+        const jsonData = await r.json();
+        console.log(jsonData);
+        // jsonData.url로 리다이렉트
+
+        localStorage.login_state = true;
+        window.location.href = jsonData.url;
+      });
+    };
+    action();
+  };
+
   useEffect(() => {
     window.addEventListener("message", (event) => {
       if (event.origin !== location.origin) {
@@ -73,27 +90,14 @@ export default function Page() {
     });
 
     const action = async (code: string) => {
-      let { error: callbackerror } = await githubCallback({ githubCode: code });
-      if (callbackerror !== null) {
-        toast.error(callbackerror || "Unknown error");
-        return;
-      }
-
-      // 버튼 비활성화 시점
-      const { error, registerRequired } = await login();
+      const { error } = await GithubLogin({ githubCode: code });
       if (error) {
         toast.error(error);
         return;
-      } else if (registerRequired) {
-        const { error } = await register();
-        if (error) {
-          toast.error(error);
-          return;
-        }
+      } else {
+        SetLoginState();
+        toast.success("Logged in!");
       }
-
-      SetLoginState();
-      toast.success("Logged in!");
     };
   }, [oauthState]);
 
@@ -103,6 +107,10 @@ export default function Page() {
 
       <Button onClick={handleClick}>
         <GitHubLogoIcon className="mr-2 h-4 w-4" /> Login with GitHub
+      </Button>
+
+      <Button onClick={TesthandleClick}>
+        <GitHubLogoIcon className="mr-2 h-4 w-4" /> Login with GitHub (test)
       </Button>
 
       <div className="flex flex-col items-center justify-center">

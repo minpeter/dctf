@@ -6,42 +6,13 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"encoding/json"
-	"errors"
 	"io"
-	"math"
 	"time"
 )
 
-type TokenKinds int
-type Token string
-
-const (
-	Auth TokenKinds = iota
-	Github
-)
-
-type AuthTokenData string
-
-type GithubTokenData struct {
-	GithubID    string
-	GithubEmail string
-	GithubName  string
-}
-
-type TokenDataTypes struct {
-	Auth   AuthTokenData
-	Github GithubTokenData
-}
-
 type InternalTokenData struct {
-	K TokenKinds
 	T int64
-	D TokenDataTypes
-}
-
-var TokenExpiries = map[TokenKinds]float64{
-	Auth:   math.Inf(1),
-	Github: 3600,
+	D string
 }
 
 func TimeNow() int64 {
@@ -60,7 +31,7 @@ func TimeNow() int64 {
 
 var tokenKey = []byte("aaaaabbbbbaaaaabbbbbaaaaa33aaaaa")
 
-func encryptToken(content InternalTokenData) (Token, error) {
+func encryptToken(content InternalTokenData) (string, error) {
 	iv := make([]byte, 12)
 	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
 		return "", err
@@ -87,10 +58,10 @@ func encryptToken(content InternalTokenData) (Token, error) {
 	// Append iv and nonce to the cipherText
 	tokenContent := append(iv, cipherText...)
 
-	return Token(base64.StdEncoding.EncodeToString(tokenContent)), nil
+	return string(base64.StdEncoding.EncodeToString(tokenContent)), nil
 }
 
-func decryptToken(token Token) (InternalTokenData, error) {
+func decryptToken(token string) (InternalTokenData, error) {
 	tokenContent, err := base64.StdEncoding.DecodeString(string(token))
 	if err != nil {
 		return InternalTokenData{}, err
@@ -124,27 +95,18 @@ func decryptToken(token Token) (InternalTokenData, error) {
 	return decodedData, nil
 }
 
-func GetData(expectedTokenKind TokenKinds, token Token) (TokenDataTypes, error) {
+func GetData(token string) (string, error) {
 
 	content, err := decryptToken(token)
 	if err != nil {
-		return TokenDataTypes{}, err
-	}
-
-	if content.K != expectedTokenKind {
-		return TokenDataTypes{}, errors.New("unexpected token kind")
-	}
-
-	if !math.IsInf(TokenExpiries[content.K], 1) && content.T+int64(TokenExpiries[content.K]) < TimeNow() {
-		return TokenDataTypes{}, errors.New("Token expired")
+		return "", err
 	}
 
 	return content.D, nil
 }
 
-func GetToken(tokenKind TokenKinds, data TokenDataTypes) (Token, error) {
+func GetToken(data string) (string, error) {
 	token := InternalTokenData{
-		K: tokenKind,
 		T: TimeNow(),
 		D: data,
 	}
@@ -154,5 +116,5 @@ func GetToken(tokenKind TokenKinds, data TokenDataTypes) (Token, error) {
 		return "", err
 	}
 
-	return Token(encryptedToken), nil
+	return string(encryptedToken), nil
 }

@@ -24,14 +24,14 @@ func AuthTokenMiddleware(params ...int) gin.HandlerFunc {
 			return
 		}
 
-		uuid, err := GetData(Auth, Token(cookie))
+		uuid, err := GetData(cookie)
 		if err != nil {
 			utils.SendResponse(c, "badToken", nil)
 			c.Abort()
 			return
 		}
 
-		user, has, err := database.GetUserById(string(uuid.Auth))
+		user, has, err := database.GetUserById(uuid)
 		if err != nil || !has {
 			utils.SendResponse(c, "badToken", nil)
 			c.Abort()

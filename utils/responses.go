@@ -3,14 +3,12 @@ package utils
 import "github.com/gin-gonic/gin"
 
 type Response struct {
-	Kind           string      `json:"kind"`
-	Message        string      `json:"message"`
-	Data           interface{} `json:"data"`
-	Status         int         `json:"-"`
-	RawContentType string      `json:"-"`
+	Kind    string      `json:"kind"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
+	Status  int         `json:"-"`
 }
 
-// kind를 통해 ResponseList에서 Response를 가져온다.
 func SendResponse(c *gin.Context, kind string, data interface{}) {
 
 	res, ok := Responses[kind]
@@ -110,9 +108,8 @@ var Responses = map[string]Response{
 		Message: "The leaderboard was retrieved.",
 	},
 	"goodGithubLeaderboard": {
-		Status:         200,
-		Message:        "",
-		RawContentType: "application/json",
+		Status:  200,
+		Message: "",
 	},
 	"goodGithubToken": {
 		Status:  200,
@@ -265,7 +262,8 @@ var Responses = map[string]Response{
 	"goodClientConfig": {
 		Status:  200,
 		Message: "The client config was retrieved.",
-	}, "badRecaptchaCode": {
+	},
+	"badRecaptchaCode": {
 		Status:  401,
 		Message: "The recaptcha code is invalid.",
 	},

@@ -23,38 +23,14 @@ export async function Logout() {
   return resp;
 }
 
-export async function githubCallback({ githubCode }: { githubCode: string }) {
+export async function GithubLogin({ githubCode }: { githubCode: string }) {
   const resp = await request("POST", "/auth/callback/github", {
     githubCode,
   });
 
-  if (resp.kind !== "goodGithubToken") {
-    return { error: resp.message };
-  } else {
-    return { error: null };
-  }
-}
-
-export async function login() {
-  const resp = await request("POST", "/auth/login");
-
   if (resp.kind === "goodLogin") {
-    return { error: null, registerRequired: false };
-  } else if (resp.kind === "badUnknownUser") {
-    return { error: null, registerRequired: true };
+    return { error: null };
   } else {
-    return { error: "Unknown error", registerRequired: false };
+    return { error: "Unknown error" };
   }
 }
-
-export const register = async () => {
-  const resp = await request("POST", "/auth/register");
-  switch (resp.kind) {
-    case "goodRegister":
-      return { error: null };
-    case "badAlreadyRegistered":
-      return { error: resp.message };
-    default:
-      return { error: "Unknown error" };
-  }
-};

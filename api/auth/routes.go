@@ -1,20 +1,24 @@
 package auth
 
 import (
+	"context"
+	"encoding/json"
+	"fmt"
+	"io"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/minpeter/telos/auth"
 	"github.com/minpeter/telos/database"
+	"github.com/minpeter/telos/oauth"
 	"github.com/minpeter/telos/utils"
 )
 
 func Routes(authRoutes *gin.RouterGroup) {
 
 	authRoutes.POST("/logout", logoutHandler)
-	authRoutes.POST("/callback/github", GithubCallbackHandler)
-	authRoutes.POST("/login", auth.GithubTokenMiddleware(), loginHandler)
-	authRoutes.POST("/register", auth.GithubTokenMiddleware(), registerHandler)
+	authRoutes.GET("/callback/github", GithubCallbackHandler)
+	authRoutes.GET("/login/github", GithubLoginHandler)
 
 }
 
@@ -23,73 +27,81 @@ func logoutHandler(c *gin.Context) {
 	utils.SendResponse(c, "goodLogout", gin.H{})
 }
 
-func loginHandler(c *gin.Context) {
+func GithubLoginHandler(c *gin.Context) {
 
-	githubUserHas, has := c.Get("githubUserHas")
-	if !has {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "githubUserHas not found"})
+	url := oauth.GitHubLoginConfig.AuthCodeURL("randomstate")
+
+	// c.Redirect(http.StatusTemporaryRedirect, url)
+	c.JSON(http.StatusOK, gin.H{"url": url})
+}
+
+func GithubCallbackHandler(c *gin.Context) {
+	state := c.Query("state")
+	if state != "randomstate" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "state is not valid"})
 		return
 	}
 
-	if !githubUserHas.(bool) {
-		utils.SendResponse(c, "badUnknownUser", gin.H{})
+	code := c.Query("code")
+
+	fmt.Println("state: ", state)
+	fmt.Println("code: ", code)
+
+	githubcon := oauth.GithubConfig()
+
+	token, err := githubcon.Exchange(context.Background(), code)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	githubData, has := c.Get("githubData")
-	if !has {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "githubData not found"})
+	// Create an HTTP client
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", "https://api.github.com/user", nil)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	req.Header.Set("Authorization", "token "+token.AccessToken)
+	resp, err := client.Do(req)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	githubTokenData := githubData.(auth.GithubTokenData)
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
-	user, has, err := database.GetuserByGithubId(githubTokenData.GithubID)
-
-	if err != nil || !has {
+	var result GithubUserResponse
+	if err := json.Unmarshal(body, &result); err != nil { // Parse []byte to go struct pointer
+		fmt.Println("Error parsing response:", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
 	}
 
-	authToken, err := auth.GetToken(auth.Auth, auth.TokenDataTypes{
-		Auth: auth.AuthTokenData(user.Id),
-	},
-	)
+	user, has, err := database.GetuserByGithubId(result.ID)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	utils.SetCookie(c, "authToken", string(authToken))
-	utils.SendResponse(c, "goodLogin", gin.H{
-		"authToken": authToken,
-	})
+	if !has {
+		register(result, c)
+		return
+	}
+
+	login(user, c)
+
+	c.Redirect(http.StatusTemporaryRedirect, "/challs")
 
 }
 
-func registerHandler(c *gin.Context) {
-
-	githubUserHas, has := c.Get("githubUserHas")
-	if !has {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "githubUserHas not found"})
-		return
-	}
-
-	if githubUserHas.(bool) {
-		utils.SendResponse(c, "badAlreadyRegistered", gin.H{})
-		return
-	}
-
-	githubData, has := c.Get("githubData")
-	if !has {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "githubData not found"})
-		return
-	}
-
-	githubTokenData := githubData.(auth.GithubTokenData)
-
-	authToken, err := auth.UserRegister("open", githubTokenData.GithubEmail, githubTokenData.GithubName, githubTokenData.GithubID)
+func register(result GithubUserResponse, c *gin.Context) {
+	authToken, err := auth.UserRegister("open", result.Email, result.Login, result.ID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -97,7 +109,41 @@ func registerHandler(c *gin.Context) {
 
 	utils.SetCookie(c, "authToken", string(authToken))
 
-	utils.SendResponse(c, "goodRegister", gin.H{
-		"authToken": authToken,
-	})
+	// utils.SendResponse(c, "goodLogin", gin.H{
+	// 	"authToken": authToken,
+	// })
+
+	fmt.Println("register")
+}
+
+func login(user database.User, c *gin.Context) {
+	authToken, err := auth.GetToken(user.Id)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	utils.SetCookie(c, "authToken", string(authToken))
+
+	// utils.SendResponse(c, "goodLogin", gin.H{
+	// 	"authToken": authToken,
+	// })
+
+	fmt.Println("login")
+
+}
+
+type GithubUserResponse struct {
+	Login                   string `json:"login"`
+	ID                      int    `json:"id"`
+	AvatarURL               string `json:"avatar_url"`
+	URL                     string `json:"url"`
+	Name                    string `json:"name"`
+	Blog                    string `json:"blog"`
+	Location                string `json:"location"`
+	Email                   string `json:"email"`
+	Hireable                bool   `json:"hireable"`
+	Bio                     string `json:"bio"`
+	TwoFactorAuthentication bool   `json:"two_factor_authentication"`
 }

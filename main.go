@@ -9,6 +9,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/minpeter/telos/api"
 	"github.com/minpeter/telos/database"
+	"github.com/minpeter/telos/oauth"
 	"github.com/minpeter/telos/utils"
 )
 
@@ -25,6 +26,8 @@ func main() {
 	}
 
 	err := godotenv.Load(".env")
+
+	oauth.GithubConfig()
 
 	fmt.Println("\n\n===== ENVIRONMENT VARIABLES =====")
 	fmt.Println("PORT: port to run the server on (optional, default 4000)")
