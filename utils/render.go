@@ -9,12 +9,24 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+var count int = 0
+
 func RenderTemplates(c *gin.Context, Data any) {
 
-	mainTemplateName := "main"
+	mainTemplateName := "root"
 
 	if c.GetHeader("Hx-Request") == "true" {
 		mainTemplateName = "htmx"
+	}
+
+	count += 1
+
+	layout := "logout"
+
+	if count%3 == 0 {
+		layout = "login"
+	} else if count%3 == 1 {
+		layout = "admin"
 	}
 
 	templateName := c.Request.URL.Path
@@ -23,11 +35,14 @@ func RenderTemplates(c *gin.Context, Data any) {
 		templateName = "home"
 	}
 
-	// 메인 템플릿 디렉토리
-	mainTemplateDir := "templates/layouts/"
-
 	// 템플릿 생성
-	tmpl, err := template.New(mainTemplateName).ParseGlob(filepath.Join(mainTemplateDir, "*.tmpl"))
+	tmpl, err := template.New(mainTemplateName).ParseGlob(filepath.Join("templates/bases/", "*.tmpl"))
+	if err != nil {
+		return
+	}
+
+	layoutTemplatePath := filepath.Join("templates/layouts/", layout+".tmpl")
+	_, err = tmpl.ParseFiles(layoutTemplatePath)
 	if err != nil {
 		return
 	}
