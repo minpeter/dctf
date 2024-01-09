@@ -6,6 +6,7 @@ import (
 	"os"
 	"runtime"
 
+	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/minpeter/telos/api"
 	"github.com/minpeter/telos/database"
@@ -44,7 +45,19 @@ func main() {
 	}
 
 	app := api.NewRouter()
-	app.NoRoute(utils.StaticWeb)
+	// app.NoRoute(utils.StaticWeb)
+	app.LoadHTMLGlob("templates/components/*")
+
+	view := app.Group("/")
+	view.GET("/", func(c *gin.Context) {
+		utils.RenderTemplates(c, gin.H{})
+	})
+
+	view.GET("/challenge", func(c *gin.Context) {
+		utils.RenderTemplates(c, gin.H{
+			"Text": "Hello, World!",
+		})
+	})
 
 	port := os.Getenv("PORT")
 	if port == "" {

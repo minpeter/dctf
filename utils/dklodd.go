@@ -8,12 +8,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"net/http"
 	"os"
-	"path/filepath"
 	"strconv"
 	"strings"
-	"text/template"
 	"time"
 
 	"github.com/docker/docker/api/types"
@@ -294,52 +291,4 @@ func GetChallbyId(id string) Challenge {
 	}
 	numberId, _ := strconv.Atoi(id)
 	return chall[numberId]
-}
-
-func RenderTemplates(c *gin.Context, Data any, optionTemplateName ...string) {
-
-	mainTemplateName := "main"
-
-	if c.GetHeader("Hx-Request") == "true" {
-		mainTemplateName = "htmx"
-	}
-
-	var templateName string
-
-	if len(optionTemplateName) == 0 {
-		templateName = c.Request.URL.Path
-
-		if templateName == "/" {
-			templateName = "main"
-		}
-	} else {
-		templateName = optionTemplateName[0]
-	}
-
-	// 메인 템플릿 디렉토리
-	mainTemplateDir := "templates/layouts/"
-
-	// 템플릿 생성
-	tmpl, err := template.New(mainTemplateName).ParseGlob(filepath.Join(mainTemplateDir, "*.tmpl"))
-	if err != nil {
-		return
-	}
-
-	// 서브 템플릿 등록
-	subTemplatePath := filepath.Join("templates/pages/", templateName+".tmpl")
-	_, err = tmpl.ParseFiles(subTemplatePath)
-	if err != nil {
-		return
-	}
-
-	// 렌더링 결과를 저장할 버퍼 생성
-	var result bytes.Buffer
-
-	// 템플릿 실행 및 결과를 버퍼에 쓰기
-	err = tmpl.ExecuteTemplate(&result, mainTemplateName+".tmpl", Data)
-	if err != nil {
-		return
-	}
-
-	c.Data(http.StatusOK, "text/html; charset=utf-8", result.Bytes())
 }
