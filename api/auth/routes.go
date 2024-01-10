@@ -1,16 +1,13 @@
 package auth
 
 import (
-	"context"
-	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/minpeter/telos/auth"
+	"github.com/minpeter/telos/auth/oauth"
 	"github.com/minpeter/telos/database"
-	"github.com/minpeter/telos/oauth"
 	"github.com/minpeter/telos/utils"
 )
 
@@ -35,57 +32,24 @@ func logoutHandler(c *gin.Context) {
 
 func GithubLoginHandler(c *gin.Context) {
 
-	url := oauth.GitHubLoginConfig.AuthCodeURL("randomstate")
-
-	// c.Redirect(http.StatusTemporaryRedirect, url)
+	url, err := oauth.GithubDialogUrl()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.Redirect(http.StatusTemporaryRedirect, url)
 	c.JSON(http.StatusOK, gin.H{"url": url})
+
 }
 
 func GithubCallbackHandler(c *gin.Context) {
 	state := c.Query("state")
-	if state != "randomstate" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "state is not valid"})
-		return
-	}
-
 	code := c.Query("code")
 
-	fmt.Println("state: ", state)
-	fmt.Println("code: ", code)
-
-	githubcon := oauth.GithubConfig()
-
-	token, err := githubcon.Exchange(context.Background(), code)
+	result, err := oauth.GithubCallback(state, code)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	// Create an HTTP client
-	client := &http.Client{}
-	req, err := http.NewRequest("GET", "https://api.github.com/user", nil)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	req.Header.Set("Authorization", "token "+token.AccessToken)
-	resp, err := client.Do(req)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	defer resp.Body.Close()
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	var result GithubUserResponse
-	if err := json.Unmarshal(body, &result); err != nil { // Parse []byte to go struct pointer
-		fmt.Println("Error parsing response:", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
 	user, has, err := database.GetuserByGithubId(result.ID)
@@ -102,11 +66,11 @@ func GithubCallbackHandler(c *gin.Context) {
 
 	login(user, c)
 
-	c.Redirect(http.StatusTemporaryRedirect, "/success")
+	// c.Redirect(http.StatusTemporaryRedirect, "/success")
 
 }
 
-func register(result GithubUserResponse, c *gin.Context) {
+func register(result oauth.GithubUserResponse, c *gin.Context) {
 	authToken, err := auth.UserRegister("open", result.Email, result.Login, result.ID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -115,9 +79,9 @@ func register(result GithubUserResponse, c *gin.Context) {
 
 	utils.SetCookie(c, "authToken", string(authToken))
 
-	// utils.SendResponse(c, "goodLogin", gin.H{
-	// 	"authToken": authToken,
-	// })
+	utils.SendResponse(c, "goodLogin", gin.H{
+		"authToken": authToken,
+	})
 
 	fmt.Println("register")
 }
@@ -132,24 +96,10 @@ func login(user database.User, c *gin.Context) {
 
 	utils.SetCookie(c, "authToken", string(authToken))
 
-	// utils.SendResponse(c, "goodLogin", gin.H{
-	// 	"authToken": authToken,
-	// })
+	utils.SendResponse(c, "goodLogin", gin.H{
+		"authToken": authToken,
+	})
 
 	fmt.Println("login")
 
-}
-
-type GithubUserResponse struct {
-	Login                   string `json:"login"`
-	ID                      int    `json:"id"`
-	AvatarURL               string `json:"avatar_url"`
-	URL                     string `json:"url"`
-	Name                    string `json:"name"`
-	Blog                    string `json:"blog"`
-	Location                string `json:"location"`
-	Email                   string `json:"email"`
-	Hireable                bool   `json:"hireable"`
-	Bio                     string `json:"bio"`
-	TwoFactorAuthentication bool   `json:"two_factor_authentication"`
 }
