@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 	"github.com/minpeter/telos/auth/oauth"
 	"github.com/minpeter/telos/templates/bases"
@@ -44,6 +46,8 @@ func HtmxRoute(app *gin.Engine) {
 	})
 
 	app.NoRoute(func(c *gin.Context) {
+
+		fmt.Println("NoRoute", c.Request.URL.Path)
 		utils.Render(c, bases.Data{
 			Header: []layouts.Header{
 				{
