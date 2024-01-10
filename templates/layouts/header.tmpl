@@ -1,0 +1,23 @@
+{{define "layout"}}
+
+<header>
+  <ul class="flex items-center justify-center flex-1 p-1 space-x-1 list-none    text-neutral-700 group ">
+
+    {{range $val := .Header}}
+
+    <li hx-boost="true">
+      <a href={{$val.Url}}
+        class="inline-flex items-center justify-center h-10 px-4 py-2 text-sm font-medium transition-colors rounded-md hover:text-neutral-900 focus:outline-none disabled:opacity-50 disabled:pointer-events-none bg-background hover:bg-neutral-100 group w-max">
+        {{$val.Title}}
+      </a>
+    </li>
+
+    {{end}}
+
+  </ul>
+
+</header>
+
+{{template "page" .}}
+
+{{end}}

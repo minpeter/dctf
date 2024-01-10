@@ -7,11 +7,32 @@ import (
 	"text/template"
 
 	"github.com/gin-gonic/gin"
+	"github.com/minpeter/telos/templates/bases"
+	"github.com/minpeter/telos/templates/layouts"
 )
 
-var count int = 0
+func Render(c *gin.Context) {
 
-func RenderTemplates(c *gin.Context, Data any) {
+	Data := bases.Data{
+		Header: []layouts.Header{
+			{
+				Title: "Home",
+				Url:   "/",
+			},
+			{
+				Title: "Challenge",
+				Url:   "/challenge",
+			},
+			{
+				Title: "About",
+				Url:   "/about",
+			},
+			{
+				Title: "Login",
+				Url:   "/login",
+			},
+		},
+	}
 
 	mainTemplateName := "root"
 
@@ -19,20 +40,13 @@ func RenderTemplates(c *gin.Context, Data any) {
 		mainTemplateName = "htmx"
 	}
 
-	count += 1
-	layout := "default"
-	if count%6 == 0 {
-		layout = "login"
-	} else if count%6 == 2 {
-		layout = "admin"
-	}
-
-	if c.GetHeader("Hx-Request") == "true" && layout == "default" {
+	var layout string
+	if Data.Header == nil {
 		layout = "empty"
 		c.Header("HX-Retarget", "#main")
 		c.Header("HX-Reswap", "outerHTML")
 	} else {
-		layout = "logout"
+		layout = "header"
 	}
 
 	templateName := c.Request.URL.Path
