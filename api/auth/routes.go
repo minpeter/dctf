@@ -8,6 +8,8 @@ import (
 	"github.com/minpeter/telos/auth"
 	"github.com/minpeter/telos/auth/oauth"
 	"github.com/minpeter/telos/database"
+	"github.com/minpeter/telos/templates/bases"
+	"github.com/minpeter/telos/templates/layouts"
 	"github.com/minpeter/telos/utils"
 )
 
@@ -48,14 +50,14 @@ func GithubCallbackHandler(c *gin.Context) {
 
 	result, err := oauth.GithubCallback(state, code)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		utils.ErrorRander(c, err)
 		return
 	}
 
 	user, has, err := database.GetuserByGithubId(result.ID)
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		utils.ErrorRander(c, err)
 		return
 	}
 
@@ -65,22 +67,40 @@ func GithubCallbackHandler(c *gin.Context) {
 	}
 
 	login(user, c)
-
-	// c.Redirect(http.StatusTemporaryRedirect, "/success")
-
 }
 
 func register(result oauth.GithubUserResponse, c *gin.Context) {
 	authToken, err := auth.UserRegister("open", result.Email, result.Login, result.ID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		utils.ErrorRander(c, err)
 		return
 	}
 
-	utils.SetCookie(c, "authToken", string(authToken))
+	utils.SetCookie(c, "authToken", authToken)
+	// utils.SendResponse(c, "goodLogin", gin.H{
+	// 	"authToken": authToken,
+	// })
 
-	utils.SendResponse(c, "goodLogin", gin.H{
-		"authToken": authToken,
+	utils.Render(c, bases.Data{
+		Header: []layouts.Header{
+			{
+				Title: "Home",
+				Url:   "/",
+			},
+			{
+				Title: "Challenge",
+				Url:   "/challenge",
+			},
+			{
+				Title: "About",
+				Url:   "/about",
+			},
+			{
+				Title: "Logout",
+				Url:   "/logout",
+			},
+		},
+		Page: "home",
 	})
 
 	fmt.Println("register")
@@ -88,16 +108,32 @@ func register(result oauth.GithubUserResponse, c *gin.Context) {
 
 func login(user database.User, c *gin.Context) {
 	authToken, err := auth.GetToken(user.Id)
-
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		utils.ErrorRander(c, err)
 		return
 	}
 
-	utils.SetCookie(c, "authToken", string(authToken))
-
-	utils.SendResponse(c, "goodLogin", gin.H{
-		"authToken": authToken,
+	utils.SetCookie(c, "authToken", authToken)
+	utils.Render(c, bases.Data{
+		Header: []layouts.Header{
+			{
+				Title: "Home",
+				Url:   "/",
+			},
+			{
+				Title: "Challenge",
+				Url:   "/challenge",
+			},
+			{
+				Title: "About",
+				Url:   "/about",
+			},
+			{
+				Title: "Logout",
+				Url:   "/logout",
+			},
+		},
+		Page: "home",
 	})
 
 	fmt.Println("login")

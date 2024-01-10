@@ -2,6 +2,7 @@ package utils
 
 import (
 	"bytes"
+	"errors"
 	"net/http"
 	"path/filepath"
 	"text/template"
@@ -10,13 +11,18 @@ import (
 	"github.com/minpeter/telos/templates/bases"
 )
 
+func ErrorRander(c *gin.Context, err error) {
+	Render(c, bases.Data{
+		Error: err,
+	})
+}
+
 func Render(c *gin.Context, Data bases.Data) {
 
 	mainTemplateName := "root"
 	if c.GetHeader("Hx-Request") == "true" {
 		mainTemplateName = "htmx"
 	}
-
 	tmpl, err := template.New(mainTemplateName).ParseGlob(filepath.Join("templates/bases/", "*.tmpl"))
 	if err != nil {
 		return
@@ -39,9 +45,23 @@ func Render(c *gin.Context, Data bases.Data) {
 	if templateName == "/" {
 		templateName = "home"
 	}
+	if Data.Error != nil {
+		templateName = "error"
+	}
+	if Data.Page != "" {
+		templateName = Data.Page
+	}
+
 	_, err = tmpl.ParseFiles(filepath.Join("templates/pages/", templateName+".tmpl"))
 	if err != nil {
-		return
+		templateName = "error"
+
+		_, err = tmpl.ParseFiles(filepath.Join("templates/pages/", templateName+".tmpl"))
+		if err != nil {
+			return
+		}
+
+		Data.Error = errors.New("404 Not Found")
 	}
 
 	var result bytes.Buffer

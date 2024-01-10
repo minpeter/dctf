@@ -16,7 +16,7 @@ func HtmxRoute(app *gin.Engine) {
 
 		url, err := oauth.GithubDialogUrl()
 		if err != nil {
-			c.JSON(500, gin.H{"error": err.Error()})
+			utils.ErrorRander(c, err)
 			return
 		}
 
@@ -42,6 +42,31 @@ func HtmxRoute(app *gin.Engine) {
 			Data: map[string]any{
 				"GitHubLoginURL": url,
 			},
+		})
+	})
+
+	app.GET("/error", func(c *gin.Context) {
+
+		utils.Render(c, bases.Data{
+			Header: []layouts.Header{
+				{
+					Title: "Home",
+					Url:   "/",
+				},
+				{
+					Title: "Challenge",
+					Url:   "/challenge",
+				},
+				{
+					Title: "About",
+					Url:   "/about",
+				},
+				{
+					Title: "Login",
+					Url:   "/login",
+				},
+			},
+			Error: fmt.Errorf("this is an error"),
 		})
 	})
 

@@ -5,4 +5,6 @@ import "github.com/minpeter/telos/templates/layouts"
 type Data struct {
 	Header []layouts.Header
 	Data   interface{}
+	Page   string
+	Error  error
 }
