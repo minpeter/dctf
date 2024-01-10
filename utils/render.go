@@ -8,31 +8,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/minpeter/telos/templates/bases"
-	"github.com/minpeter/telos/templates/layouts"
 )
 
-func Render(c *gin.Context) {
-
-	Data := bases.Data{
-		Header: []layouts.Header{
-			{
-				Title: "Home",
-				Url:   "/",
-			},
-			{
-				Title: "Challenge",
-				Url:   "/challenge",
-			},
-			{
-				Title: "About",
-				Url:   "/about",
-			},
-			{
-				Title: "Login",
-				Url:   "/login",
-			},
-		},
-	}
+func Render(c *gin.Context, Data bases.Data) {
 
 	mainTemplateName := "root"
 

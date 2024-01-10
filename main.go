@@ -44,8 +44,7 @@ func main() {
 	}
 
 	app := api.NewRouter()
-	// app.NoRoute(utils.StaticWeb)
-	app.NoRoute(utils.Render)
+	HtmxRoute(app)
 
 	port := os.Getenv("PORT")
 	if port == "" {
