@@ -8,8 +8,6 @@ import (
 	"github.com/minpeter/telos/auth"
 	"github.com/minpeter/telos/auth/oauth"
 	"github.com/minpeter/telos/database"
-	"github.com/minpeter/telos/templates/bases"
-	"github.com/minpeter/telos/templates/layouts"
 	"github.com/minpeter/telos/utils"
 )
 
@@ -81,27 +79,7 @@ func register(result oauth.GithubUserResponse, c *gin.Context) {
 	// 	"authToken": authToken,
 	// })
 
-	utils.Render(c, bases.Data{
-		Header: []layouts.Header{
-			{
-				Title: "Home",
-				Url:   "/",
-			},
-			{
-				Title: "Challenge",
-				Url:   "/challenge",
-			},
-			{
-				Title: "About",
-				Url:   "/about",
-			},
-			{
-				Title: "Logout",
-				Url:   "/logout",
-			},
-		},
-		Page: "home",
-	})
+	c.Redirect(http.StatusTemporaryRedirect, "/")
 
 	fmt.Println("register")
 }
@@ -114,27 +92,8 @@ func login(user database.User, c *gin.Context) {
 	}
 
 	utils.SetCookie(c, "authToken", authToken)
-	utils.Render(c, bases.Data{
-		Header: []layouts.Header{
-			{
-				Title: "Home",
-				Url:   "/",
-			},
-			{
-				Title: "Challenge",
-				Url:   "/challenge",
-			},
-			{
-				Title: "About",
-				Url:   "/about",
-			},
-			{
-				Title: "Logout",
-				Url:   "/logout",
-			},
-		},
-		Page: "home",
-	})
+
+	c.Redirect(http.StatusTemporaryRedirect, "/")
 
 	fmt.Println("login")
 

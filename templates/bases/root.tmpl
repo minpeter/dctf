@@ -4,9 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://unpkg.com/htmx.org@1.9.9/dist/htmx.min.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="//unpkg.com/htmx.org"></script>
   <script src="//unpkg.com/alpinejs" defer></script>
+  <script src="//cdn.tailwindcss.com"></script>
 
   <style>
     html {
@@ -31,13 +31,11 @@
   {{template "header" .}}
 
 
-  <main id="main" class="flex flex-col items-center justify-center
-flex-1 w-full max-w-4xl px-4 py-8 mx-auto space-y-8">
+  <main id="main" class="flex flex-col items-center justify-center flex-1 w-full max-w-4xl px-4 py-8 mx-auto space-y-8">
 
     {{template "content" .}}
 
   </main>
-
 
 </body>
 

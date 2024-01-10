@@ -9,12 +9,52 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/minpeter/telos/templates/bases"
+	"github.com/minpeter/telos/templates/layouts"
 )
 
 func ErrorRander(c *gin.Context, err error) {
 	Render(c, bases.Data{
 		Error: err,
 	})
+}
+
+var CommonHeader = []layouts.Header{
+	{
+		Title: "Home",
+		Url:   "/",
+	},
+	{
+		Title: "Scoreboard",
+		Url:   "/scoreboard",
+	},
+}
+
+var LogoutStateHeader = []layouts.Header{
+	{
+		Title: "Login",
+		Url:   "/login",
+	},
+}
+
+var LoginStateHeader = []layouts.Header{
+	{
+		Title: "Challenge",
+		Url:   "/challenge",
+	},
+	{
+		Title: "Profile",
+		Url:   "/profile",
+	},
+	{
+		Title: "Logout",
+		Url:   "/logout",
+	},
+}
+var AdminHeader = []layouts.Header{
+	{
+		Title: "Admin",
+		Url:   "/admin",
+	},
 }
 
 func Render(c *gin.Context, Data bases.Data) {
@@ -29,6 +69,16 @@ func Render(c *gin.Context, Data bases.Data) {
 	}
 
 	var layout string
+
+	_, err = c.Cookie("authToken")
+	if err != nil {
+		Data.Header = append(Data.Header, CommonHeader...)
+		Data.Header = append(Data.Header, LogoutStateHeader...)
+	} else {
+		Data.Header = append(Data.Header, CommonHeader...)
+		Data.Header = append(Data.Header, LoginStateHeader...)
+	}
+
 	if Data.Header == nil || c.GetHeader("Hx-Request") == "true" {
 		layout = "empty"
 		c.Header("HX-Retarget", "#main")
