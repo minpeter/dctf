@@ -20,13 +20,19 @@ func RenderTemplates(c *gin.Context, Data any) {
 	}
 
 	count += 1
-
-	layout := "logout"
-
-	if count%3 == 0 {
+	layout := "default"
+	if count%6 == 0 {
 		layout = "login"
-	} else if count%3 == 1 {
+	} else if count%6 == 2 {
 		layout = "admin"
+	}
+
+	if c.GetHeader("Hx-Request") == "true" && layout == "default" {
+		layout = "empty"
+		c.Header("HX-Retarget", "#main")
+		c.Header("HX-Reswap", "outerHTML")
+	} else {
+		layout = "logout"
 	}
 
 	templateName := c.Request.URL.Path
@@ -35,7 +41,6 @@ func RenderTemplates(c *gin.Context, Data any) {
 		templateName = "home"
 	}
 
-	// 템플릿 생성
 	tmpl, err := template.New(mainTemplateName).ParseGlob(filepath.Join("templates/bases/", "*.tmpl"))
 	if err != nil {
 		return
@@ -47,7 +52,12 @@ func RenderTemplates(c *gin.Context, Data any) {
 		return
 	}
 
-	// 서브 템플릿 등록
+	pageWrapperTemplatePath := filepath.Join("templates/pages/", "wrapper.tmpl")
+	_, err = tmpl.ParseFiles(pageWrapperTemplatePath)
+	if err != nil {
+		return
+	}
+
 	subTemplatePath := filepath.Join("templates/pages/", templateName+".tmpl")
 	_, err = tmpl.ParseFiles(subTemplatePath)
 	if err != nil {
