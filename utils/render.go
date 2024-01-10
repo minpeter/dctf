@@ -79,7 +79,7 @@ func Render(c *gin.Context, Data bases.Data) {
 		Data.Header = append(Data.Header, LoginStateHeader...)
 	}
 
-	if Data.Header == nil || c.GetHeader("Hx-Request") == "true" {
+	if c.GetHeader("Hx-Request") == "true" {
 		layout = "empty"
 		c.Header("HX-Retarget", "#main")
 		c.Header("HX-Reswap", "outerHTML")

@@ -27,7 +27,7 @@ func loginCheckHandler(c *gin.Context) {
 
 func logoutHandler(c *gin.Context) {
 	utils.RemoveCookie(c, "authToken")
-	utils.SendResponse(c, "goodLogout", gin.H{})
+
 }
 
 func GithubLoginHandler(c *gin.Context) {
