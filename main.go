@@ -8,8 +8,8 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/minpeter/telos/api"
+	"github.com/minpeter/telos/auth/oauth"
 	"github.com/minpeter/telos/database"
-	"github.com/minpeter/telos/oauth"
 	"github.com/minpeter/telos/utils"
 )
 
@@ -45,13 +45,7 @@ func main() {
 
 	app := api.NewRouter()
 	// app.NoRoute(utils.StaticWeb)
-
-	{
-		// app.LoadHTMLGlob("templates/components/*")
-
-		app.NoRoute(utils.Render)
-
-	}
+	app.NoRoute(utils.Render)
 
 	port := os.Getenv("PORT")
 	if port == "" {

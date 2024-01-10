@@ -7,6 +7,7 @@ require (
 	github.com/gin-gonic/gin v1.9.1
 	github.com/google/uuid v1.5.0
 	github.com/joho/godotenv v1.5.1
+	github.com/muesli/cache2go v0.0.0-20221011235721-518229cd8021
 	github.com/vincent-petithory/dataurl v1.0.0
 	golang.org/x/oauth2 v0.15.0
 	modernc.org/sqlite v1.28.0
