@@ -39,6 +39,12 @@ func HtmxRoute(app *gin.Engine) {
 		})
 	})
 
+	app.GET("/components/modal", func(c *gin.Context) {
+
+		c.File("./templates/components/modal.tmpl")
+
+	})
+
 	app.NoRoute(func(c *gin.Context) {
 
 		fmt.Println("NoRoute", c.Request.URL.Path)
