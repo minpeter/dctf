@@ -6,6 +6,7 @@ import (
 	"os"
 	"runtime"
 
+	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/minpeter/telos/api"
 	"github.com/minpeter/telos/auth/oauth"
@@ -44,6 +45,11 @@ func main() {
 	}
 
 	app := api.NewRouter()
+
+	app.GET("/robots.txt", func(c *gin.Context) {
+		c.Data(200, "text/plain", []byte("User-agent: *\nDisallow: /"))
+	})
+
 	HtmxRoute(app)
 
 	port := os.Getenv("PORT")

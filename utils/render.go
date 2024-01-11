@@ -29,14 +29,14 @@ var CommonHeader = []layouts.Header{
 	},
 }
 
-var LogoutStateHeader = []layouts.Header{
+var LogoutHeader = []layouts.Header{
 	{
 		Title: "Login",
 		Url:   "/login",
 	},
 }
 
-var LoginStateHeader = []layouts.Header{
+var LoginHeader = []layouts.Header{
 	{
 		Title: "Challenge",
 		Url:   "/challenge",
@@ -57,6 +57,10 @@ var AdminHeader = []layouts.Header{
 	},
 }
 
+var LogoutStateHeader = append(CommonHeader, LogoutHeader...)
+var LoginStateHeader = append(CommonHeader, LoginHeader...)
+var AdminStateHeader = append(CommonHeader, AdminHeader...)
+
 func Render(c *gin.Context, Data bases.Data) {
 
 	mainTemplateName := "root"
@@ -70,16 +74,16 @@ func Render(c *gin.Context, Data bases.Data) {
 
 	var layout string
 
-	_, err = c.Cookie("authToken")
-	if err != nil {
-		Data.Header = append(Data.Header, CommonHeader...)
-		Data.Header = append(Data.Header, LogoutStateHeader...)
-	} else {
-		Data.Header = append(Data.Header, CommonHeader...)
-		Data.Header = append(Data.Header, LoginStateHeader...)
+	if Data.Header == nil {
+		_, err = c.Cookie("authToken")
+		if err != nil {
+			Data.Header = LogoutStateHeader
+		} else {
+			Data.Header = LoginStateHeader
+		}
 	}
 
-	if c.GetHeader("Hx-Request") == "true" {
+	if c.GetHeader("Hx-Request") == "true" && Data.Header == nil {
 		layout = "empty"
 		c.Header("HX-Retarget", "#main")
 		c.Header("HX-Reswap", "outerHTML")

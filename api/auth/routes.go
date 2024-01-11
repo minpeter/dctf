@@ -8,12 +8,13 @@ import (
 	"github.com/minpeter/telos/auth"
 	"github.com/minpeter/telos/auth/oauth"
 	"github.com/minpeter/telos/database"
+	"github.com/minpeter/telos/templates/bases"
 	"github.com/minpeter/telos/utils"
 )
 
 func Routes(authRoutes *gin.RouterGroup) {
 
-	authRoutes.POST("/logout", logoutHandler)
+	authRoutes.GET("/logout", logoutHandler)
 	authRoutes.GET("/callback/github", GithubCallbackHandler)
 	authRoutes.GET("/login/github", GithubLoginHandler)
 	authRoutes.POST("/login/check", auth.AuthTokenMiddleware(), loginCheckHandler)
@@ -27,6 +28,12 @@ func loginCheckHandler(c *gin.Context) {
 
 func logoutHandler(c *gin.Context) {
 	utils.RemoveCookie(c, "authToken")
+
+	c.Header("HX-Push-Url", "/home")
+	utils.Render(c, bases.Data{
+		Header: utils.LogoutStateHeader,
+		Page:   "home",
+	})
 
 }
 
