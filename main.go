@@ -18,15 +18,19 @@ func main() {
 
 	utils.Tq = utils.NewTimedQueue(10)
 
-	utils.LoadOnlineSandbox()
+	// utils.LoadOnlineSandbox()
 
-	if _, err := utils.CRLogin(); err != nil {
-		fmt.Println("CR Login Error: ", err)
+	// if _, err := utils.CRLogin(); err != nil {
+	// 	fmt.Println("CR Login Error: ", err)
 
-		fmt.Println("plz provide your own credentials CR_USERNAME and CR_PASSWORD")
-	}
+	// 	fmt.Println("plz provide your own credentials CR_USERNAME and CR_PASSWORD")
+	// }
 
 	err := godotenv.Load(".env")
+	if err != nil {
+		fmt.Println("missing .env file")
+		fmt.Println("using environment variables")
+	}
 
 	oauth.GithubConfig()
 
@@ -34,11 +38,6 @@ func main() {
 	fmt.Println("PORT: port to run the server on (optional, default 4000)")
 	fmt.Println("GITHUB_CLIENT_ID: GitHub OAuth client ID (required)")
 	fmt.Printf("GITHUB_CLIENT_SECRET: GitHub OAuth client secret (required)\n\n")
-
-	if err != nil {
-		fmt.Println("missing .env file")
-		fmt.Println("using environment variables")
-	}
 
 	if err := database.ConnectDatabase(); err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
