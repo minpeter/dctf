@@ -11,5 +11,6 @@ RUN go build -o /app/server .
 FROM alpine
 WORKDIR /app
 COPY --from=build /app/server /app/server
+COPY templates /app/templates
 EXPOSE 4000
 CMD ./server
