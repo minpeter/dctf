@@ -26,6 +26,12 @@ func HtmxRoute(app *gin.Engine) {
 		})
 	})
 
+	app.GET("/logout", func(c *gin.Context) {
+
+		utils.RemoveCookie(c, "authToken")
+		utils.Render(c, bases.Data{})
+	})
+
 	app.GET("/error", func(c *gin.Context) {
 
 		utils.Render(c, bases.Data{

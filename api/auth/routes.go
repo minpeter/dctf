@@ -27,9 +27,8 @@ func loginCheckHandler(c *gin.Context) {
 }
 
 func logoutHandler(c *gin.Context) {
-	utils.RemoveCookie(c, "authToken")
 
-	c.Header("HX-Push-Url", "/home")
+	utils.RemoveCookie(c, "authToken")
 	utils.Render(c, bases.Data{
 		Header: utils.LogoutStateHeader,
 		Page:   "home",
