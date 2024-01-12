@@ -15,8 +15,10 @@ export default function Page() {
 
       <Button asChild>
         <a
-          href={`/api/auth/login/github?redirect=${
-            location.protocol + "//" + location.host
+          href={`/api/auth/login/github${
+            typeof window !== "undefined"
+              ? "?redirect=" + location.protocol + "//" + location.host
+              : ""
           }`}
         >
           <GitHubLogoIcon className="mr-2 h-4 w-4" /> Login with GitHub

@@ -16,6 +16,16 @@ import (
 
 func main() {
 
+	patorjk := `
+▄▄▄▄▄▄▄▄ .▄▄▌        .▄▄ · 
+•██  ▀▄.▀·██•  ▪     ▐█ ▀. 
+▐█.▪▐▀▀▪▄██▪   ▄█▀▄ ▄▀▀▀█▄
+▐█▌·▐█▄▄▌▐█▌▐▌▐█▌.▐▌▐█▄▪▐█
+▀▀▀  ▀▀▀ .▀▀▀  ▀█▄▀▪ ▀▀▀▀ 
+`
+
+	fmt.Println("\n\n", patorjk)
+
 	utils.Tq = utils.NewTimedQueue(10)
 
 	// utils.LoadOnlineSandbox()
@@ -41,7 +51,7 @@ func main() {
 	ISDEV := os.Getenv("IS_DEVELOPMENT") == "true"
 
 	if !ISDEV {
-		fmt.Println("\n\n======== PRODUCTION MODE ========")
+		fmt.Println("======== PRODUCTION MODE ========")
 		gin.SetMode(gin.ReleaseMode)
 	}
 
