@@ -9,18 +9,14 @@ export function SetLoginState() {
 
 export function relog() {
   localStorage.removeItem("login_state");
+  localStorage.removeItem("auth_token");
   window.location.href = "/login";
 }
 
 export async function Logout() {
-  const resp = await request("POST", "/auth/logout", {});
-
-  if (resp.kind === "goodLogout") {
-    localStorage.removeItem("login_state");
-    window.location.href = "/";
-  }
-
-  return resp;
+  localStorage.removeItem("login_state");
+  localStorage.removeItem("auth_token");
+  window.location.href = "/";
 }
 
 export async function CheckLogin() {
