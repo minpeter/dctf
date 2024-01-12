@@ -64,6 +64,8 @@ func GithubCallbackHandler(c *gin.Context) {
 		return
 	}
 
+	defer oauth.OauthStateCache.Delete(request.State)
+
 	if request.State == "" || request.Code == "" {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "State or code is missing."})
 		return
