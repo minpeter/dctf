@@ -3,58 +3,43 @@ package oauth
 import (
 	"context"
 	"encoding/json"
-	"errors"
-	"fmt"
 	"io"
-	"time"
-
-	"github.com/google/uuid"
 )
 
-func GithubDialogUrl() (string, error) {
-	key := uuid.New().String()[0:18]
+func GithubCallback(state string, code string) (GithubUserResponse, string, error) {
 
-	OauthStateCache.Add(string(key), 10*time.Minute, key)
-
-	url := GitHubLoginConfig.AuthCodeURL(key)
-
-	fmt.Println(url)
-
-	return url, nil
-}
-
-func GithubCallback(state string, code string) (GithubUserResponse, error) {
-	if !OauthStateCache.Exists(state) {
-		return GithubUserResponse{}, errors.New("invalid oauth state")
+	requester, err := OauthStateCache.Value(state)
+	if err != nil {
+		return GithubUserResponse{}, "", err
 	}
 
 	githubcon := GithubConfig()
 
 	token, err := githubcon.Exchange(context.Background(), code)
 	if err != nil {
-		return GithubUserResponse{}, err
+		return GithubUserResponse{}, "", err
 	}
 
 	client := githubcon.Client(context.Background(), token)
 
 	resp, err := client.Get("https://api.github.com/user")
 	if err != nil {
-		return GithubUserResponse{}, err
+		return GithubUserResponse{}, "", err
 	}
 
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return GithubUserResponse{}, err
+		return GithubUserResponse{}, "", err
 	}
 
 	var result GithubUserResponse
 	if err := json.Unmarshal(body, &result); err != nil {
-		return GithubUserResponse{}, err
+		return GithubUserResponse{}, "", err
 	}
 
-	return result, nil
+	return result, requester.Data().(string), nil
 }
 
 type GithubUserResponse struct {
