@@ -15,7 +15,7 @@ var OauthStateCache = cache2go.Cache("oauthState")
 func GithubConfig() oauth2.Config {
 
 	if os.Getenv("OAUTH_REDIRECT_URL") == "" {
-		os.Setenv("OAUTH_REDIRECT_URL", "http://localhost:4000")
+		os.Setenv("OAUTH_REDIRECT_URL", "http://localhost:3000")
 	}
 
 	GitHubLoginConfig = oauth2.Config{
