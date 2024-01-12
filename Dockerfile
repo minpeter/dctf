@@ -17,7 +17,6 @@ RUN go build -o /app/server .
 FROM alpine
 
 WORKDIR /app
-COPY client-config.json /app/client-config.json
 COPY --from=front-build /app/out /app/ui/out
 COPY --from=back-build /app/server /app/server
 EXPOSE 4000

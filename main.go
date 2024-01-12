@@ -6,6 +6,7 @@ import (
 	"os"
 	"runtime"
 
+	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/minpeter/telos/api"
 	"github.com/minpeter/telos/auth/oauth"
@@ -27,18 +28,28 @@ func main() {
 
 	err := godotenv.Load(".env")
 
-	oauth.GithubConfig()
-
-	fmt.Println("\n\n===== ENVIRONMENT VARIABLES =====")
-	fmt.Println("PORT: port to run the server on (optional, default 4000)")
-	fmt.Println("OAUTH_REDIRECT_URL: OAuth redirect URL (required, default http://localhost:4000)")
-	fmt.Println("GITHUB_CLIENT_ID: GitHub OAuth client ID (required)")
-	fmt.Printf("GITHUB_CLIENT_SECRET: GitHub OAuth client secret (required)\n\n")
-
 	if err != nil {
 		fmt.Println("missing .env file")
 		fmt.Println("using environment variables")
 	}
+
+	oauth.GithubConfig()
+
+	P := os.Getenv("PORT")
+	GCI := os.Getenv("GITHUB_CLIENT_ID") != ""
+	GCS := os.Getenv("GITHUB_CLIENT_SECRET") != ""
+	ISDEV := os.Getenv("IS_DEVELOPMENT") == "true"
+
+	if !ISDEV {
+		fmt.Println("\n\n======== PRODUCTION MODE ========")
+		gin.SetMode(gin.ReleaseMode)
+	}
+
+	fmt.Println("\n===== ENVIRONMENT VARIABLES =====")
+	fmt.Printf("PORT: port to run the server on (optional, default 4000) %s\n", P)
+	fmt.Printf("IS_DEVELOPMENT: development mode (optional, default false) %v\n", ISDEV)
+	fmt.Printf("GITHUB_CLIENT_ID: GitHub OAuth client ID (required) %v\n", GCI)
+	fmt.Printf("GITHUB_CLIENT_SECRET: GitHub OAuth client secret (required) %v\n", GCS)
 
 	if err := database.ConnectDatabase(); err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
