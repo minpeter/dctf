@@ -248,7 +248,12 @@ export default function Page() {
       </div>
       <div className="flex flex-col space-y-4">
         {solvedCount == problems.length && !showSolved ? (
-          <div>I solved all the problems.</div>
+          <div className="w-96 mx-20">
+            <div className="text-2xl font-bold">Congratulations!</div>
+            <div className="text-lg font-bold">
+              You have solved all the problems.
+            </div>
+          </div>
         ) : (
           problemsToDisplay.map((problem: ProblemProps) => {
             return (
