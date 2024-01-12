@@ -9,8 +9,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/minpeter/telos/auth"
+	"github.com/minpeter/telos/auth/oauth"
 	"github.com/minpeter/telos/database"
-	"github.com/minpeter/telos/oauth"
 	"github.com/minpeter/telos/utils"
 )
 
