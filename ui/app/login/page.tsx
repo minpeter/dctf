@@ -9,20 +9,35 @@ import { GithubLogin, SetLoginState } from "@/api/auth";
 import { toast } from "sonner";
 
 export default function Page() {
+  const onGithubLogin = async () => {
+    const resp = await GithubLogin();
+
+    if (resp.error) {
+      toast.error(resp.error);
+      return;
+    } else {
+      console.log(resp.url);
+
+      window.location.href = resp.url;
+
+      // var popup = window.open(
+      //   resp.url,
+      //   "Github oauth login",
+      //   "width=700px,height=800px"
+      // );
+
+      // if (popup) {
+      //   popup.focus();
+      // }
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-center gap-4 w-full max-w-md mx-auto">
       <h1 className="text-4xl font-bold mb-4">Log in to Telos</h1>
 
-      <Button asChild>
-        <a
-          href={`/api/auth/login/github${
-            typeof window !== "undefined"
-              ? "?redirect=" + location.protocol + "//" + location.host
-              : ""
-          }`}
-        >
-          <GitHubLogoIcon className="mr-2 h-4 w-4" /> Login with GitHub
-        </a>
+      <Button onClick={onGithubLogin}>
+        <GitHubLogoIcon className="mr-2 h-4 w-4" /> Login with GitHub
       </Button>
 
       <div className="flex flex-col items-center justify-center">

@@ -17,8 +17,8 @@ func Routes(authRoutes *gin.RouterGroup) {
 
 	authRoutes.GET("/logout", logoutHandler)
 
-	authRoutes.GET("/login/github", GithubLoginHandler)
-	authRoutes.GET("/callback/github", GithubCallbackHandler)
+	authRoutes.POST("/login/github", GithubLoginHandler)
+	authRoutes.POST("/callback/github", GithubCallbackHandler)
 
 	authRoutes.POST("/login/check", auth.AuthTokenMiddleware(), loginCheckHandler)
 
@@ -49,14 +49,27 @@ func GithubLoginHandler(c *gin.Context) {
 	oauth.OauthStateCache.Add(state, 10*time.Minute, Requester)
 	url := oauth.GitHubLoginConfig.AuthCodeURL(state)
 	fmt.Println(url)
-	c.Redirect(http.StatusTemporaryRedirect, url)
+
+	utils.SendResponse(c, "goodGithubUrl", gin.H{"url": url})
 }
 
 func GithubCallbackHandler(c *gin.Context) {
-	state := c.Query("state")
-	code := c.Query("code")
+	var request struct {
+		State string `json:"state"`
+		Code  string `json:"code"`
+	}
 
-	result, requester, err := oauth.GithubCallback(state, code)
+	if err := c.ShouldBindJSON(&request); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if request.State == "" || request.Code == "" {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "State or code is missing."})
+		return
+	}
+
+	result, requester, err := oauth.GithubCallback(request.State, request.Code)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -82,7 +95,13 @@ func GithubCallbackHandler(c *gin.Context) {
 		return
 	}
 
-	utils.SetCookie(c, "authToken", authToken)
-	c.Redirect(http.StatusTemporaryRedirect, requester)
+	utils.SendResponse(
+		c,
+		"goodAuth",
+		gin.H{
+			"authToken": authToken,
+			"requester": requester,
+		},
+	)
 
 }

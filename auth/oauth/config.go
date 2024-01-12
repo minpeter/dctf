@@ -19,7 +19,7 @@ func GithubConfig() oauth2.Config {
 	}
 
 	GitHubLoginConfig = oauth2.Config{
-		RedirectURL:  os.Getenv("OAUTH_REDIRECT_URL") + "/api/auth/callback/github",
+		RedirectURL:  os.Getenv("OAUTH_REDIRECT_URL") + "/login/callback/github",
 		ClientID:     os.Getenv("GITHUB_CLIENT_ID"),
 		ClientSecret: os.Getenv("GITHUB_CLIENT_SECRET"),
 		Scopes:       []string{"user"},

@@ -6,8 +6,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+var FilePath = "ui/out"
+
 func StaticWeb(c *gin.Context) {
-	FilePath := "ui/out"
 	path := c.Request.URL.Path
 
 	filePaths := []string{
@@ -28,5 +29,9 @@ func StaticWeb(c *gin.Context) {
 		return
 	}
 
-	c.File(FilePath + "/404.html")
+	c.File(FilePath + "/error/404.html")
+}
+
+func StaticError500(c *gin.Context) {
+	c.File(FilePath + "/error/500.html")
 }

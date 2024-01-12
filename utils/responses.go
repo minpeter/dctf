@@ -23,6 +23,14 @@ func SendResponse(c *gin.Context, kind string, data interface{}) {
 }
 
 var Responses = map[string]Response{
+	"goodAuth": {
+		Status:  200,
+		Message: "The user is authenticated.",
+	},
+	"goodGithubUrl": {
+		Status:  200,
+		Message: "The Github login URL was retrieved.",
+	},
 	"goodUserCheck": {
 		Status:  200,
 		Message: "The user is logged in.",

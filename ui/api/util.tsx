@@ -47,6 +47,10 @@ export const request = (
 
   const headers: { [key: string]: string } = {};
 
+  if (localStorage.auth_token) {
+    headers.Authorization = `Bearer ${localStorage.auth_token}`;
+  }
+
   if (body) {
     headers["Content-Type"] = "application/json";
   }

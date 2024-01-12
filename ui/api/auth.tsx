@@ -33,14 +33,33 @@ export async function CheckLogin() {
   }
 }
 
-export async function GithubLogin({ githubCode }: { githubCode: string }) {
+export async function GithubLogin() {
+  const resp = await request("POST", "/auth/login/github", {});
+
+  if (resp.kind === "goodGithubUrl") {
+    return { error: null, url: resp.data.url };
+  }
+
+  return { error: "Unknown error" };
+}
+
+export async function GithubCallback({
+  code,
+  state,
+}: {
+  code: string;
+  state: string;
+}) {
   const resp = await request("POST", "/auth/callback/github", {
-    githubCode,
+    code,
+    state,
   });
 
-  if (resp.kind === "goodLogin") {
-    return { error: null };
+  console.log(resp);
+
+  if (resp.kind === "goodAuth") {
+    return { error: null, authToken: resp.data.authToken };
   } else {
-    return { error: "Unknown error" };
+    return { error: "Unknown error", authToken: null };
   }
 }

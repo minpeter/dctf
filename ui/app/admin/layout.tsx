@@ -4,7 +4,7 @@ import { checkAdmin } from "@/api/admin";
 
 import { useState, useEffect } from "react";
 
-import NotFound from "../404/page";
+import NotFound from "../error/404/page";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [admin, setAdmin] = useState(false);

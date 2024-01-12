@@ -48,6 +48,7 @@ func main() {
 	P := os.Getenv("PORT")
 	GCI := os.Getenv("GITHUB_CLIENT_ID") != ""
 	GCS := os.Getenv("GITHUB_CLIENT_SECRET") != ""
+	ORU := os.Getenv("OAUTH_REDIRECT_URL") != ""
 	ISDEV := os.Getenv("IS_DEVELOPMENT") == "true"
 
 	if !ISDEV {
@@ -58,6 +59,7 @@ func main() {
 	fmt.Println("\n===== ENVIRONMENT VARIABLES =====")
 	fmt.Printf("PORT: port to run the server on (optional, default 4000) %s\n", P)
 	fmt.Printf("IS_DEVELOPMENT: development mode (optional, default false) %v\n", ISDEV)
+	fmt.Printf("OAUTH_REDIRECT_URL: OAuth redirect URL (required) %v\n", ORU)
 	fmt.Printf("GITHUB_CLIENT_ID: GitHub OAuth client ID (required) %v\n", GCI)
 	fmt.Printf("GITHUB_CLIENT_SECRET: GitHub OAuth client secret (required) %v\n", GCS)
 
@@ -66,7 +68,16 @@ func main() {
 	}
 
 	app := api.NewRouter()
-	app.NoRoute(utils.StaticWeb)
+
+	if ISDEV {
+		app.NoRoute(
+			func(c *gin.Context) {
+				c.JSON(404, gin.H{"message": "THIS IS DEVELOPMENT MODE",
+					"status": 404})
+			})
+	} else {
+		app.NoRoute(utils.StaticWeb)
+	}
 
 	port := os.Getenv("PORT")
 	if port == "" {

@@ -16,15 +16,15 @@ func AuthTokenMiddleware(params ...int) gin.HandlerFunc {
 	}
 
 	return func(c *gin.Context) {
-		cookie, err := c.Cookie("authToken")
-		if err != nil {
-			log.Printf("cookie error: %s", err.Error())
+		authHeader := c.GetHeader("Authorization")
+
+		if authHeader == "" && authHeader[:7] != "Bearer " {
 			utils.SendResponse(c, "badToken", nil)
-			c.Abort()
 			return
 		}
 
-		uuid, err := GetData(cookie)
+		log.Printf("authHeader: %s", authHeader)
+		uuid, err := GetData(authHeader[7:])
 		if err != nil {
 			utils.SendResponse(c, "badToken", nil)
 			c.Abort()
@@ -47,7 +47,7 @@ func AuthTokenMiddleware(params ...int) gin.HandlerFunc {
 		c.Set("user", user)
 		c.Set("userid", user.Id)
 
-		fmt.Println("!!MIDDLEWARE!! cookie: ", cookie)
+		fmt.Println("!!MIDDLEWARE!! Auth Token: ", authHeader)
 		fmt.Println("!!MIDDLEWARE!! user authenticated: ", user)
 
 		c.Next()
