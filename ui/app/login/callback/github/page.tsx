@@ -10,6 +10,8 @@ export default function Page() {
   const searchParams = useSearchParams();
   const code = searchParams.get("code");
   const state = searchParams.get("state");
+  const githubError = searchParams.get("error");
+  const githubErrorDescription = searchParams.get("error_description");
 
   const [error, setError] = useState<string | null>(null);
 
@@ -37,10 +39,20 @@ export default function Page() {
     }
   }, [code, state]);
 
+  useEffect(() => {
+    if (githubError) {
+      setError(githubErrorDescription);
+    }
+  }, [githubError, githubErrorDescription]);
+
   return (
     <div className="flex flex-col items-center justify-center gap-4">
       <h1 className="text-4xl font-bold">
-        {error ? "internal server error" : "Logging in..."}
+        {error
+          ? githubError
+            ? "Github login failed"
+            : "internal server error"
+          : "Logging in..."}
       </h1>
 
       {error && <p className="text-gray-400">{error}</p>}
