@@ -28,7 +28,18 @@ import { useState, useEffect } from "react";
 
 import { usePathname } from "next/navigation";
 
-export default function Navbar() {
+import * as React from "react";
+import { ChevronsUpDown } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Command, CommandGroup, CommandItem } from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+export function Navbar() {
   const [isClient, setIsClient] = useState(false);
   const [admin, setAdmin] = useState(false);
 
@@ -157,6 +168,70 @@ export default function Navbar() {
           </NavigationMenuList>
         </NavigationMenu>
       )}
+    </div>
+  );
+}
+
+const navlink = [
+  {
+    value: "Home",
+    label: "Home",
+  },
+  {
+    value: "Scoreboard",
+    label: "Scoreboard",
+  },
+  {
+    value: "Profile",
+    label: "Profile",
+  },
+  {
+    value: "Challenges",
+    label: "Challenges",
+  },
+  {
+    value: "Logout",
+    label: "Logout",
+  },
+];
+
+export function MobileNavbar() {
+  const [open, setOpen] = React.useState(false);
+  const [value, setValue] = React.useState(navlink[0].value);
+
+  return (
+    <div className="flex sm:hidden justify-center w-full max-w-screen-lg px-5 mb-2">
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            className="w-[400px] justify-between"
+          >
+            {value}
+            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[350px] p-0">
+          <Command>
+            <CommandGroup>
+              {navlink.map((framework) => (
+                <CommandItem
+                  key={framework.value}
+                  value={framework.value}
+                  onSelect={(currentValue) => {
+                    setValue(currentValue === value ? "" : currentValue);
+                    setOpen(false);
+                  }}
+                >
+                  {framework.label}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </Command>
+        </PopoverContent>
+      </Popover>
     </div>
   );
 }
