@@ -58,7 +58,7 @@ export default function Navbar() {
   }, [loggedIn]);
 
   return (
-    <div className="mt-10 w-full items-center justify-center flex flex-col">
+    <div className="flex-col hidden sm:flex">
       <NavigationMenu>
         <NavigationMenuList>
           {admin && (

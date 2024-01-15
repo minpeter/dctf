@@ -26,13 +26,14 @@ export default function RootLayout({
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
+          "flex flex-col items-center",
+          "py-5",
           fontSans.variable
         )}
       >
         <Navbar />
-        <div className="flex flex-col items-center justify-center p-10 mb-24">
-          {children}
-        </div>
+
+        <div className="w-full max-w-screen-lg px-5">{children}</div>
         <Toaster />
       </body>
     </html>
