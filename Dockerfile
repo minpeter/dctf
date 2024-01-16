@@ -2,7 +2,7 @@ FROM node:20-slim AS front-build
 
 WORKDIR /app
 COPY ui/package.json ui/yarn.lock ./
-RUN yarn install --frozen-lockfile && yarn cache clean
+RUN yarn install
 COPY ui .
 RUN yarn build
 

@@ -256,7 +256,7 @@ export function Navbar() {
               <CommandGroup>
                 {commonLink.map((linkitem) => (
                   <CommandItem
-                    key={linkitem.label}
+                    key={linkitem.link}
                     value={linkitem.label}
                     onSelect={() => {
                       setLink(linkitem.label);
@@ -271,7 +271,7 @@ export function Navbar() {
                 {isClient && loggedIn
                   ? loginLink.map((linkitem) =>
                       linkitem.label === "Logout" ? (
-                        <AlertDialog key={linkitem.label}>
+                        <AlertDialog key={linkitem.link}>
                           <AlertDialogTrigger className="w-full">
                             <CommandItem value={linkitem.label}>
                               {linkitem.label}
@@ -300,7 +300,7 @@ export function Navbar() {
                         </AlertDialog>
                       ) : (
                         <CommandItem
-                          key={linkitem.label}
+                          key={linkitem.link}
                           value={linkitem.label}
                           onSelect={() => {
                             setLink(linkitem.label);
@@ -314,7 +314,7 @@ export function Navbar() {
                     )
                   : logoutLink.map((linkitem) => (
                       <CommandItem
-                        key={linkitem.label}
+                        key={linkitem.link}
                         value={linkitem.label}
                         onSelect={() => {
                           setLink(linkitem.label);
@@ -329,7 +329,7 @@ export function Navbar() {
                 {admin &&
                   adminLink.map((linkitem) => (
                     <CommandItem
-                      key={linkitem.label}
+                      key={linkitem.link}
                       value={linkitem.label}
                       onSelect={() => {
                         setLink(linkitem.label);
