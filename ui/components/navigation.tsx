@@ -39,9 +39,35 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
+const navlink = [
+  {
+    value: "Home",
+    label: "Home",
+  },
+  {
+    value: "Scoreboard",
+    label: "Scoreboard",
+  },
+  {
+    value: "Profile",
+    label: "Profile",
+  },
+  {
+    value: "Challenges",
+    label: "Challenges",
+  },
+  {
+    value: "Logout",
+    label: "Logout",
+  },
+];
+
 export function Navbar() {
   const [isClient, setIsClient] = useState(false);
   const [admin, setAdmin] = useState(false);
+
+  const [open, setOpen] = React.useState(false);
+  const [value, setValue] = React.useState(navlink[0].value);
 
   const pathname = usePathname();
 
@@ -69,169 +95,146 @@ export function Navbar() {
   }, [loggedIn]);
 
   return (
-    <div className="flex-col hidden sm:flex">
-      <NavigationMenu>
-        <NavigationMenuList>
-          {admin && (
-            <NavigationMenuItem>
-              <Link href="/admin" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Admin
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
-          )}
-
-          <NavigationMenuItem>
-            <Link href="/" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Home
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
-
-          <NavigationMenuItem>
-            <Link href="/scores" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Scoreboard
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
-
-          {isClient && loggedIn ? (
-            <>
+    <div className="h-16 flex justify-between items-center">
+      <div className="hidden sm:flex">
+        <NavigationMenu>
+          <NavigationMenuList>
+            {admin && (
               <NavigationMenuItem>
-                <Link href="/profile" legacyBehavior passHref>
+                <Link href="/admin" legacyBehavior passHref>
                   <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    Profile
+                    Admin
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
+            )}
+
+            <NavigationMenuItem>
+              <Link href="/" legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  Home
+                </NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
+
+            <NavigationMenuItem>
+              <Link href="/scores" legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  Scoreboard
+                </NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
+
+            {isClient && loggedIn ? (
+              <>
+                <NavigationMenuItem>
+                  <Link href="/profile" legacyBehavior passHref>
+                    <NavigationMenuLink
+                      className={navigationMenuTriggerStyle()}
+                    >
+                      Profile
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <Link href="/challs" legacyBehavior passHref>
+                    <NavigationMenuLink
+                      className={navigationMenuTriggerStyle()}
+                    >
+                      Challenges
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <AlertDialog>
+                    <NavigationMenuLink
+                      className={navigationMenuTriggerStyle()}
+                    >
+                      <AlertDialogTrigger>Logout</AlertDialogTrigger>
+                    </NavigationMenuLink>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Logout</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Are you sure you want to logout?
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={Logout}>
+                          Logout
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </NavigationMenuItem>
+              </>
+            ) : (
               <NavigationMenuItem>
-                <Link href="/challs" legacyBehavior passHref>
+                <Link href="/login" legacyBehavior passHref>
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    Login
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+            )}
+          </NavigationMenuList>
+        </NavigationMenu>
+
+        {showAdminNav && admin && (
+          <NavigationMenu className="mt-1">
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <Link href="/admin/challs" legacyBehavior passHref>
                   <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                     Challenges
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <AlertDialog>
+                <Link href="/admin/users" legacyBehavior passHref>
                   <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    <AlertDialogTrigger>Logout</AlertDialogTrigger>
+                    Users
                   </NavigationMenuLink>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Logout</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        Are you sure you want to logout?
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction onClick={Logout}>
-                        Logout
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
+                </Link>
               </NavigationMenuItem>
-            </>
-          ) : (
-            <NavigationMenuItem>
-              <Link href="/login" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Login
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
-          )}
-        </NavigationMenuList>
-      </NavigationMenu>
-
-      {showAdminNav && admin && (
-        <NavigationMenu className="mt-1">
-          <NavigationMenuList>
-            <NavigationMenuItem>
-              <Link href="/admin/challs" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Challenges
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <Link href="/admin/users" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Users
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
-      )}
-    </div>
-  );
-}
-
-const navlink = [
-  {
-    value: "Home",
-    label: "Home",
-  },
-  {
-    value: "Scoreboard",
-    label: "Scoreboard",
-  },
-  {
-    value: "Profile",
-    label: "Profile",
-  },
-  {
-    value: "Challenges",
-    label: "Challenges",
-  },
-  {
-    value: "Logout",
-    label: "Logout",
-  },
-];
-
-export function MobileNavbar() {
-  const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState(navlink[0].value);
-
-  return (
-    <div className="flex sm:hidden justify-center w-full max-w-screen-lg px-5 mb-2">
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className="w-[400px] justify-between"
-          >
-            {value}
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[350px] p-0">
-          <Command>
-            <CommandGroup>
-              {navlink.map((framework) => (
-                <CommandItem
-                  key={framework.value}
-                  value={framework.value}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
-                    setOpen(false);
-                  }}
-                >
-                  {framework.label}
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </Command>
-        </PopoverContent>
-      </Popover>
+            </NavigationMenuList>
+          </NavigationMenu>
+        )}
+      </div>
+      <div className="flex sm:hidden">
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={open}
+              className="w-[85vw] justify-between"
+            >
+              {value}
+              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[85vw] p-0">
+            <Command>
+              <CommandGroup>
+                {navlink.map((framework) => (
+                  <CommandItem
+                    key={framework.value}
+                    value={framework.value}
+                    onSelect={(currentValue) => {
+                      setValue(currentValue === value ? "" : currentValue);
+                      setOpen(false);
+                    }}
+                  >
+                    {framework.label}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </Command>
+          </PopoverContent>
+        </Popover>
+      </div>
     </div>
   );
 }

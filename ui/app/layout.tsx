@@ -1,6 +1,6 @@
 import "./globals.css";
 import { Inter as FontSans } from "next/font/google";
-import { Navbar, MobileNavbar } from "@/components/navigation";
+import { Navbar } from "@/components/navigation";
 import { Toaster } from "@/components/ui/sonner";
 
 import { cn } from "@/lib/utils";
@@ -32,7 +32,6 @@ export default function RootLayout({
         )}
       >
         <Navbar />
-        <MobileNavbar />
 
         <div className="w-full max-w-screen-lg px-5">{children}</div>
         <Toaster />
