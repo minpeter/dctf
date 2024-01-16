@@ -110,6 +110,67 @@ export default function Page() {
             </FormItem>
           )}
         />
+
+        <FormField
+          control={form.control}
+          name="author"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                Author
+                <span className="text-red-500">*</span>
+              </FormLabel>
+              <FormControl>
+                <Input placeholder="John Doe" {...field} />
+              </FormControl>
+              <FormDescription>
+                This is the author of the challenge.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                Description
+                <span className="text-red-500">*</span>
+              </FormLabel>
+              <FormControl>
+                <Input placeholder="My Challenge" {...field} />
+              </FormControl>
+              <FormDescription>
+                This is the description of the challenge.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="flag"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                Flag
+                <span className="text-red-500">*</span>
+              </FormLabel>
+              <FormControl>
+                <Input placeholder="flag{...}" {...field} />
+              </FormControl>
+              <FormDescription>
+                This is the flag of the challenge.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <Button type="submit">Submit</Button>
       </form>
     </Form>
