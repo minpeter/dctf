@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useCallback, useEffect, useMemo } from "react";
-import { v4 as uuid } from "uuid";
 
 import { getChallenges } from "@/api/admin";
 import AdminProblem from "@/components/adminproblem";
+import { Button } from "@/components/ui/button";
 
 type AdminProblemProps = {
   id?: string;
@@ -26,86 +26,21 @@ type AdminProblemProps = {
   };
 };
 
-const SAMPLE_PROBLEM: AdminProblemProps = {
-  name: "",
-  description: "",
-  category: "",
-  author: "",
-  files: [],
-  points: {
-    min: 100,
-    max: 500,
-  },
-  flag: "",
-  dynamic: {
-    env: "",
-    Image: "",
-    type: "tcp",
-  },
-};
-
 export default function Page() {
-  const [problems, setProblems] = useState<any[]>([]);
-
-  // newId is the id of the new problem. this allows us to reuse code for problem creation
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const newId = useMemo(() => uuid(), [problems]);
-
-  const completeProblems = problems.concat({
-    ...SAMPLE_PROBLEM,
-    id: newId,
-  });
-
-  useEffect(() => {
-    const action = async () => {
-      setProblems(await getChallenges());
-    };
-    action();
-  }, []);
-
-  const deleteProblem = useCallback(
-    ({ problem }: { problem: AdminProblemProps }) => {
-      setProblems(problems.filter((p) => p.id !== problem.id));
-    },
-    [problems]
-  );
-
-  const updateProblem = useCallback(
-    ({ problem }: { problem: AdminProblemProps }) => {
-      let nextProblems = completeProblems;
-
-      // If we aren't creating new problem, remove sample problem first
-      if (problem.id !== newId) {
-        nextProblems = nextProblems.filter((p) => p.id !== newId);
-      }
-      setProblems(
-        nextProblems.map((p) => {
-          // Perform partial update by merging properties
-          if (p.id === problem.id) {
-            return {
-              ...p,
-              ...problem,
-            };
-          }
-          return p;
-        })
-      );
-    },
-    [newId, completeProblems]
-  );
-
   return (
-    <div className="grid w-full grid-cols-1 gap-4 md:w-auto lg:grid-cols-2 xl:grid-cols-3">
-      {completeProblems.map((problem) => {
-        return (
-          <AdminProblem
-            update={updateProblem}
-            delete={deleteProblem}
-            key={problem.id}
-            problem={problem}
-          />
-        );
-      })}
+    <div className="flex flex-col w-full">
+      <div className="border rounded-md px-10 py-5 flex justify-between items-center">
+        Admin Panel - Challenges
+        <Button
+          onClick={() => {
+            getChallenges().then((res) => {
+              console.log(res);
+            });
+          }}
+        >
+          New Challenge
+        </Button>
+      </div>
     </div>
   );
 }
