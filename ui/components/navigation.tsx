@@ -7,6 +7,7 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { Badge } from "@/components/ui/badge";
 
 import { Button } from "@/components/ui/button";
 import { Command, CommandGroup, CommandItem } from "@/components/ui/command";
@@ -34,6 +35,7 @@ import { ChevronsUpDown } from "lucide-react";
 import Link from "next/link";
 import { Logout } from "@/api/auth";
 import { checkAdmin } from "@/api/admin";
+import { cn } from "@/lib/utils";
 
 const commonLink = [
   {
@@ -47,13 +49,6 @@ const commonLink = [
   {
     link: "/test",
     label: "Test",
-  },
-];
-
-const adminLink = [
-  {
-    link: "/admin",
-    label: "Admin",
   },
 ];
 
@@ -76,6 +71,13 @@ const loginLink = [
   {
     link: "/logout",
     label: "Logout",
+  },
+];
+
+const adminLink = [
+  {
+    link: "/admin/challs",
+    label: "Challenges",
   },
 ];
 
@@ -141,22 +143,15 @@ export function Navbar() {
   }, [loggedIn]);
 
   return (
-    <div className="h-16 flex justify-between items-center">
+    <div
+      className={cn(
+        " flex justify-between items-center",
+        admin ? "h-24" : "h-16"
+      )}
+    >
       <div className="hidden sm:flex flex-col items-center">
         <NavigationMenu>
           <NavigationMenuList>
-            {admin &&
-              adminLink.map((linkitem) => (
-                <NavigationMenuItem key={linkitem.link}>
-                  <Link href={linkitem.link} legacyBehavior passHref>
-                    <NavigationMenuLink
-                      className={navigationMenuTriggerStyle()}
-                    >
-                      {linkitem.label}
-                    </NavigationMenuLink>
-                  </Link>
-                </NavigationMenuItem>
-              ))}
             {commonLink.map((linkitem) => (
               <NavigationMenuItem key={linkitem.link}>
                 <Link href={linkitem.link} legacyBehavior passHref>
@@ -219,28 +214,35 @@ export function Navbar() {
           </NavigationMenuList>
         </NavigationMenu>
 
-        {showAdminNav && admin && (
+        {admin && (
           <NavigationMenu className="mt-1">
             <NavigationMenuList>
-              <NavigationMenuItem>
-                <Link href="/admin/challs" legacyBehavior passHref>
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    Challenges
-                  </NavigationMenuLink>
-                </Link>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <Link href="/admin/users" legacyBehavior passHref>
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    Users
-                  </NavigationMenuLink>
-                </Link>
-              </NavigationMenuItem>
+              {admin && (
+                <Badge variant="secondary" className="w-fit mr-2">
+                  {showAdminNav ? "Admin Panel" : "User Panel"}
+                </Badge>
+              )}
+              {adminLink.map((linkitem) => (
+                <NavigationMenuItem key={linkitem.link}>
+                  <Link href={linkitem.link} legacyBehavior passHref>
+                    <NavigationMenuLink
+                      className={navigationMenuTriggerStyle()}
+                    >
+                      Admin - {linkitem.label}
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
+              ))}
             </NavigationMenuList>
           </NavigationMenu>
         )}
       </div>
-      <div className="flex sm:hidden">
+      <div className="flex sm:hidden flex-col gap-2">
+        {admin && (
+          <Badge variant="secondary" className="w-fit">
+            {showAdminNav ? "Admin Panel" : "User Panel"}
+          </Badge>
+        )}
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button
@@ -256,21 +258,6 @@ export function Navbar() {
           <PopoverContent className="w-[85vw] p-0">
             <Command>
               <CommandGroup>
-                {admin &&
-                  adminLink.map((linkitem) => (
-                    <CommandItem
-                      key={linkitem.label}
-                      value={linkitem.label}
-                      onSelect={() => {
-                        setLink(linkitem.label);
-                        router.push(linkitem.link);
-                        setOpen(false);
-                      }}
-                    >
-                      {linkitem.label}
-                    </CommandItem>
-                  ))}
-
                 {commonLink.map((linkitem) => (
                   <CommandItem
                     key={linkitem.label}
@@ -342,6 +329,21 @@ export function Navbar() {
                         {linkitem.label}
                       </CommandItem>
                     ))}
+
+                {admin &&
+                  adminLink.map((linkitem) => (
+                    <CommandItem
+                      key={linkitem.label}
+                      value={linkitem.label}
+                      onSelect={() => {
+                        setLink(linkitem.label);
+                        router.push(linkitem.link);
+                        setOpen(false);
+                      }}
+                    >
+                      Admin - {linkitem.label}
+                    </CommandItem>
+                  ))}
               </CommandGroup>
             </Command>
           </PopoverContent>
