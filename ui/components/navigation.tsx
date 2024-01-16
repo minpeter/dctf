@@ -46,10 +46,6 @@ const commonLink = [
     link: "/scores",
     label: "Scoreboard",
   },
-  {
-    link: "/test",
-    label: "Test",
-  },
 ];
 
 const logoutLink = [

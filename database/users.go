@@ -15,6 +15,10 @@ func MakeUser(id, name, email, division string, githubId, perms int) error {
 
 	fmt.Println("called database.MakeUser with GithubId: ", githubId)
 
+	if id == "" || name == "" || email == "" || division == "" || githubId == 0 {
+		return fmt.Errorf("missing required fields")
+	}
+
 	empty, err := DB.IsTableEmpty(&User{})
 	if err != nil {
 		return err
