@@ -189,8 +189,8 @@ export default function Page() {
   }
 
   return (
-    <div className="flex w-full flex-col space-y-4 lg:w-fit lg:flex-row lg:space-x-4 lg:space-y-0">
-      <div className="flex flex-col space-y-4">
+    <div className="w-full flex flex-col space-y-4 lg:flex-row lg:space-x-4 lg:space-y-0">
+      <div className="flex flex-shrink-0 flex-col space-y-4">
         <Card>
           <CardHeader>
             <CardTitle>Filters</CardTitle>
@@ -246,13 +246,18 @@ export default function Page() {
           </CardContent>
         </Card>
       </div>
-      <div className="flex flex-col space-y-4">
+
+      <div className="flex flex-col space-y-4 flex-grow lg:w-screen">
         {solvedCount == problems.length && !showSolved ? (
-          <div className="w-96 mx-20">
-            <div className="text-2xl font-bold">Congratulations!</div>
-            <div className="text-lg font-bold">
-              You have solved all the problems.
-            </div>
+          <div className="flex flex-col items-center space-y-2 border px-10 py-24 rounded-md">
+            <h2
+              className="
+              text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500
+            "
+            >
+              Congratulations!
+            </h2>
+            <div className="text-lg">You have solved all the problems.</div>
           </div>
         ) : (
           problemsToDisplay.map((problem: ProblemProps) => {

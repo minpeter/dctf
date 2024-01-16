@@ -180,7 +180,11 @@ export default function Problem({
               value={value}
               onChange={handleInputChange}
               readOnly={solved}
-              onKeyDown={() => submit()}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  submit();
+                }
+              }}
             />
             <Button type="submit" onClick={submit} disabled={solved}>
               {solved ? "Solved" : "Submit"}

@@ -79,6 +79,34 @@ const loginLink = [
   },
 ];
 
+function searchLabel(link: string) {
+  for (let i = 0; i < commonLink.length; i++) {
+    if (commonLink[i].link === link) {
+      return commonLink[i].label;
+    }
+  }
+
+  for (let i = 0; i < adminLink.length; i++) {
+    if (adminLink[i].link === link) {
+      return adminLink[i].label;
+    }
+  }
+
+  for (let i = 0; i < loginLink.length; i++) {
+    if (loginLink[i].link === link) {
+      return loginLink[i].label;
+    }
+  }
+
+  for (let i = 0; i < logoutLink.length; i++) {
+    if (logoutLink[i].link === link) {
+      return logoutLink[i].label;
+    }
+  }
+
+  return "Home";
+}
+
 export function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
@@ -98,6 +126,7 @@ export function Navbar() {
 
   useEffect(() => {
     setAdminPath(pathname.includes("/admin"));
+    setLink(searchLabel(pathname));
   }, [pathname]);
 
   useEffect(() => {
@@ -113,7 +142,7 @@ export function Navbar() {
 
   return (
     <div className="h-16 flex justify-between items-center">
-      <div className="hidden sm:flex">
+      <div className="hidden sm:flex flex-col items-center">
         <NavigationMenu>
           <NavigationMenuList>
             {admin &&

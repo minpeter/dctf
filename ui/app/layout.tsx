@@ -33,7 +33,9 @@ export default function RootLayout({
       >
         <Navbar />
 
-        <div className="w-full max-w-screen-lg px-5">{children}</div>
+        <div className="w-full max-w-screen-lg px-5 flex justify-center">
+          {children}
+        </div>
         <Toaster />
       </body>
     </html>
