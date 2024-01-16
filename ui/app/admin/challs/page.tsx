@@ -19,7 +19,7 @@ type AdminProblemProps = {
   };
 
   flag: string;
-  dklodd: {
+  dynamic: {
     env: string;
     Image: string;
     type: string;
@@ -37,10 +37,10 @@ const SAMPLE_PROBLEM: AdminProblemProps = {
     max: 500,
   },
   flag: "",
-  dklodd: {
+  dynamic: {
     env: "",
     Image: "",
-    type: "web",
+    type: "tcp",
   },
 };
 

@@ -37,7 +37,7 @@ export type ProblemProps = {
   files: string[];
   points: number;
   solves: number;
-  dynamic?: "tcp" | "web" | "none";
+  dynamic?: "tcp" | "http" | "static";
 };
 
 export default function Problem({
@@ -49,8 +49,8 @@ export default function Problem({
   solved: boolean;
   setSolved: (id: string) => void;
 }) {
-  const isDynamic = problem.dynamic === "tcp" || problem.dynamic === "web";
-  const isWeb = problem.dynamic === "web";
+  const isDynamic = problem.dynamic === "tcp" || problem.dynamic === "http";
+  const isHttp = problem.dynamic === "http";
   const isTcp = problem.dynamic === "tcp";
   const isFileExists = problem.files.length > 0;
 
@@ -83,12 +83,8 @@ export default function Problem({
               {problem.category}/{problem.name}
             </h3>
             <div className="flex space-x-2">
-              {isDynamic && (
-                <>
-                  <Badge>dynamic</Badge>
-                  <Badge>Running</Badge>
-                </>
-              )}
+              <Badge>{problem.dynamic}</Badge>
+              {isDynamic && <Badge>{false ? "Running" : "Stopped"}</Badge>}
             </div>
           </div>
 
@@ -99,14 +95,14 @@ export default function Problem({
         <CardDescription>{problem.author}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4 py-4">
-        {isWeb && (
+        {/* {isHttp && (
           <Link
             href="https://sanity-check.chal.seccon.jp/"
             className="text-blue-500"
           >
             https://sanity-check.chal.seccon.jp/
           </Link>
-        )}
+        )} */}
 
         <p>{problem.description}</p>
 
@@ -123,7 +119,7 @@ export default function Problem({
               <div className="flex w-full items-center space-x-2">
                 <Input
                   type="connection"
-                  value="remote('bdspz.dklodd.minpeter.tech', 443, ssl=True)"
+                  value="remote('bdspz.dynamic.minpeter.tech', 443, ssl=True)"
                   readOnly
                 />
                 <Button type="submit">Copy</Button>
@@ -133,7 +129,7 @@ export default function Problem({
               <div className="flex w-full items-center space-x-2">
                 <Input
                   type="connection"
-                  value="ncat --ssl bdspz.dklodd.minpeter.tech 443"
+                  value="ncat --ssl bdspz.dynamic.minpeter.tech 443"
                   readOnly
                 />
                 <Button type="submit">Copy</Button>
@@ -143,7 +139,7 @@ export default function Problem({
               <div className="flex w-full items-center space-x-2">
                 <Input
                   type="connection"
-                  value="socat openssl-connect:bdspz.dklodd.minpeter.tech:443"
+                  value="socat openssl-connect:bdspz.dynamic.minpeter.tech:443"
                   readOnly
                 />
                 <Button type="submit">Copy</Button>
@@ -153,7 +149,7 @@ export default function Problem({
               <div className="flex w-full items-center space-x-2">
                 <Input
                   type="connection"
-                  value="openssl s_client -connect bdspz.dklodd.minpeter.tech:443"
+                  value="openssl s_client -connect bdspz.dynamic.minpeter.tech:443"
                   readOnly
                 />
                 <Button type="submit">Copy</Button>
@@ -215,7 +211,13 @@ export default function Problem({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button>Instance Stop</Button>
+                {isDynamic &&
+                  // isRunning
+                  (true ? (
+                    <Button>Instance Start</Button>
+                  ) : (
+                    <Button>Instance Stop</Button>
+                  ))}
               </TooltipTrigger>
               <TooltipContent>
                 <p>Stopping in 3 minute</p>

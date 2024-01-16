@@ -3,20 +3,20 @@ package database
 import "fmt"
 
 type Challenge struct {
-	Id               string `json:"id" xorm:"pk"`
-	Name             string `json:"name"`
-	Description      string `json:"description"`
-	Category         string `json:"category"`
-	Author           string `json:"author"`
-	Files            []File `json:"files" xorm:"jsonb"`
-	Points           Points `json:"points" xorm:"jsonb notnull"`
-	Flag             string `json:"flag"`
-	TiebreakEligible bool   `json:"tiebreakEligible"`
-	SortWeight       int    `json:"sortWeight"`
-	Dklodd           Dklodd `json:"dklodd" xorm:"jsonb"`
+	Id               string  `json:"id" xorm:"pk"`
+	Name             string  `json:"name"`
+	Description      string  `json:"description"`
+	Category         string  `json:"category"`
+	Author           string  `json:"author"`
+	Files            []File  `json:"files" xorm:"jsonb"`
+	Points           Points  `json:"points" xorm:"jsonb notnull"`
+	Flag             string  `json:"flag"`
+	TiebreakEligible bool    `json:"tiebreakEligible"`
+	SortWeight       int     `json:"sortWeight"`
+	Dynamic          Dynamic `json:"dynamic" xorm:"jsonb"`
 }
 
-type Dklodd struct {
+type Dynamic struct {
 	Image string `json:"image"`
 	Type  string `json:"type"`
 	Env   string `json:"env"`
@@ -41,6 +41,7 @@ type CleanedChallenge struct {
 	Files       []File `json:"files"`
 	Points      int    `json:"points"`
 	Solves      int    `json:"solves"`
+	Dynamic     string `json:"dynamic"`
 }
 
 func GetChallengeById(id string) (Challenge, error) {
@@ -96,6 +97,13 @@ func GetCleanedChallenges() ([]CleanedChallenge, error) {
 			return nil, err
 		}
 
+		var dynamicType string
+		if challenge.Dynamic.Type != "" && challenge.Dynamic.Image != "" {
+			dynamicType = challenge.Dynamic.Type
+		} else {
+			dynamicType = "static"
+		}
+
 		cleanedChallenges = append(cleanedChallenges, CleanedChallenge{
 			Id:          challenge.Id,
 			Name:        challenge.Name,
@@ -105,6 +113,7 @@ func GetCleanedChallenges() ([]CleanedChallenge, error) {
 			Files:       challenge.Files,
 			Points:      challenge.Points.Max,
 			Solves:      int(count),
+			Dynamic:     dynamicType,
 		})
 
 	}
@@ -123,6 +132,10 @@ func DeleteChallenge(id string) error {
 
 func PutChallenge(challenge Challenge) error {
 	has, err := DB.Where("id = ?", challenge.Id).Exist(&Challenge{})
+
+	if challenge.Dynamic.Type == "http" || challenge.Dynamic.Type == "tcp" || challenge.Dynamic.Type == "" {
+		return fmt.Errorf("invalid dynamic type")
+	}
 
 	fmt.Println("id:", challenge.Id)
 	if err != nil {

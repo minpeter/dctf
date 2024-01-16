@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import {
   AlertDialog,
@@ -21,6 +22,17 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 import { updateChallenge, deleteChallenge, uploadFiles } from "@/api/admin";
 // import { encodeFile } from "../../util";
@@ -79,14 +91,19 @@ export default function AdminProblem({
     []
   );
 
-  // const [image, setImage] = useState(problem.dklodd.image);
-  // const handleImageChange = useCallback(
-  //   (e: any) => setImage(e.target.value),
-  //   []
-  // );
+  const [image, setImage] = useState(problem.dynamic.image);
+  const handleImageChange = useCallback(
+    (e: any) => setImage(e.target.value),
+    []
+  );
 
-  // const [type, setType] = useState(problem.dklodd.type);
-  // const handleTypeChange = useCallback((e: any) => setType(e.target.value), []);
+  const [env, setEnv] = useState(problem.dynamic.env);
+  const handleEnvChange = useCallback((e: any) => setEnv(e.target.value), []);
+
+  const [type, setType] = useState(problem.dynamic.type);
+  const handleTypeChange = useCallback((e: any) => {
+    setType(e);
+  }, []);
 
   // const handleFileUpload = useCallback(
   //   async (e:any) => {
@@ -130,22 +147,22 @@ export default function AdminProblem({
   //   [problem.id, problem.files, updateClient]
   // );
 
-  const handleRemoveFile = (file: any) => async () => {
-    const newFiles = problem.files.filter((f: any) => f !== file);
+  // const handleRemoveFile = (file: any) => async () => {
+  //   const newFiles = problem.files.filter((f: any) => f !== file);
 
-    const data = await updateChallenge({
-      id: problem.id,
-      data: {
-        files: newFiles,
-      },
-    });
+  //   const data = await updateChallenge({
+  //     id: problem.id,
+  //     data: {
+  //       files: newFiles,
+  //     },
+  //   });
 
-    updateClient({
-      problem: data,
-    });
+  //   updateClient({
+  //     problem: data,
+  //   });
 
-    toast.success("Problem successfully updated");
-  };
+  //   toast.success("Problem successfully updated");
+  // };
 
   const handleUpdate = async (e: any) => {
     e.preventDefault();
@@ -163,10 +180,11 @@ export default function AdminProblem({
           min: minPoints,
           max: maxPoints,
         },
-        // dklodd: {
-        //   image,
-        //   type,
-        // },
+        dynamic: {
+          image,
+          type,
+          env,
+        },
       },
     });
 
@@ -321,29 +339,83 @@ export default function AdminProblem({
           )} */}
         </CardContent>
 
-        <CardFooter className="flex justify-end gap-2 bg-gray-100 pt-4">
-          <Button onClick={handleUpdate}>Update</Button>
+        <CardFooter className="flex justify-between	 gap-2 bg-gray-100 pt-4">
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline">Edit Dynamic</Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Edit Dynamic</DialogTitle>
+                <DialogDescription>
+                  It allows you to dynamically create instances for each team
+                  using docker and podman.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="name" className="text-right">
+                    Image
+                  </Label>
+                  <Input
+                    id="name"
+                    value={image}
+                    className="col-span-3"
+                    onChange={handleImageChange}
+                  />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="username" className="text-right">
+                    Type
+                  </Label>
+                  <RadioGroup
+                    defaultValue={type || "tcp"}
+                    className="flex gap-2"
+                    onValueChange={handleTypeChange}
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="tcp" id="tcp" />
+                      <Label htmlFor="tcp">tcp</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="http" id="http" />
+                      <Label htmlFor="http">http</Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+              </div>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button>Save Dynamic</Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
 
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="destructive">Delete</Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete
-                  your challenge data from servers.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={handleDelete}>
-                  Continue
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          <div className="flex gap-2">
+            <Button onClick={handleUpdate}>Update</Button>
+
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive">Delete</Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete
+                    your challenge data from servers.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDelete}>
+                    Continue
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
         </CardFooter>
       </Card>
     </>

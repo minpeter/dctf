@@ -98,7 +98,7 @@ func LoadOnlineSandbox() {
 	}
 
 	for _, instance := range containers {
-		if instance.Labels["dklodd"] == "true" {
+		if instance.Labels["dynamic"] == "true" {
 			OnlineSandboxIds = append(OnlineSandboxIds, instance.ID[0:12])
 		}
 	}

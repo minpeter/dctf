@@ -26,19 +26,19 @@ import { useState, useEffect } from "react";
 import { privateProfile } from "@/api/profile";
 
 export default function Page() {
-  const [username, setUsername] = useState("");
+  const [user, setUser] = useState<any>({});
 
   useEffect(() => {
     privateProfile().then((resp: any) => {
-      setUsername(resp.username);
+      setUser(resp.data);
     });
   }, []);
 
   return (
-    <div className="grid gap-4">
+    <div className="w-full md:w-auto flex flex-col gap-4">
       <Card>
         <CardHeader>
-          <CardTitle>{username}</CardTitle>
+          <CardTitle>{user && user.name ? user.name : "Loading..."}</CardTitle>
           <CardDescription>
             This will change the way your name appears on the scoreboard. You
             can change it once every 10 minutes.
@@ -69,13 +69,13 @@ export default function Page() {
               <Label htmlFor="name">
                 <AvatarIcon className="h-5 w-5 mr-2" />
               </Label>
-              <Input id="name" value="username" className="col-span-3" />
+              <Input id="name" value={user.name} className="col-span-3" />
             </div>
             <div className="flex items-center gap-1">
               <Label htmlFor="email">
                 <EnvelopeOpenIcon className="h-5 w-5 mr-2" />
               </Label>
-              <Input id="email" value="test@gmail.com" className="col-span-3" />
+              <Input id="email" value={user.email} className="col-span-3" />
             </div>
             <div className="flex items-center gap-1">
               <Label htmlFor="link">

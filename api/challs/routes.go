@@ -22,7 +22,7 @@ func Routes(challRoutes *gin.RouterGroup) {
 	challRoutes.GET("/:id/solves", getChallSolvesHandler)
 	challRoutes.POST("/:id/submit", auth.AuthTokenMiddleware(), submitChallHandler)
 
-	// dklodd router
+	// dynamic router
 	challRoutes.GET("/:id/start", auth.AuthTokenMiddleware(), createChallHandler)
 	challRoutes.GET("/:id/stop", auth.AuthTokenMiddleware(), deleteChallHandler)
 }
@@ -70,7 +70,7 @@ func createChallHandler(c *gin.Context) {
 
 	ctx := context.Background()
 
-	imageName := challengeData.Dklodd.Image
+	imageName := challengeData.Dynamic.Image
 
 	hashId := utils.GenerateId(c)
 
@@ -82,7 +82,7 @@ func createChallHandler(c *gin.Context) {
 			"traefik.enable": "true",
 			"traefik.tcp.routers." + hashId + ".rule": "HostSNI(`" + hashId + "." + host[0] + "`)",
 			"traefik.tcp.routers." + hashId + ".tls":  "true",
-			"dklodd":                                  "true",
+			"dynamic":                                 "true",
 		},
 		Env: []string{},
 	}
@@ -91,11 +91,11 @@ func createChallHandler(c *gin.Context) {
 		config.Labels["traefik.tcp.routers."+hashId+".tls"] = "true"
 	}
 
-	if challengeData.Dklodd.Type == "web" {
+	if challengeData.Dynamic.Type == "web" {
 		config.Labels = map[string]string{
 			"traefik.enable": "true",
 			"traefik.http.routers." + hashId + ".rule": "Host(`" + hashId + "." + host[0] + "`)",
-			"dklodd": "true",
+			"dynamic": "true",
 		}
 		if host[1] == "443" {
 			config.Labels["traefik.http.routers."+hashId+".tls"] = "true"
@@ -141,7 +141,7 @@ func createChallHandler(c *gin.Context) {
 		connection = "https://" + connection
 	}
 
-	if challengeData.Dklodd.Type == "web" {
+	if challengeData.Dynamic.Type == "web" {
 		utils.SendResponse(c, "goodStartInstance", gin.H{
 			"connection": connection,
 			"id":         sandboxID[0:12],
