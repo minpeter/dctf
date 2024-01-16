@@ -1,9 +1,5 @@
 "use client";
 
-import Link from "next/link";
-import { Logout } from "@/api/auth";
-import { checkAdmin } from "@/api/admin";
-
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -12,6 +8,13 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 
+import { Button } from "@/components/ui/button";
+import { Command, CommandGroup, CommandItem } from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,51 +28,65 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { useState, useEffect } from "react";
-
-import { usePathname } from "next/navigation";
-
-import * as React from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { ChevronsUpDown } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-import { Command, CommandGroup, CommandItem } from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import Link from "next/link";
+import { Logout } from "@/api/auth";
+import { checkAdmin } from "@/api/admin";
 
-const navlink = [
+const commonLink = [
   {
-    value: "Home",
+    link: "/",
     label: "Home",
   },
   {
-    value: "Scoreboard",
+    link: "/scores",
     label: "Scoreboard",
   },
   {
-    value: "Profile",
+    link: "/test",
+    label: "Test",
+  },
+];
+
+const adminLink = [
+  {
+    link: "/admin",
+    label: "Admin",
+  },
+];
+
+const logoutLink = [
+  {
+    link: "/login",
+    label: "Login",
+  },
+];
+
+const loginLink = [
+  {
+    link: "/profile",
     label: "Profile",
   },
   {
-    value: "Challenges",
+    link: "/challs",
     label: "Challenges",
   },
   {
-    value: "Logout",
+    link: "/logout",
     label: "Logout",
   },
 ];
 
 export function Navbar() {
+  const pathname = usePathname();
+  const router = useRouter();
   const [isClient, setIsClient] = useState(false);
   const [admin, setAdmin] = useState(false);
 
-  const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState(navlink[0].value);
-
-  const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+  const [link, setLink] = useState(commonLink[0].label);
 
   const [showAdminNav, setAdminPath] = useState(false);
 
@@ -99,85 +116,77 @@ export function Navbar() {
       <div className="hidden sm:flex">
         <NavigationMenu>
           <NavigationMenuList>
-            {admin && (
-              <NavigationMenuItem>
-                <Link href="/admin" legacyBehavior passHref>
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    Admin
-                  </NavigationMenuLink>
-                </Link>
-              </NavigationMenuItem>
-            )}
-
-            <NavigationMenuItem>
-              <Link href="/" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Home
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
-
-            <NavigationMenuItem>
-              <Link href="/scores" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Scoreboard
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
-
-            {isClient && loggedIn ? (
-              <>
-                <NavigationMenuItem>
-                  <Link href="/profile" legacyBehavior passHref>
+            {admin &&
+              adminLink.map((linkitem) => (
+                <NavigationMenuItem key={linkitem.link}>
+                  <Link href={linkitem.link} legacyBehavior passHref>
                     <NavigationMenuLink
                       className={navigationMenuTriggerStyle()}
                     >
-                      Profile
+                      {linkitem.label}
                     </NavigationMenuLink>
                   </Link>
                 </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <Link href="/challs" legacyBehavior passHref>
-                    <NavigationMenuLink
-                      className={navigationMenuTriggerStyle()}
-                    >
-                      Challenges
-                    </NavigationMenuLink>
-                  </Link>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <AlertDialog>
-                    <NavigationMenuLink
-                      className={navigationMenuTriggerStyle()}
-                    >
-                      <AlertDialogTrigger>Logout</AlertDialogTrigger>
-                    </NavigationMenuLink>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Logout</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Are you sure you want to logout?
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction onClick={Logout}>
-                          Logout
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </NavigationMenuItem>
-              </>
-            ) : (
-              <NavigationMenuItem>
-                <Link href="/login" legacyBehavior passHref>
+              ))}
+            {commonLink.map((linkitem) => (
+              <NavigationMenuItem key={linkitem.link}>
+                <Link href={linkitem.link} legacyBehavior passHref>
                   <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    Login
+                    {linkitem.label}
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
-            )}
+            ))}
+
+            {isClient && loggedIn
+              ? loginLink.map((linkitem) =>
+                  linkitem.label === "Logout" ? (
+                    <NavigationMenuItem key={linkitem.link}>
+                      <AlertDialog>
+                        <NavigationMenuLink
+                          className={navigationMenuTriggerStyle()}
+                        >
+                          <AlertDialogTrigger>Logout</AlertDialogTrigger>
+                        </NavigationMenuLink>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Logout</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Are you sure you want to logout?
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={Logout}>
+                              Logout
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </NavigationMenuItem>
+                  ) : (
+                    <NavigationMenuItem key={linkitem.link}>
+                      <Link href={linkitem.link} legacyBehavior passHref>
+                        <NavigationMenuLink
+                          className={navigationMenuTriggerStyle()}
+                        >
+                          {linkitem.label}
+                        </NavigationMenuLink>
+                      </Link>
+                    </NavigationMenuItem>
+                  )
+                )
+              : logoutLink.map((linkitem) => (
+                  <NavigationMenuItem key={linkitem.link}>
+                    <Link href={linkitem.link} legacyBehavior passHref>
+                      <NavigationMenuLink
+                        className={navigationMenuTriggerStyle()}
+                      >
+                        {linkitem.label}
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
+                ))}
           </NavigationMenuList>
         </NavigationMenu>
 
@@ -211,25 +220,99 @@ export function Navbar() {
               aria-expanded={open}
               className="w-[85vw] justify-between"
             >
-              {value}
+              {link}
               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-[85vw] p-0">
             <Command>
               <CommandGroup>
-                {navlink.map((framework) => (
+                {admin &&
+                  adminLink.map((linkitem) => (
+                    <CommandItem
+                      key={linkitem.label}
+                      value={linkitem.label}
+                      onSelect={() => {
+                        setLink(linkitem.label);
+                        router.push(linkitem.link);
+                        setOpen(false);
+                      }}
+                    >
+                      {linkitem.label}
+                    </CommandItem>
+                  ))}
+
+                {commonLink.map((linkitem) => (
                   <CommandItem
-                    key={framework.value}
-                    value={framework.value}
-                    onSelect={(currentValue) => {
-                      setValue(currentValue === value ? "" : currentValue);
+                    key={linkitem.label}
+                    value={linkitem.label}
+                    onSelect={() => {
+                      setLink(linkitem.label);
+                      router.push(linkitem.link);
                       setOpen(false);
                     }}
                   >
-                    {framework.label}
+                    {linkitem.label}
                   </CommandItem>
                 ))}
+
+                {isClient && loggedIn
+                  ? loginLink.map((linkitem) =>
+                      linkitem.label === "Logout" ? (
+                        <AlertDialog key={linkitem.label}>
+                          <AlertDialogTrigger className="w-full">
+                            <CommandItem value={linkitem.label}>
+                              {linkitem.label}
+                            </CommandItem>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Logout</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Are you sure you want to logout?
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel
+                                onClick={() => {
+                                  setOpen(false);
+                                }}
+                              >
+                                Cancel
+                              </AlertDialogCancel>
+                              <AlertDialogAction onClick={Logout}>
+                                Logout
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      ) : (
+                        <CommandItem
+                          key={linkitem.label}
+                          value={linkitem.label}
+                          onSelect={() => {
+                            setLink(linkitem.label);
+                            router.push(linkitem.link);
+                            setOpen(false);
+                          }}
+                        >
+                          {linkitem.label}
+                        </CommandItem>
+                      )
+                    )
+                  : logoutLink.map((linkitem) => (
+                      <CommandItem
+                        key={linkitem.label}
+                        value={linkitem.label}
+                        onSelect={() => {
+                          setLink(linkitem.label);
+                          router.push(linkitem.link);
+                          setOpen(false);
+                        }}
+                      >
+                        {linkitem.label}
+                      </CommandItem>
+                    ))}
               </CommandGroup>
             </Command>
           </PopoverContent>
