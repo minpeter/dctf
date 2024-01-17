@@ -3,6 +3,8 @@
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import { GitHubLogoIcon, ReloadIcon } from "@radix-ui/react-icons";
+
 import { GithubCallback } from "@/api/auth";
 import { Button } from "@/components/ui/button";
 
@@ -48,11 +50,18 @@ export default function Page() {
   return (
     <div className="flex flex-col items-center justify-center gap-4">
       <h1 className="text-4xl font-bold">
-        {error
-          ? githubError
-            ? "Github login failed"
-            : "internal server error"
-          : "Logging in..."}
+        {error ? (
+          githubError ? (
+            "Github login failed"
+          ) : (
+            "internal server error"
+          )
+        ) : (
+          <div className="flex flex-col items-center justify-center gap-4">
+            <GitHubLogoIcon className="w-8 h-8 animate-spin" />
+            <span>Logging in...</span>
+          </div>
+        )}
       </h1>
 
       {error && <p className="text-gray-400">{error}</p>}
