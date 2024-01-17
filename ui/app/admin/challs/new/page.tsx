@@ -20,7 +20,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import dynamic from "next/dynamic";
 
 const FormSchema = z.object({
   category: z.string().min(2, {
