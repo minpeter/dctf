@@ -4,19 +4,23 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
+  FormDescription,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import dynamic from "next/dynamic";
 
 const FormSchema = z.object({
   category: z.string().min(2, {
@@ -25,40 +29,80 @@ const FormSchema = z.object({
   name: z.string().min(2, {
     message: "Name must be at least 2 characters.",
   }),
-  author: z.string().min(2, {
-    message: "Author must be at least 2 characters.",
-  }),
-  description: z.string(),
-  flag: z.string().min(2, {
-    message: "Flag must be at least 2 characters.",
-  }),
+  author: z.string().optional(),
+  description: z.string().optional(),
+  flag: z
+    .string()
+    .min(6, {
+      message: "Flag must be at least 6 characters.",
+    })
+    .regex(/\{.*\}$/, "Flag must be in the format of xxx{xxx}"),
+
   points: z.object({
-    min: z.number().min(0, {
-      message: "Minimum points must be at least 0.",
+    min: z.number().min(1, {
+      message: "Minimum points must be at least 1.",
     }),
-    max: z.number().min(0, {
-      message: "Maximum points must be at least 0.",
+    max: z.number().min(2, {
+      message: "Maximum points must be at least 2.",
     }),
   }),
   dynamic: z.object({
-    env: z.string().min(2, {
-      message: "Environment must be at least 2 characters.",
-    }),
-    image: z.string().min(2, {
-      message: "Image must be at least 2 characters.",
-    }),
-    type: z.enum(["tcp", "http", "static"], {
-      required_error: "You need to select a notification type.",
-    }),
+    env: z
+      .string()
+      .min(2, {
+        message: "Environment must be at least 2 characters.",
+      })
+      .optional(),
+    image: z
+      .string()
+      .optional()
+      .refine(
+        (val) => {
+          if (isDynamic) {
+            if (!val) return false;
+            if (val == "") return false;
+            return true;
+          }
+          return true;
+        },
+        {
+          message:
+            "when dynamic switch is on, you need to fill dynamic required fields.",
+        }
+      ),
+    type: z
+      .enum(["tcp", "http", "static"], {
+        required_error: "You need to select a type.",
+      })
+      .optional()
+      .refine(
+        (val) => {
+          if (isDynamic) {
+            if (!val) return false;
+            if (!["http", "tcp"].includes(val)) return false;
+            return true;
+          }
+          return true;
+        },
+        {
+          message:
+            "when dynamic switch is on, you need to fill dynamic required fields.",
+        }
+      ),
   }),
 });
 
 function onSubmit(data: z.infer<typeof FormSchema>) {
   console.log(JSON.stringify(data, null, 2));
+  console.log("isDynamic", isDynamic);
   toast.success("Successfully created challenge.");
 }
 
+let isDynamic = false;
+
 export default function Page() {
+  const [dynamic, setDynamic] = useState(false);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -66,12 +110,26 @@ export default function Page() {
         min: 100,
         max: 500,
       },
+      dynamic: {
+        type: "static",
+      },
     },
   });
 
+  useEffect(() => {
+    isDynamic = dynamic;
+
+    if (!dynamic) {
+      form.setValue("dynamic", {
+        type: "static",
+        image: "",
+      });
+    }
+  }, [dynamic, form]);
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
           name="category"
@@ -82,11 +140,12 @@ export default function Page() {
                 <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
-                <Input placeholder="crypto" {...field} />
+                <Input
+                  placeholder="crypto | web | system | etc..."
+                  {...field}
+                />
               </FormControl>
-              <FormDescription>
-                This is the category of the challenge.
-              </FormDescription>
+
               <FormMessage />
             </FormItem>
           )}
@@ -104,9 +163,7 @@ export default function Page() {
               <FormControl>
                 <Input placeholder="My Challenge" {...field} />
               </FormControl>
-              <FormDescription>
-                This is the name of the challenge.
-              </FormDescription>
+
               <FormMessage />
             </FormItem>
           )}
@@ -117,16 +174,11 @@ export default function Page() {
           name="author"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>
-                Author
-                <span className="text-red-500">*</span>
-              </FormLabel>
+              <FormLabel>Author</FormLabel>
               <FormControl>
-                <Input placeholder="John Doe" {...field} />
+                <Input placeholder="Aaron Swartz :)" {...field} />
               </FormControl>
-              <FormDescription>
-                This is the author of the challenge.
-              </FormDescription>
+
               <FormMessage />
             </FormItem>
           )}
@@ -137,16 +189,44 @@ export default function Page() {
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>
-                Description
-                <span className="text-red-500">*</span>
-              </FormLabel>
+              <FormLabel>Description</FormLabel>
               <FormControl>
-                <Input placeholder="My Challenge" {...field} />
+                <Textarea
+                  placeholder="Type your challenge description here."
+                  {...field}
+                />
               </FormControl>
-              <FormDescription>
-                This is the description of the challenge.
-              </FormDescription>
+
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {/* point */}
+        <FormField
+          control={form.control}
+          name="points.min"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Minimum points</FormLabel>
+              <FormControl>
+                <Input placeholder="100" {...field} />
+              </FormControl>
+
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="points.max"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Maximum points</FormLabel>
+              <FormControl>
+                <Input placeholder="500" {...field} />
+              </FormControl>
+
               <FormMessage />
             </FormItem>
           )}
@@ -164,54 +244,87 @@ export default function Page() {
               <FormControl>
                 <Input placeholder="flag{...}" {...field} />
               </FormControl>
-              <FormDescription>
-                This is the flag of the challenge.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
 
-        <FormField
-          control={form.control}
-          name="dynamic.type"
-          render={({ field }) => (
-            <FormItem className="space-y-3">
-              <FormLabel>Notify me about...</FormLabel>
-              <FormControl>
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  className="flex flex-col space-y-1"
-                >
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="all" />
-                    </FormControl>
-                    <FormLabel className="font-normal">
-                      All new messages
-                    </FormLabel>
-                  </FormItem>
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="mentions" />
-                    </FormControl>
-                    <FormLabel className="font-normal">
-                      Direct messages and mentions
-                    </FormLabel>
-                  </FormItem>
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="none" />
-                    </FormControl>
-                    <FormLabel className="font-normal">Nothing</FormLabel>
-                  </FormItem>
-                </RadioGroup>
-              </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+        <div className="flex flex-col rounded-lg border p-4 gap-6 shadow-sm">
+          <div className="flex flex-row items-center justify-between">
+            <div className="space-y-0.5">
+              <FormLabel>Dynamic container</FormLabel>
+              <FormDescription>
+                If you want to use dynamic container, please check this box.
+              </FormDescription>
+            </div>
+            <FormControl>
+              <Switch checked={dynamic} onClick={() => setDynamic(!dynamic)} />
+            </FormControl>
+          </div>
+
+          {dynamic && (
+            <>
+              <FormField
+                control={form.control}
+                name="dynamic.image"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Dynamic container image
+                      <span className="text-red-500">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="minpeter/mathematician-in-wonderland:latest"
+                        {...field}
+                      />
+                    </FormControl>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="dynamic.type"
+                render={({ field }) => (
+                  <FormItem className="space-y-3">
+                    <FormLabel>
+                      Dynamic container type
+                      <span className="text-red-500">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="flex flex-col space-y-1"
+                      >
+                        <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="http" />
+                          </FormControl>
+                          <FormLabel className="font-normal">
+                            http, connects to use via browser
+                          </FormLabel>
+                        </FormItem>
+                        <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="tcp" />
+                          </FormControl>
+                          <FormLabel className="font-normal">
+                            tcp, connects to use via ncat
+                          </FormLabel>
+                        </FormItem>
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </>
+          )}
+        </div>
 
         <Button type="submit">Submit</Button>
       </form>
