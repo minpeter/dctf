@@ -18,6 +18,15 @@ export const updateChallenge = async ({
   ).data;
 };
 
+export const createChallenge = async ({ data }: { data: any }) => {
+  await request("POST", "/admin/challs", { data }).then((resp) => {
+    if (resp.kind === "goodChallengeCreate") {
+      return resp.data;
+    }
+    return { error: "unknown error" };
+  });
+};
+
 export const deleteChallenge = async ({ id }: { id: string }) => {
   return (await request("DELETE", `/admin/challs/${encodeURIComponent(id)}`))
     .data;

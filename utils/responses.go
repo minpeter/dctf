@@ -23,6 +23,10 @@ func SendResponse(c *gin.Context, kind string, data interface{}) {
 }
 
 var Responses = map[string]Response{
+	"goodChallengeCreate": {
+		Status:  200,
+		Message: "The challenge was created.",
+	},
 	"goodAuth": {
 		Status:  200,
 		Message: "The user is authenticated.",

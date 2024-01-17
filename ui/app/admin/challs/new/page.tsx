@@ -7,6 +7,10 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 
+import { createChallenge } from "@/api/admin";
+
+import { useRouter } from "next/navigation";
+
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -94,6 +98,9 @@ const FormSchema = z.object({
 function onSubmit(data: z.infer<typeof FormSchema>) {
   console.log(JSON.stringify(data, null, 2));
   console.log("isDynamic", isDynamic);
+  const resp = createChallenge({ data });
+  console.log("resp", resp);
+
   toast.success("Successfully created challenge.");
 }
 
@@ -126,10 +133,16 @@ export default function Page() {
     }
   }, [dynamic, form]);
 
+  const router = useRouter();
+
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        // onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit((data) => {
+          onSubmit(data);
+          router.push("/admin/challs");
+        })}
         className="space-y-6 flex flex-col"
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
