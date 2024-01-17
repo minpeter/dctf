@@ -4,14 +4,18 @@ import { useEffect } from "react";
 
 import { CheckLogin, SetLoginState } from "@/api/auth";
 
+import { useRouter } from "next/navigation";
+
 export default function Page() {
+  const router = useRouter();
+
   useEffect(() => {
     CheckLogin().then((resp) => {
       if (resp.error) {
-        window.location.href = "/login";
+        router.push("/login");
       } else {
         SetLoginState();
-        window.location.href = "/challs";
+        router.push("/challs");
       }
     });
   });

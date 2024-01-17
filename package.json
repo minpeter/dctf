@@ -14,6 +14,7 @@
     "dep:ui": "cd ui && yarn",
     "dep:server": "go mod tidy",
     "dep": "yarn && yarn dep:ui && yarn dep:server",
+    "start": "IS_DEVELOPMENT=false PORT=3000 ./telos",
     "traefik": "podman compose -f infra-config/dev-compose.yml up -d "
   },
   "devDependencies": {

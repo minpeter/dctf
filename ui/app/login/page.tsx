@@ -15,35 +15,32 @@ import {
 
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { Separator } from "@/components/ui/separator";
 
-import { useEffect, useState } from "react";
-import { GithubLogin, SetLoginState } from "@/api/auth";
+import { useCallback, useState } from "react";
+import { GithubLogin } from "@/api/auth";
 import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
+import { useRouter } from "next/navigation";
+
 export default function Page() {
+  const router = useRouter();
   const [wait, setWait] = useState(false);
 
-  const onGithubLogin = async () => {
+  const onGithubLogin = useCallback(async () => {
     setWait(true);
-
     const resp = await GithubLogin();
-
     if (resp.error) {
       toast.error(resp.error);
       return;
     } else {
-      console.log(resp.url);
-
-      window.location.href = resp.url;
+      router.push(resp.url);
     }
-  };
+  }, [router]);
 
   return (
-    <Card className="flex flex-col items-center justify-center gap-4 p-4 mt-6">
+    <Card className="flex flex-col items-center justify-center gap-4 p-4">
       <h1 className="text-2xl font-bold mb-2">Login to Telos</h1>
 
       <div className="grid w-full max-w-sm items-center gap-1.5">

@@ -6,22 +6,6 @@ export const privateProfile = async () => {
   return handleResponse({ resp, valid: ["goodUserData"] });
 };
 
-export const pendingPrivateProfile = async ({
-  authToken,
-}: {
-  authToken: string;
-}) => {
-  const { data } = await (
-    await fetch("/api/users/me", {
-      headers: {
-        authorization: `Bearer ${authToken}`,
-      },
-    })
-  ).json();
-
-  return data;
-};
-
 export const publicProfile = async (uuid: string) => {
   const resp = await request("GET", `/users/${encodeURIComponent(uuid)}`);
 

@@ -1,16 +1,19 @@
 "use client";
 
 import { request } from "@/api/util";
+import { useRouter } from "next/navigation";
 
 export function SetLoginState() {
   localStorage.login_state = true;
-  window.location.href = "/challs";
+  const router = useRouter();
+  router.push("/challs");
 }
 
-export function relog() {
+export function Relog() {
   localStorage.removeItem("login_state");
   localStorage.removeItem("auth_token");
-  window.location.href = "/login";
+  const router = useRouter();
+  router.push("/login");
 }
 
 export async function Logout() {
@@ -53,7 +56,7 @@ export async function GithubCallback({
 
   console.log(resp);
 
-  if (resp.kind === "goodAuth") {
+  if (resp.kind == "goodAuth") {
     return { error: null, authToken: resp.data.authToken };
   } else {
     return { error: "Unknown error", authToken: null };

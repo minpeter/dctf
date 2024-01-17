@@ -1,6 +1,6 @@
 "use client";
 
-import { relog } from "@/api/auth";
+import { Relog } from "@/api/auth";
 
 export const handleResponse = ({
   resp,
@@ -60,9 +60,25 @@ export const request = (
     headers,
     body: body && JSON.stringify(body),
   })
-    .then((resp) => resp.json())
     .then((resp) => {
-      if (resp.kind === "badToken") return relog();
+      if (resp.status === 401) {
+        return Relog();
+      }
+
+      if (resp.status != 200) {
+        console.error(resp);
+        return { kind: "unknownError", data: null, message: "Unknown error" };
+      }
+
+      return resp.json();
+    })
+    .then((resp) => {
+      // resp에 kind가 없으면 서버에서 오류가 난 것
+      if (!resp.kind || resp.kind == undefined) {
+        console.error(resp);
+        return { kind: "unknownError", data: null, message: "Unknown error" };
+      }
+      if (resp.kind === "badToken") return Relog();
 
       return resp;
     })

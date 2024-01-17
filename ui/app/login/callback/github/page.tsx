@@ -3,19 +3,23 @@
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { GitHubLogoIcon, ReloadIcon } from "@radix-ui/react-icons";
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
 
 import { GithubCallback } from "@/api/auth";
 import { Button } from "@/components/ui/button";
 
+import { useRouter } from "next/navigation";
+
 export default function Page() {
+  const router = useRouter();
   const searchParams = useSearchParams();
+
+  const [error, setError] = useState<string | null>(null);
+
   const code = searchParams.get("code");
   const state = searchParams.get("state");
   const githubError = searchParams.get("error");
   const githubErrorDescription = searchParams.get("error_description");
-
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const action = async (code: string, state: string) => {
@@ -29,17 +33,15 @@ export default function Page() {
         return;
       }
       setError(null);
-
       localStorage.auth_token = authToken;
       localStorage.login_state = true;
-
-      window.location.href = "/challs";
+      router.push("/challs");
     };
 
     if (code && state) {
       action(code, state);
     }
-  }, [code, state]);
+  }, [code, state, router]);
 
   useEffect(() => {
     if (githubError) {
@@ -66,11 +68,7 @@ export default function Page() {
 
       {error && <p className="text-gray-400">{error}</p>}
 
-      {error && (
-        <Button onClick={() => (window.location.href = "/login")}>
-          Go back
-        </Button>
-      )}
+      {error && <Button onClick={() => router.push("/login")}>Go back</Button>}
     </div>
   );
 }
