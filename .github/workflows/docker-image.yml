@@ -1,5 +1,4 @@
-#
-name: Create and publish a Docker image
+name: Create and publish a multi-arch container image
 
 on:
   workflow_dispatch:
@@ -8,7 +7,6 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
   REGISTRY_IMAGE: ghcr.io/${{ github.repository }}
 
 jobs:
@@ -23,7 +21,6 @@ jobs:
     permissions:
       contents: read
       packages: write
-      #
     steps:
       - name: Prepare
         run: |
