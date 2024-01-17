@@ -67,7 +67,11 @@ export const request = (
 
       if (resp.status != 200) {
         console.error(resp);
-        return { kind: "unknownError", data: null, message: "Unknown error" };
+        return {
+          kind: "unknownError",
+          data: null,
+          message: "resp code != 200",
+        };
       }
 
       return resp.json();
@@ -76,7 +80,11 @@ export const request = (
       // resp에 kind가 없으면 서버에서 오류가 난 것
       if (!resp.kind || resp.kind == undefined) {
         console.error(resp);
-        return { kind: "unknownError", data: null, message: "Unknown error" };
+        return {
+          kind: "unknownError",
+          data: null,
+          message: "can't find resp.kind",
+        };
       }
       if (resp.kind === "badToken") return Relog();
 
