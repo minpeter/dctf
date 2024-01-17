@@ -37,7 +37,6 @@ require (
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.6 // indirect
-	github.com/knz/go-libedit v1.10.1 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/moby/term v0.5.0 // indirect
@@ -66,10 +65,7 @@ require (
 	gotest.tools/v3 v3.5.1 // indirect
 	lukechampine.com/uint128 v1.3.0 // indirect
 	modernc.org/cc/v3 v3.41.0 // indirect
-	modernc.org/cc/v4 v4.2.1 // indirect
 	modernc.org/ccgo/v3 v3.16.15 // indirect
-	modernc.org/ccgo/v4 v4.0.0-20230612200659-63de3e82e68d // indirect
-	modernc.org/gc/v2 v2.1.2-0.20220923113132-f3b5abcf8083 // indirect
 	modernc.org/libc v1.40.3 // indirect
 	modernc.org/mathutil v1.6.0 // indirect
 	modernc.org/memory v1.7.2 // indirect
