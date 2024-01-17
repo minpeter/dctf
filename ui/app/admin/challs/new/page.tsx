@@ -129,201 +129,208 @@ export default function Page() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="category"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                Category
-                <span className="text-red-500">*</span>
-              </FormLabel>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-6 flex flex-col"
+      >
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <FormField
+            control={form.control}
+            name="category"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  Category
+                  <span className="text-red-500">*</span>
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="crypto | web | system | etc..."
+                    {...field}
+                  />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  Name
+                  <span className="text-red-500">*</span>
+                </FormLabel>
+                <FormControl>
+                  <Input placeholder="My Challenge" {...field} />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="author"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Author</FormLabel>
+                <FormControl>
+                  <Input placeholder="Aaron Swartz :)" {...field} />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Type your challenge description here."
+                    {...field}
+                  />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="points.min"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Minimum points</FormLabel>
+                <FormControl>
+                  <Input placeholder="100" {...field} />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="points.max"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Maximum points</FormLabel>
+                <FormControl>
+                  <Input placeholder="500" {...field} />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="flag"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  Flag
+                  <span className="text-red-500">*</span>
+                </FormLabel>
+                <FormControl>
+                  <Input placeholder="flag{...}" {...field} />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="flex flex-col  rounded-lg border p-4 gap-6 shadow-sm">
+            <div className="flex flex-row items-center justify-between">
+              <div className="space-y-0.5">
+                <FormLabel>Dynamic container</FormLabel>
+                <FormDescription>
+                  If you want to use dynamic container, please check this box.
+                </FormDescription>
+              </div>
               <FormControl>
-                <Input
-                  placeholder="crypto | web | system | etc..."
-                  {...field}
+                <Switch
+                  checked={dynamic}
+                  onClick={() => setDynamic(!dynamic)}
                 />
               </FormControl>
-
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                Name
-                <span className="text-red-500">*</span>
-              </FormLabel>
-              <FormControl>
-                <Input placeholder="My Challenge" {...field} />
-              </FormControl>
-
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="author"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Author</FormLabel>
-              <FormControl>
-                <Input placeholder="Aaron Swartz :)" {...field} />
-              </FormControl>
-
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Type your challenge description here."
-                  {...field}
-                />
-              </FormControl>
-
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {/* point */}
-        <FormField
-          control={form.control}
-          name="points.min"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Minimum points</FormLabel>
-              <FormControl>
-                <Input placeholder="100" {...field} />
-              </FormControl>
-
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="points.max"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Maximum points</FormLabel>
-              <FormControl>
-                <Input placeholder="500" {...field} />
-              </FormControl>
-
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="flag"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                Flag
-                <span className="text-red-500">*</span>
-              </FormLabel>
-              <FormControl>
-                <Input placeholder="flag{...}" {...field} />
-              </FormControl>
-
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className="flex flex-col rounded-lg border p-4 gap-6 shadow-sm">
-          <div className="flex flex-row items-center justify-between">
-            <div className="space-y-0.5">
-              <FormLabel>Dynamic container</FormLabel>
-              <FormDescription>
-                If you want to use dynamic container, please check this box.
-              </FormDescription>
             </div>
-            <FormControl>
-              <Switch checked={dynamic} onClick={() => setDynamic(!dynamic)} />
-            </FormControl>
+
+            {dynamic && (
+              <>
+                <FormField
+                  control={form.control}
+                  name="dynamic.image"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        Dynamic container image
+                        <span className="text-red-500">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="minpeter/mathematician-in-wonderland:latest"
+                          {...field}
+                        />
+                      </FormControl>
+
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="dynamic.type"
+                  render={({ field }) => (
+                    <FormItem className="space-y-3">
+                      <FormLabel>
+                        Dynamic container type
+                        <span className="text-red-500">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <RadioGroup
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          className="flex flex-col space-y-1"
+                        >
+                          <FormItem className="flex items-center space-x-3 space-y-0">
+                            <FormControl>
+                              <RadioGroupItem value="http" />
+                            </FormControl>
+                            <FormLabel className="font-normal">
+                              http, connects to use via browser
+                            </FormLabel>
+                          </FormItem>
+                          <FormItem className="flex items-center space-x-3 space-y-0">
+                            <FormControl>
+                              <RadioGroupItem value="tcp" />
+                            </FormControl>
+                            <FormLabel className="font-normal">
+                              tcp, connects to use via ncat
+                            </FormLabel>
+                          </FormItem>
+                        </RadioGroup>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </>
+            )}
           </div>
-
-          {dynamic && (
-            <>
-              <FormField
-                control={form.control}
-                name="dynamic.image"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Dynamic container image
-                      <span className="text-red-500">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="minpeter/mathematician-in-wonderland:latest"
-                        {...field}
-                      />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="dynamic.type"
-                render={({ field }) => (
-                  <FormItem className="space-y-3">
-                    <FormLabel>
-                      Dynamic container type
-                      <span className="text-red-500">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        className="flex flex-col space-y-1"
-                      >
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="http" />
-                          </FormControl>
-                          <FormLabel className="font-normal">
-                            http, connects to use via browser
-                          </FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="tcp" />
-                          </FormControl>
-                          <FormLabel className="font-normal">
-                            tcp, connects to use via ncat
-                          </FormLabel>
-                        </FormItem>
-                      </RadioGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </>
-          )}
         </div>
 
         <Button type="submit">Submit</Button>
