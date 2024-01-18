@@ -3,7 +3,6 @@ package utils
 import (
 	"bytes"
 	"context"
-	"crypto/sha1"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
@@ -14,12 +13,12 @@ import (
 	"strconv"
 	"strings"
 	"text/template"
-	"time"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/client"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type Challenge struct {
@@ -181,9 +180,10 @@ func PullImage(imageName string) {
 	}
 }
 
-func GenerateId(data *gin.Context) string {
-	hash := sha1.Sum([]byte(data.ClientIP() + data.Request.UserAgent() + time.Now().String()))
-	return strings.ReplaceAll(strings.ToLower(base64.RawURLEncoding.EncodeToString(hash[:])[:5]), "_", "0")
+func GenerateId() string {
+	uuid := uuid.New().String()
+	uuid = strings.Replace(uuid, "-", "", -1)
+	return uuid[0:8]
 }
 
 func GetAllChall() ([]Challenge, error) {

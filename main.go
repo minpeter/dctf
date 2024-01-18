@@ -26,15 +26,15 @@ func main() {
 
 	fmt.Println("\n\n", patorjk)
 
-	utils.Tq = utils.NewTimedQueue(10)
+	utils.Tq = utils.NewTimedQueue(60)
 
-	// utils.LoadOnlineSandbox()
+	utils.LoadOnlineSandbox()
 
-	// if _, err := utils.CRLogin(); err != nil {
-	// 	fmt.Println("CR Login Error: ", err)
+	if _, err := utils.CRLogin(); err != nil {
+		fmt.Println("CR Login Error: ", err)
 
-	// 	fmt.Println("plz provide your own credentials CR_USERNAME and CR_PASSWORD")
-	// }
+		fmt.Println("plz provide your own credentials CR_USERNAME and CR_PASSWORD")
+	}
 
 	err := godotenv.Load(".env")
 

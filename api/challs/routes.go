@@ -23,8 +23,8 @@ func Routes(challRoutes *gin.RouterGroup) {
 	challRoutes.POST("/:id/submit", auth.AuthTokenMiddleware(), submitChallHandler)
 
 	// dynamic router
-	challRoutes.GET("/:id/start", auth.AuthTokenMiddleware(), createChallHandler)
-	challRoutes.GET("/:id/stop", auth.AuthTokenMiddleware(), deleteChallHandler)
+	challRoutes.POST("/:id/start", auth.AuthTokenMiddleware(), createChallHandler)
+	challRoutes.POST("/:id/stop", auth.AuthTokenMiddleware(), deleteChallHandler)
 }
 
 func createChallHandler(c *gin.Context) {
@@ -38,6 +38,13 @@ func createChallHandler(c *gin.Context) {
 	}
 
 	challengeID := c.Param("id")
+
+	if has, err := database.IsDynamic(challengeID); err != nil || !has {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "not dynamic challenge",
+		})
+		return
+	}
 
 	host := strings.Split(c.Request.Host, ":")
 
@@ -72,7 +79,7 @@ func createChallHandler(c *gin.Context) {
 
 	imageName := challengeData.Dynamic.Image
 
-	hashId := utils.GenerateId(c)
+	hashId := utils.GenerateId()
 
 	utils.PullImage(imageName)
 
@@ -91,7 +98,7 @@ func createChallHandler(c *gin.Context) {
 		config.Labels["traefik.tcp.routers."+hashId+".tls"] = "true"
 	}
 
-	if challengeData.Dynamic.Type == "web" {
+	if challengeData.Dynamic.Type == "http" {
 		config.Labels = map[string]string{
 			"traefik.enable": "true",
 			"traefik.http.routers." + hashId + ".rule": "Host(`" + hashId + "." + host[0] + "`)",
@@ -141,19 +148,19 @@ func createChallHandler(c *gin.Context) {
 		connection = "https://" + connection
 	}
 
-	if challengeData.Dynamic.Type == "web" {
+	if challengeData.Dynamic.Type == "http" {
 		utils.SendResponse(c, "goodStartInstance", gin.H{
 			"connection": connection,
 			"id":         sandboxID[0:12],
-			"type":       "web",
+			"type":       "http",
 		})
 		return
 
 	} else {
 		utils.SendResponse(c, "goodStartInstance", gin.H{
 			"connection": []struct {
-				Type    string
-				Command string
+				Type    string `json:"type"`
+				Command string `json:"command"`
 			}{
 				{
 					Type:    "ncat",

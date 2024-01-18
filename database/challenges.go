@@ -75,6 +75,24 @@ func GetAllChallenges() ([]Challenge, error) {
 
 }
 
+func IsDynamic(id string) (bool, error) {
+	var challenge Challenge
+	has, err := DB.Where("id = ?", id).Get(&challenge)
+	if err != nil {
+		return false, err
+	}
+
+	if !has {
+		return false, fmt.Errorf("challenge not found")
+	}
+
+	if challenge.Dynamic.Type != "" && challenge.Dynamic.Image != "" {
+		return true, nil
+	}
+
+	return false, nil
+}
+
 func GetCleanedChallenges() ([]CleanedChallenge, error) {
 	var challenges []Challenge
 	err := DB.Find(&challenges)

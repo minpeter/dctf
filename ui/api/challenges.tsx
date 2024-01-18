@@ -48,13 +48,13 @@ export const submitFlag = async (id: string, flag: string) => {
 };
 
 export const startInstance = async (id: string) => {
-  const resp = await request("GET", `/challs/${encodeURIComponent(id)}/start`);
+  const resp = await request("POST", `/challs/${encodeURIComponent(id)}/start`);
 
   return handleResponse({ resp, valid: ["goodStartInstance"] });
 };
 
 export const stopInstance = async (id: string) => {
-  const resp = await request("GET", `/challs/${encodeURIComponent(id)}/stop`);
+  const resp = await request("POST", `/challs/${encodeURIComponent(id)}/stop`);
 
   return handleResponse({ resp, valid: ["goodStopInstance"] });
 };

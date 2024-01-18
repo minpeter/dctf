@@ -23,9 +23,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import Link from "next/link";
 import { useState, useCallback } from "react";
-import { submitFlag } from "@/api/challenges";
+import { startInstance, submitFlag } from "@/api/challenges";
 
 import Fire from "@/components/confetti";
+import { ReloadIcon } from "@radix-ui/react-icons";
 
 // sync with backend CleanedChallenge struct
 export type ProblemProps = {
@@ -50,9 +51,43 @@ export default function Problem({
   setSolved: (id: string) => void;
 }) {
   const isDynamic = problem.dynamic === "tcp" || problem.dynamic === "http";
-  const isHttp = problem.dynamic === "http";
-  const isTcp = problem.dynamic === "tcp";
+  const [httpConnection, setHttpConnection] = useState("");
+  const [tcpConnection, setTcpConnection] = useState<
+    { type: string; command: string }[]
+  >([]);
   const isFileExists = problem.files.length > 0;
+
+  const [isRunning, setIsRunning] = useState(false);
+  const [wait, setWait] = useState(false);
+
+  const handleInstanceStart = useCallback(() => {
+    const action = async () => {
+      setWait(true);
+
+      const { error, data } = await startInstance(problem.id);
+      if (error === undefined) {
+        console.log(data);
+        if (data.type === "tcp") {
+          setTcpConnection(data.connection);
+        } else {
+          setHttpConnection(data.connection);
+        }
+        setIsRunning(true);
+      } else {
+        toast.error(error);
+      }
+
+      setWait(false);
+    };
+
+    action();
+  }, [problem.id]);
+
+  const handleInstanceStop = useCallback(() => {
+    setHttpConnection("");
+    setTcpConnection([]);
+    setIsRunning(false);
+  }, []);
 
   const [value, setValue] = useState("");
   const handleInputChange = useCallback(
@@ -84,7 +119,7 @@ export default function Problem({
             </h3>
             <div className="flex space-x-2">
               <Badge>{problem.dynamic}</Badge>
-              {isDynamic && <Badge>{false ? "Running" : "Stopped"}</Badge>}
+              {isDynamic && <Badge>{isRunning ? "Running" : "Stopped"}</Badge>}
             </div>
           </div>
 
@@ -95,66 +130,33 @@ export default function Problem({
         <CardDescription>{problem.author}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4 py-4">
-        {/* {isHttp && (
-          <Link
-            href="https://sanity-check.chal.seccon.jp/"
-            className="text-blue-500"
-          >
-            https://sanity-check.chal.seccon.jp/
+        {httpConnection != "" && (
+          <Link href={httpConnection} className="text-blue-500">
+            {httpConnection}
           </Link>
-        )} */}
+        )}
 
         <p>{problem.description}</p>
 
-        {isTcp ? (
+        {tcpConnection.length > 0 ? (
           <Tabs defaultValue="pwn" className="space-y-4">
             <TabsList>
-              <TabsTrigger value="pwn">pwn</TabsTrigger>
-              <TabsTrigger value="socat">socat</TabsTrigger>
-              <TabsTrigger value="ncat">ncat</TabsTrigger>
-              <TabsTrigger value="openssl">openssl</TabsTrigger>
+              {tcpConnection.map((conn, i) => (
+                <TabsTrigger key={i} value={conn.type}>
+                  {conn.type}
+                </TabsTrigger>
+              ))}
               <TabsTrigger value="flag">Flag Submission</TabsTrigger>
             </TabsList>
-            <TabsContent value="pwn">
-              <div className="flex w-full items-center space-x-2">
-                <Input
-                  type="connection"
-                  value="remote('bdspz.dynamic.minpeter.tech', 443, ssl=True)"
-                  readOnly
-                />
-                <Button type="submit">Copy</Button>
-              </div>
-            </TabsContent>
-            <TabsContent value="ncat">
-              <div className="flex w-full items-center space-x-2">
-                <Input
-                  type="connection"
-                  value="ncat --ssl bdspz.dynamic.minpeter.tech 443"
-                  readOnly
-                />
-                <Button type="submit">Copy</Button>
-              </div>
-            </TabsContent>
-            <TabsContent value="socat">
-              <div className="flex w-full items-center space-x-2">
-                <Input
-                  type="connection"
-                  value="socat openssl-connect:bdspz.dynamic.minpeter.tech:443"
-                  readOnly
-                />
-                <Button type="submit">Copy</Button>
-              </div>
-            </TabsContent>
-            <TabsContent value="openssl">
-              <div className="flex w-full items-center space-x-2">
-                <Input
-                  type="connection"
-                  value="openssl s_client -connect bdspz.dynamic.minpeter.tech:443"
-                  readOnly
-                />
-                <Button type="submit">Copy</Button>
-              </div>
-            </TabsContent>
+
+            {tcpConnection.map((conn, i) => (
+              <TabsContent key={i} value={conn.type}>
+                <div className="flex w-full items-center space-x-2">
+                  <Input type="connection" value={conn.command} readOnly />
+                  <Button type="submit">Copy</Button>
+                </div>
+              </TabsContent>
+            ))}
             <TabsContent value="flag">
               <div className="flex w-full items-center space-x-2">
                 <Input
@@ -207,24 +209,39 @@ export default function Problem({
             </>
           )}
         </div>
-        {isDynamic && (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                {isDynamic &&
-                  // isRunning
-                  (true ? (
-                    <Button>Instance Start</Button>
-                  ) : (
-                    <Button>Instance Stop</Button>
-                  ))}
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Stopping in 3 minute</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        )}
+        {isDynamic &&
+          (isRunning ? (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button onClick={handleInstanceStop} disabled={wait}>
+                    {wait ? (
+                      <>
+                        <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                        Please wait
+                      </>
+                    ) : (
+                      <>Instance Stop</>
+                    )}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Stopping in 3 minute</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          ) : (
+            <Button onClick={handleInstanceStart} disabled={wait}>
+              {wait ? (
+                <>
+                  <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                  Please wait
+                </>
+              ) : (
+                <>Instance Start</>
+              )}
+            </Button>
+          ))}
       </CardFooter>
     </Card>
   );

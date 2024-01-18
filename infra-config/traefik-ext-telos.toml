@@ -5,5 +5,3 @@
     service = "telos-ext-srv"
 [[http.services.telos-ext-srv.loadBalancer.servers]]
   url = "http://host.docker.internal:4000"
-
-  
