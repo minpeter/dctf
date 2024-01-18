@@ -39,7 +39,7 @@ import {
 
 const sortOptions = ["Name", "Category", "Points", "Solves", "Author"];
 
-import { getChallenges } from "@/api/admin";
+import { deleteChallenges, getChallenges } from "@/api/admin";
 
 import { toast } from "sonner";
 
@@ -47,7 +47,7 @@ export default function Page() {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(sortOptions[0]);
 
-  const [challs, setChalls] = React.useState(null);
+  const [challs, setChalls] = React.useState<any[]>([]);
 
   React.useEffect(() => {
     const action = async () => {
@@ -64,6 +64,18 @@ export default function Page() {
     action();
   }, []);
 
+  const onDelete = React.useCallback(async (ids: string[]) => {
+    const resp = await deleteChallenges({ ids });
+    if (resp.error) {
+      toast.error(resp.error);
+    } else {
+      setChalls((challs) => challs.filter((c) => !ids.includes(c.id)));
+      setAllToggleState(false);
+
+      toast.success("Successfully deleted challenges.");
+    }
+  }, []);
+
   const [selected, setSelected] = React.useState<string[]>([]);
 
   const toggleSelected = (id: string) => {
@@ -75,14 +87,16 @@ export default function Page() {
   };
 
   const allToggle = () => {
-    // @ts-ignore
     if (selected.length === challs.length) {
       setSelected([]);
     } else {
-      // @ts-ignore
       setSelected(challs.map((c) => c.id));
     }
+
+    setAllToggleState((state) => !state);
   };
+
+  const [allToggleState, setAllToggleState] = React.useState(false);
 
   React.useEffect(() => {
     console.log(selected);
@@ -150,6 +164,7 @@ export default function Page() {
           variant="destructive"
           size="icon"
           disabled={selected.length <= 0}
+          onClick={() => onDelete(selected)}
         >
           <TrashIcon className="h-4 w-4" />
         </Button>
@@ -158,12 +173,12 @@ export default function Page() {
         </Button>
       </div>
 
-      {challs != null ? (
+      {challs != null && challs.length > 0 ? (
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>
-                <Checkbox onClick={allToggle} />
+                <Checkbox onClick={allToggle} checked={allToggleState} />
               </TableHead>
               <TableHead className="w-[150px]">Name</TableHead>
               <TableHead>Category</TableHead>
@@ -172,26 +187,23 @@ export default function Page() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {
-              // @ts-ignore
-              challs?.map((chall: any) => (
-                <TableRow key={chall.id}>
-                  <TableCell>
-                    <Checkbox
-                      id={chall.id}
-                      checked={selected.includes(chall.id)}
-                      onClick={() => toggleSelected(chall.id)}
-                    />
-                  </TableCell>
-                  <TableCell>{chall.name}</TableCell>
-                  <TableCell>{chall.category}</TableCell>
-                  <TableCell>{chall.points.max}</TableCell>
-                  <TableCell className="text-right">
-                    {chall.dynamic.type}
-                  </TableCell>
-                </TableRow>
-              ))
-            }
+            {challs?.map((chall) => (
+              <TableRow key={chall.id}>
+                <TableCell>
+                  <Checkbox
+                    id={chall.id}
+                    checked={selected.includes(chall.id)}
+                    onClick={() => toggleSelected(chall.id)}
+                  />
+                </TableCell>
+                <TableCell>{chall.name}</TableCell>
+                <TableCell>{chall.category}</TableCell>
+                <TableCell>{chall.points.max}</TableCell>
+                <TableCell className="text-right">
+                  {chall.dynamic.type}
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       ) : (

@@ -2,6 +2,16 @@
 
 import { request, handleResponse } from "./util";
 
+export const deleteChallenges = async ({ ids }: { ids: string[] }) => {
+  const resp = await request("DELETE", "/admin/challs", { ids: ids });
+
+  if (resp.kind === "goodChallengesDelete") {
+    return { error: null };
+  }
+
+  return { error: "Unknown error" };
+};
+
 export const getChallenges = async () => {
   const resp = await request("GET", "/admin/challs");
 
@@ -20,12 +30,12 @@ export const updateChallenge = async ({
   data: any;
 }) => {
   return (
-    await request("PUT", `/admin/challs/${encodeURIComponent(id)}`, { data })
+    await request("PUT", `/admin/chall/${encodeURIComponent(id)}`, { data })
   ).data;
 };
 
 export async function createChallenge({ data }: { data: any }) {
-  const resp = await request("POST", "/admin/challs", { data });
+  const resp = await request("POST", "/admin/chall", { data });
 
   if (resp.kind === "goodChallengeCreate") {
     return { error: null, data: resp.data };
@@ -35,7 +45,7 @@ export async function createChallenge({ data }: { data: any }) {
 }
 
 export const deleteChallenge = async ({ id }: { id: string }) => {
-  return (await request("DELETE", `/admin/challs/${encodeURIComponent(id)}`))
+  return (await request("DELETE", `/admin/chall/${encodeURIComponent(id)}`))
     .data;
 };
 

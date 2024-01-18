@@ -251,6 +251,10 @@ var Responses = map[string]Response{
 		Status:  200,
 		Message: "Challenge successfully deleted",
 	},
+	"goodChallengesDelete": {
+		Status:  200,
+		Message: "Challenge successfully deleted",
+	},
 	"goodUserData": {
 		Status:  200,
 		Message: "The user data was successfully retrieved.",

@@ -13,12 +13,17 @@ func Routes(adminRoutes *gin.RouterGroup) {
 
 	adminRoutes.GET("/check", checkHandler)
 	challs := adminRoutes.Group("/challs")
+	chall := adminRoutes.Group("/chall")
 
 	{
-		challs.DELETE("/:id", deleteChallengeHandler)
 		challs.GET("", listChallengesHandler)
-		challs.PUT("/:id", updateChallengeHandler)
-		challs.POST("", createChallengeHandler)
+		challs.DELETE("", deleteChallengesHandler)
+	}
+
+	{
+		chall.POST("", createChallengeHandler)
+		chall.DELETE("/:id", deleteChallengeHandler)
+		chall.PUT("/:id", updateChallengeHandler)
 	}
 
 	upload := adminRoutes.Group("/upload")
