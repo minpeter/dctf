@@ -3,7 +3,13 @@
 import { request, handleResponse } from "./util";
 
 export const getChallenges = async () => {
-  return (await request("GET", "/admin/challs")).data;
+  const resp = await request("GET", "/admin/challs");
+
+  if (resp.kind === "goodChallenges") {
+    return { error: null, data: resp.data };
+  }
+
+  return { error: "Unknown error" };
 };
 
 export const updateChallenge = async ({
@@ -18,14 +24,15 @@ export const updateChallenge = async ({
   ).data;
 };
 
-export const createChallenge = async ({ data }: { data: any }) => {
-  await request("POST", "/admin/challs", { data }).then((resp) => {
-    if (resp.kind === "goodChallengeCreate") {
-      return resp.data;
-    }
-    return { error: "unknown error" };
-  });
-};
+export async function createChallenge({ data }: { data: any }) {
+  const resp = await request("POST", "/admin/challs", { data });
+
+  if (resp.kind === "goodChallengeCreate") {
+    return { error: null, data: resp.data };
+  }
+
+  return { error: "Unknown error" };
+}
 
 export const deleteChallenge = async ({ id }: { id: string }) => {
   return (await request("DELETE", `/admin/challs/${encodeURIComponent(id)}`))

@@ -133,7 +133,7 @@ func DeleteChallenge(id string) error {
 func PutChallenge(challenge Challenge) error {
 	has, err := DB.Where("id = ?", challenge.Id).Exist(&Challenge{})
 
-	if challenge.Dynamic.Type == "http" || challenge.Dynamic.Type == "tcp" || challenge.Dynamic.Type == "" {
+	if challenge.Dynamic.Type != "static" && challenge.Dynamic.Type != "" && challenge.Dynamic.Type != "http" && challenge.Dynamic.Type != "tcp" {
 		return fmt.Errorf("invalid dynamic type")
 	}
 

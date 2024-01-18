@@ -11,7 +11,7 @@ import { createChallenge } from "@/api/admin";
 
 import { useRouter } from "next/navigation";
 
-import { useEffect, useState } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -95,19 +95,21 @@ const FormSchema = z.object({
   }),
 });
 
-function onSubmit(data: z.infer<typeof FormSchema>) {
-  console.log(JSON.stringify(data, null, 2));
-  console.log("isDynamic", isDynamic);
-  const resp = createChallenge({ data });
-  console.log("resp", resp);
-
-  toast.success("Successfully created challenge.");
-}
-
 let isDynamic = false;
 
 export default function Page() {
   const [dynamic, setDynamic] = useState(false);
+
+  const onSubmit = useCallback(async (data: z.infer<typeof FormSchema>) => {
+    console.log(JSON.stringify(data, null, 2));
+
+    const resp = await createChallenge({ data });
+    if (resp.error) {
+      toast.error(resp.error);
+    } else {
+      toast.success("Successfully created challenge.");
+    }
+  }, []);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
