@@ -2,9 +2,11 @@
 
 # Telos (CTF platform)
 
-> [!WARNING]
-> This product is still under development. Not suitable for production use.  
-> 아직 개발 중인 제품입니다. 프로덕션에 사용하기 적절하지 않습니다.
+
+<img width="30%" alt="image" src="https://github.com/minpeter/telos/assets/62207008/e4dec08c-6368-428a-8a55-f88160d05bae">
+<img width="30%" alt="image" src="https://github.com/minpeter/telos/assets/62207008/03519741-de29-48f6-a056-c775fb0bc1de">
+<img width="30%" alt="image" src="https://github.com/minpeter/telos/assets/62207008/00ef10a4-fb64-4685-bbd1-125c7303c1a1">
+
 
 ### how to on test server
 
@@ -17,6 +19,6 @@
 _if frontend changes, run `yarn build` in ui directory_
 
 
-
-<img width="630" alt="image" src="https://github.com/minpeter/telos/assets/62207008/54549ca5-8619-4268-835e-3350c1632535">
-<img width="646" alt="image" src="https://github.com/minpeter/telos/assets/62207008/eb44ae1a-fb11-42e3-a45b-94f8b0f7ef2d">
+> [!WARNING]
+> This product is still under development. Not suitable for production use.  
+> 아직 개발 중인 제품입니다. 프로덕션에 사용하기 적절하지 않습니다.
