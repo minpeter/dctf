@@ -15,3 +15,8 @@
 5. cd ui && yarn build
 
 _if frontend changes, run `yarn build` in ui directory_
+
+
+
+<img width="630" alt="image" src="https://github.com/minpeter/telos/assets/62207008/54549ca5-8619-4268-835e-3350c1632535">
+<img width="646" alt="image" src="https://github.com/minpeter/telos/assets/62207008/eb44ae1a-fb11-42e3-a45b-94f8b0f7ef2d">
