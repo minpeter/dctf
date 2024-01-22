@@ -1,15 +1,13 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-
-import { getChallenges } from "@/api/challenges";
-
 import Problem, { ProblemProps } from "@/components/problem";
+import { Checkbox } from "@/components/ui/checkbox";
+import { toast } from "sonner";
 
 import { useCallback, useState, useEffect, useMemo } from "react";
 
-import { toast } from "sonner";
+import { getChallenges } from "@/api/challenges";
 
 const loadStates = {
   pending: 0,
