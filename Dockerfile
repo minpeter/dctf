@@ -1,6 +1,7 @@
-FROM node:20-slim AS front-build
+FROM node:20 AS front-build
 
 WORKDIR /app
+RUN corepack enable
 COPY ui/package.json ui/pnpm-lock.yaml ./
 RUN pnpm install
 COPY ui .
