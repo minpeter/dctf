@@ -1,10 +1,11 @@
-FROM node:20-slim AS front-build
+FROM node:20 AS front-build
 
 WORKDIR /app
-COPY ui/package.json ui/yarn.lock ./
-RUN yarn install
+RUN corepack enable
+COPY ui/package.json ui/pnpm-lock.yaml ./
+RUN pnpm install
 COPY ui .
-RUN yarn build
+RUN pnpm build
 
 FROM golang:1.21-alpine AS back-build
 WORKDIR /app
