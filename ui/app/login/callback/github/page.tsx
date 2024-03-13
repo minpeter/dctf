@@ -1,21 +1,20 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 
 import { GithubCallback } from "@/api/auth";
 import { Button } from "@/components/ui/button";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
-export default function Page() {
+function SignalDetector() {
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   const [error, setError] = useState<string | null>(null);
 
+  const searchParams = useSearchParams();
   const code = searchParams.get("code");
   const state = searchParams.get("state");
   const githubError = searchParams.get("error");
@@ -70,5 +69,13 @@ export default function Page() {
 
       {error && <Button onClick={() => router.push("/login")}>Go back</Button>}
     </div>
+  );
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SignalDetector />
+    </Suspense>
   );
 }
