@@ -27,6 +27,11 @@ func Routes(challRoutes *gin.RouterGroup) {
 	challRoutes.POST("/:id/stop", auth.AuthTokenMiddleware(), deleteChallHandler)
 }
 
+func parseEnv(env string) []string {
+	envs := strings.Split(env, ",")
+	return envs
+}
+
 func createChallHandler(c *gin.Context) {
 
 	cli, err := client.NewClientWithOpts()
@@ -91,7 +96,7 @@ func createChallHandler(c *gin.Context) {
 			"traefik.tcp.routers." + hashId + ".tls":  "true",
 			"dynamic":                                 "true",
 		},
-		Env: []string{},
+		Env: parseEnv(challengeData.Dynamic.Env),
 	}
 
 	if host[1] == "443" {

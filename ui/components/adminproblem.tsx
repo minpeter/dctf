@@ -383,7 +383,40 @@ export default function AdminProblem({
                     </div>
                   </RadioGroup>
                 </div>
+
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="env" className="text-right">
+                    Env
+                  </Label>
+                  <Input
+                    id="env"
+                    value={env}
+                    className="col-span-3"
+                    onChange={handleEnvChange}
+                  />
+
+                  <p className="col-span-4 text-sm text-gray-500">
+                    You can use this field to pass environment
+                    variables/arguments to the docker container.
+                  </p>
+
+                  <p className="col-span-4 text-sm text-gray-500">
+                    Example: <code>FLAG=flag{flag}</code>
+                  </p>
+
+                  <p className="col-span-4 text-sm text-gray-500">
+                    You can also use the following predefined variables:
+                  </p>
+
+                  <p className="col-span-4 text-sm text-gray-500">
+                    <code>FLAG</code> - The flag for the challenge
+                  </p>
+                  <p className="col-span-4 text-sm text-gray-500">
+                    <code>PORT</code> - The port for the challenge
+                  </p>
+                </div>
               </div>
+
               <DialogFooter>
                 <DialogClose asChild>
                   <Button>Save Dynamic</Button>
